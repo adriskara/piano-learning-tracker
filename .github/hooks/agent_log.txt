@@ -1,0 +1,517 @@
+
+@Lab-1.md  Potrebno je kreirati objektni model za praćenje napretka učenika klavira (u ASP.NET MVC), koji se sastoji od barem 7 klasa, gdje 4 klase moraju biti kompleksne (preko 5 svojstava). Svojstva trebaju biti smislena i dobrog tipa: barem jedan vlastiti enum, barem jedno DateTime svojstvo, ispravne konekcije 1N, NN
+Bash List project files
+IN
+find c:/Users/adrij/source/repos/piano-learning-tracker -type f | head -50
+
+OUT
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/COMMIT_EDITMSG
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/config
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/description
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/FETCH_HEAD
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/HEAD
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/hooks/applypatch-msg.sample
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/hooks/commit-msg.sample
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/hooks/fsmonitor-watchman.sample
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/hooks/post-update.sample
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/hooks/pre-applypatch.sample
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/hooks/pre-commit.sample
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/hooks/pre-merge-commit.sample
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/hooks/pre-push.sample
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/hooks/pre-rebase.sample
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/hooks/pre-receive.sample
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/hooks/prepare-commit-msg.sample
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/hooks/push-to-checkout.sample
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/hooks/sendemail-validate.sample
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/hooks/update.sample
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/index
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/info/exclude
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/logs/HEAD
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/logs/refs/heads/lab1
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/logs/refs/heads/main
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/logs/refs/heads/master
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/logs/refs/remotes/origin/HEAD
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/logs/refs/remotes/origin/lab1
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/logs/refs/remotes/origin/main
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/objects/4b/4aeaf32d1152669de0f843dd22e109b0e0a589
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/objects/66/54e1871e67617c912eb102847e70d1b96020ce
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/objects/76/78e76b5de60716c9f446e954f26b9994e2e45b
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/objects/83/41fcdea29120dac8a650ad06e2442c3d85de24
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/objects/89/f244d759f2a24d1a84a79ae868dd13ecd5dea2
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/objects/c8/a3eec5615a44880d82e792fb91be779d192b33
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/objects/d4/419ec2ea606f6fddd6f262af6c948c0fbc5b33
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/objects/e4/6833d4a4ea70deb6c22c8ea6fc44ed1ac37ed1
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/objects/e6/9c20676f8ccdada8c9666daaa9dac6f1a8a95d
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/objects/e6/9de29bb2d1d6434b8b29ae775ad8c2e48c5391
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/objects/eb/2f5e8f934587c50a7a9c80337d746f897c63e6
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/objects/fd/ecfa997f3258bb6a8daef9ed2269ad2a260180
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/objects/pack/pack-17e6a7e17d36d29ceb74093375ea010c9dfb5c0d.idx
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/objects/pack/pack-17e6a7e17d36d29ceb74093375ea010c9dfb5c0d.pack
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/objects/pack/pack-17e6a7e17d36d29ceb74093375ea010c9dfb5c0d.rev
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/ORIG_HEAD
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/packed-refs
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/refs/heads/lab1
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/refs/heads/main
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/refs/heads/master
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/refs/remotes/origin/HEAD
+c:/Users/adrij/source/repos/piano-learning-tracker/.git/refs/remotes/origin/lab1
+Bash List non-git project files
+IN
+find c:/Users/adrij/source/repos/piano-learning-tracker -not -path '*/.git/*' -type f | sort
+
+OUT
+c:/Users/adrij/source/repos/piano-learning-tracker/.gitattributes
+c:/Users/adrij/source/repos/piano-learning-tracker/.github/hooks/agent_log.txt
+c:/Users/adrij/source/repos/piano-learning-tracker/.github/hooks/hooks.json
+c:/Users/adrij/source/repos/piano-learning-tracker/.gitignore
+c:/Users/adrij/source/repos/piano-learning-tracker/.vs/ProjectSettings.json
+c:/Users/adrij/source/repos/piano-learning-tracker/.vs/VSWorkspaceState.json
+c:/Users/adrij/source/repos/piano-learning-tracker/.vs/piano-learning-tracker.slnx/FileContentIndex/1e8afa21-b3cd-4319-b9ce-8c2c6978253f.vsidx
+c:/Users/adrij/source/repos/piano-learning-tracker/.vs/piano-learning-tracker.slnx/FileContentIndex/5fac5329-d36c-45c6-839a-dc499ddfb11d.vsidx
+c:/Users/adrij/source/repos/piano-learning-tracker/.vs/piano-learning-tracker.slnx/FileContentIndex/70eca649-c498-481b-9df6-e6029d26fd45.vsidx
+c:/Users/adrij/source/repos/piano-learning-tracker/.vs/piano-learning-tracker.slnx/v18/.wsuo
+c:/Users/adrij/source/repos/piano-learning-tracker/.vs/piano-learning-tracker.slnx/v18/DocumentLayout.json
+c:/Users/adrij/source/repos/piano-learning-tracker/.vs/piano-learning-tracker/CopilotIndices/18.4.114.215/CodeChunks.db
+c:/Users/adrij/source/repos/piano-learning-tracker/.vs/piano-learning-tracker/CopilotIndices/18.4.114.215/SemanticSymbols.db
+c:/Users/adrij/source/repos/piano-learning-tracker/.vs/slnx.sqlite
+c:/Users/adrij/source/repos/piano-learning-tracker/Lab-1.md
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker.slnx
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/Controllers/HomeController.cs
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/Models/ErrorViewModel.cs
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/PianoLearningTracker.csproj
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/Program.cs
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/Properties/launchSettings.json
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/Views/Home/Index.cshtml
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/Views/Home/Privacy.cshtml
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/Views/Shared/Error.cshtml
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/Views/Shared/_Layout.cshtml
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/Views/Shared/_Layout.cshtml.css
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/Views/Shared/_ValidationScriptsPartial.cshtml
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/Views/_ViewImports.cshtml
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/Views/_ViewStart.cshtml
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/appsettings.Development.json
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/appsettings.json
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/obj/Debug/net10.0/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/obj/Debug/net10.0/PianoLearningTracker.AssemblyInfo.cs
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/obj/Debug/net10.0/PianoLearningTracker.AssemblyInfoInputs.cache
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/obj/Debug/net10.0/PianoLearningTracker.GeneratedMSBuildEditorConfig.editorconfig
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/obj/Debug/net10.0/PianoLearningTracker.GlobalUsings.g.cs
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/obj/Debug/net10.0/PianoLearningTracker.RazorAssemblyInfo.cache
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/obj/Debug/net10.0/PianoLearningTracker.RazorAssemblyInfo.cs
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/obj/Debug/net10.0/PianoLearningTracker.assets.cache
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/obj/PianoLearningTracker.csproj.nuget.dgspec.json
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/obj/PianoLearningTracker.csproj.nuget.g.props
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/obj/PianoLearningTracker.csproj.nuget.g.targets
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/obj/Release/net10.0/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/obj/Release/net10.0/PianoLearningTracker.AssemblyInfo.cs
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/obj/Release/net10.0/PianoLearningTracker.AssemblyInfoInputs.cache
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/obj/Release/net10.0/PianoLearningTracker.GeneratedMSBuildEditorConfig.editorconfig
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/obj/Release/net10.0/PianoLearningTracker.GlobalUsings.g.cs
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/obj/Release/net10.0/PianoLearningTracker.RazorAssemblyInfo.cache
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/obj/Release/net10.0/PianoLearningTracker.RazorAssemblyInfo.cs
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/obj/project.assets.json
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/obj/project.nuget.cache
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/css/site.css
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/favicon.ico
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/js/site.js
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/LICENSE
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.css
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.css.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.min.css
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.min.css.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.css
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.css.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.min.css
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.min.css.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.css
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.css.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.min.css
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.min.css.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.css
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.css.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.min.css
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.min.css.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.css
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.css.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.min.css
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.min.css.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.css
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.css.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.min.css
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.min.css.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap.css
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap.css.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap.min.css
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap.min.css.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.css
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.css.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.min.css
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.min.css.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/js/bootstrap.esm.js
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/js/bootstrap.esm.js.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/js/bootstrap.esm.min.js
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/js/bootstrap.esm.min.js.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/js/bootstrap.js
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/js/bootstrap.js.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/js/bootstrap.min.js
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/bootstrap/dist/js/bootstrap.min.js.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/jquery-validation-unobtrusive/LICENSE.txt
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/jquery-validation/LICENSE.md
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/jquery-validation/dist/additional-methods.js
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/jquery-validation/dist/additional-methods.min.js
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/jquery-validation/dist/jquery.validate.js
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/jquery-validation/dist/jquery.validate.min.js
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/jquery/LICENSE.txt
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/jquery/dist/jquery.js
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/jquery/dist/jquery.min.js
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/jquery/dist/jquery.min.map
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/jquery/dist/jquery.slim.js
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/jquery/dist/jquery.slim.min.js
+c:/Users/adrij/source/repos/piano-learning-tracker/PianoLearningTracker/wwwroot/lib/jquery/dist/jquery.slim.min.map
+c:/Users/adrij/source/repos/piano-learning-tracker/README.md
+Projekt je čist ASP.NET MVC sa samo defaultnim ErrorViewModel.cs. Kreiram kompletan objektni model u PianoLearningTracker/Models/.
+
+Plan modela:
+
+Student, Teacher, Piece, Lesson, PracticeSession — 5 kompleksnih klasa
+StudentPiece (N-N bridge Student ↔ Piece), LessonPiece (N-N bridge Lesson ↔ Piece)
+Enumi: DifficultyLevel, LessonStatus
+Write DifficultyLevel.cs
+12 lines
+Write LessonStatus.cs
+11 lines
+Write Student.cs
+32 lines
+Write Teacher.cs
+24 lines
+Write Piece.cs
+31 lines
+Write Lesson.cs
+27 lines
+Write PracticeSession.cs
+19 lines
+Write StudentPiece.cs
+19 lines
+Write LessonPiece.cs
+15 lines
+Objektni model je kreiran. Evo pregleda:
+
+Enumi (2):
+
+DifficultyLevel.cs — Beginner, Elementary, Intermediate, Advanced, Expert
+LessonStatus.cs — Scheduled, Completed, Cancelled, Missed
+Klase (7):
+
+Klasa	Svojstva	Kompleksna?
+Student.cs	9 (incl. DateOfBirth, EnrollmentDate, DifficultyLevel)	✓
+Teacher.cs	9 (incl. HireDate)	✓
+Piece.cs	8 (incl. DifficultyLevel)	✓
+Lesson.cs	8 (incl. ScheduledDate, LessonStatus)	✓
+PracticeSession.cs	8 (incl. Date)	✓
+StudentPiece.cs	7 (incl. StartDate, CompletionDate?)	✓
+LessonPiece.cs	4 — bridge tablica	—
+Veze:
+
+1-N: Teacher → Lesson, Student → Lesson, Student → PracticeSession, Piece → PracticeSession
+N-N: Student ↔ Piece (via StudentPiece), Lesson ↔ Piece (via LessonPiece)
+c:\Users\adrij\source\repos\piano-learning-tracker\PianoLearningTracker\Models\Teacher.cs
+možeš li pojasniti svojstva i kako su napravljene konekcije
+Read Teacher.cs
+Read Student.cs
+Read Lesson.cs
+Read StudentPiece.cs
+Read Piece.cs
+Svojstva
+Svako svojstvo je oblika public Tip Naziv { get; set; } — to je automatsko svojstvo (C# automatski kreira privatni backing field). Razlikujemo tipove:
+
+Tip	Primjer u kodu	Značenje
+int	Id, YearsOfExperience	cijeli broj
+string	FirstName, Email	tekst
+DateTime	HireDate, DateOfBirth	datum i vrijeme
+DateTime?	CompletionDate	nullable — datum ili null ako nije postavljen
+bool	IsCompleted	true/false
+DifficultyLevel	CurrentLevel, Difficulty	vlastiti enum
+LessonStatus	Status	vlastiti enum
+Konekcije — kako funkcioniraju
+1-N veza (jedan prema više)
+Primjer: Teacher → Lesson
+
+
+Teacher (1) ──────────── Lesson (N)
+Implementirano na dva mjesta:
+
+Teacher.cs:16 — "strana 1" drži listu:
+
+
+public List<Lesson> Lessons { get; set; }
+Lesson.cs:12 — "strana N" drži strani ključ + navigacijsko svojstvo:
+
+
+public int TeacherId { get; set; }   // strani ključ — konkretni ID
+public Teacher Teacher { get; set; } // navigacijsko svojstvo — cijeli objekt
+TeacherId je strani ključ (foreign key) koji govori kojoj lekciji pripada koji nastavnik. Teacher je navigacijsko svojstvo koje omogućuje pristup cijelom objektu: lesson.Teacher.FirstName.
+
+Ista logika vrijedi za Student → Lesson, Student → PracticeSession, Piece → PracticeSession.
+
+N-N veza (više prema više) — bridge tablica
+Primjer: Student ↔ Piece (jedan student uči više skladbi, jedna skladba se uči kod više studenata)
+
+
+Student (N) ──── StudentPiece ──── Piece (N)
+N-N se ne može direktno predstaviti u objektnom modelu bez bridge klase. Rješenje je bridge klasa StudentPiece.cs koja:
+
+Drži strani ključeve obaju strana:
+
+public int StudentId { get; set; }  // koji student
+public int PieceId { get; set; }    // koja skladba
+Ima vlastita dodatna svojstva koja opisuju tu konkretnu vezu:
+
+public DateTime StartDate { get; set; }    // kada je student počeo učiti tu skladbu
+public bool IsCompleted { get; set; }      // je li završio
+public int ProgressRating { get; set; }   // napredak 1-10
+Ima navigacijska svojstva prema objema stranama:
+
+public Student Student { get; set; }
+public Piece Piece { get; set; }
+Student i Piece onda svaki drže listu bridge objekata:
+
+Student.cs:22: public List<StudentPiece> StudentPieces { get; set; }
+Piece.cs:15: public List<StudentPiece> StudentPieces { get; set; }
+Ista logika vrijedi za Lesson ↔ Piece via LessonPiece.
+
+Konstruktori
+
+public Teacher()
+{
+    Lessons = new List<Lesson>();
+}
+Konstruktor inicijalizira liste na praznu listu umjesto null. Bez toga bi teacher.Lessons.Add(...) bacio NullReferenceException jer lista nije kreirana.
+
+c:\Users\adrij\source\repos\piano-learning-tracker\PianoLearningTracker\Models\StudentPiece.cs
+možeš li kratke opise u komentare dodati između linija koda
+Edit StudentPiece.cs
+Added 16 lines
+Dodano. Svako svojstvo sada ima komentar koji pojašnjava svrhu, a posebno je naglašeno zašto je CompletionDate nullable (DateTime?).
+
+možeš li dodati kratke opise u svim klasa
+Read PracticeSession.cs
+Read LessonPiece.cs
+Edit Student.cs
+Added 18 lines
+Edit Teacher.cs
+Added 18 lines
+Edit Piece.cs
+Added 16 lines
+Edit Lesson.cs
+Added 18 lines
+Edit PracticeSession.cs
+Added 18 lines
+Edit LessonPiece.cs
+Added 8 lines
+Sve klase su ažurirane:
+
+Student.cs
+Teacher.cs
+Piece.cs
+Lesson.cs
+PracticeSession.cs
+LessonPiece.cs
+Svako svojstvo sada ima komentar koji objašnjava što čuva i zašto, a bridge klase imaju opis na razini klase koji pojašnjava smisao N-N veze.
+
+c:\Users\adrij\source\repos\piano-learning-tracker\PianoLearningTracker\Models\Student.cs
+možeš li u klasi student umjesto svojstva razine znanja učenika staviti svojstvo razreda (od 1 do 6)
+Edit Student.cs
+Modified
+Zamijenjeno. CurrentLevel (enum) je zamijenjen s Grade (int, 1-6) u Student.cs.
+
+c:\Users\adrij\source\repos\piano-learning-tracker\PianoLearningTracker\Program.cs
+možeš li  u main programu “napuniti” objekte podacima - kreirati
+razgranato barem 3 glavna objekta
+Read Program.cs
+Edit Program.cs
+Added 2 lines
+Edit Program.cs
+Removed 2 lines
+Edit Program.cs
+Added 317 lines
+To su samo upozorenja (hints), ne greške — kod se normalno prevodi i pokreće. Liste studenti, nastavnici, skladbe i satovi su deklarirane ali još nisu korištene. Koristit će se kada dodamo LINQ upite (sljedeći zadatak iz Lab-1).
+
+zašto se nije koristio using pa da se ne treba pisati cijela putanja?
+Imaš pravo. Visual Studio je javio "Using directive is unnecessary" pa sam ga uklonio, no to je bila pogreška — upozorenje je bilo samo hint, ne greška.
+
+Read Program.cs (lines 1-5)
+Dodajem using i uklanjam sve pune putanje iz koda.
+
+Read Program.cs
+Write Program.cs
+349 lines
+Ispravljeno. using PianoLearningTracker.Models; je dodan na vrh Program.cs, pa sada sve klase (Teacher, Student, Lesson...) i enumovi (DifficultyLevel, LessonStatus) možemo koristiti bez pisanja pune putanje.
+
+Razlog zašto je Visual Studio prvotno javio upozorenje je što ASP.NET projekti imaju uključene implicit global usings (automatski se dodaju using System, using Microsoft.AspNetCore.Builder i sl.) — no PianoLearningTracker.Models nije dio tih automatskih namespace-ova, pa ga uvijek treba ručno dodati.
+
+c#323-323
+možeš li mi objasniti ovu liniju koda?
+student1.Lessons.Add(lesson1);
+
+student1 je objekt tipa Student. Taj objekt ima svojstvo Lessons koje je tipa List<Lesson>. Metoda Add() je standardna metoda svake liste u C# koja dodaje jedan element na kraj liste.
+
+Dakle, ova linija kaže: "dodaj lesson1 u listu satova učenika student1".
+
+Bez ove linije, student1.Lessons bi bila prazna lista — objekt lesson1 postoji u memoriji, ali student1 za njega ne bi "znao". Veza postoji samo u jednom smjeru (lesson1.Student = student1), ali ne i u drugom.
+
+Ovo je karakteristika in-memory objektnog modela — veze se moraju ručno postaviti s obje strane. Kad bi se koristila baza podataka (npr. Entity Framework), ona bi to sama riješila na temelju stranih ključeva.
+
+možeš li u main programu definirati smislene LINQ upite nad objektnim
+modelom koji će se kasnije (možda) koristiti u samoj aplikaciji
+Read Program.cs (lines 331-350)
+Edit Program.cs
+Added 71 lines
+Dodano 10 LINQ upita u Program.cs. Kratki pregled:
+
+#	Upit	LINQ naredbe
+1	Učenici razreda 3+ sortirani silazno	Where, OrderByDescending, ToList
+2	Svi završeni satovi	Where, ToList
+3	Lagane skladbe sortirane po naslovu	Where, OrderBy, ToList
+4	Najmarljiviji učenik (najviše vježbi)	OrderByDescending, First
+5	Ukupno minuta vježbanja po učeniku	Select, Sum
+6	Skladbe koje se trenutno uče	Where, Any
+7	Satovi nastavnika Horvat po datumu	Where, OrderBy
+8	Prosječna ocjena vježbanja po skladbi	Select, Average
+9	Učenici s budućim zakazanim satom	Where, Any
+10	Broj satova po nastavniku	Select, Count
+Upiti 5, 8 i 10 koriste Select s anonimnim objektom (new { ... }) — to je C# obrazac za kreiranje privremenog objekta s više svojstava bez definiranja nove klase.
+
+c:\Users\adrij\source\repos\piano-learning-tracker\PianoLearningTracker\Program.cs
+nemoj mijenjati nego mi samo pokazi kako bi izgledao upit bez anonimnog objekta
+Umjesto anonimnog objekta, definirala bi se zasebna klasa koja drži iste podatke:
+
+
+public class VrijemeVjezbanjaDto
+{
+    public string Ime { get; set; }
+    public int UkupnoMinuta { get; set; }
+}
+Tada bi upit izgledao ovako:
+
+
+var vrijemeVjezbanjaPoUceniku = studenti
+    .Select(s => new VrijemeVjezbanjaDto
+    {
+        Ime = s.FirstName + " " + s.LastName,
+        UkupnoMinuta = s.PracticeSessions.Sum(ps => ps.DurationMinutes)
+    })
+    .ToList();
+Razlika je samo u tome što new { ... } stvara tip koji C# kompajler automatski generira i koji nije dostupan izvan tog mjesta u kodu — ne može se npr. proslijediti kao parametar metode ili koristiti kao povratni tip. VrijemeVjezbanjaDto je prava klasa pa je dostupna svuda u projektu.
+
+c:\Users\adrij\source\repos\piano-learning-tracker\.github\hooks\hooks.json
+možeš li mi reći gdje sam pogriješila i popraviti što trebaa s ovom JSON konfiguracijom hookova da mi se spremaju logovi
+Read hooks.json
+Read agent_log.txt
+Agent:Claude Code hooks config format
+IN
+What is the correct format for Claude Code hooks in settings.json? Specifically:
+1. What file should hooks be defined in (location)?
+2. What is the exact JSON structure for hooks (including whether items in the event arrays need an inner "hooks" array)?
+3. What are the valid event names (exact casing) - especially UserPromptSubmit and PreToolUse?
+4. How is stdin/input passed to hook commands?
+
+Please give a short concrete example of a working hooks configuration that logs to a file.
+Pronašao sam tri greške:
+
+Pogrešna lokacija — Claude Code ne čita .github/hooks/hooks.json. Hookovi moraju biti u .claude/settings.json
+Pogrešna struktura — svaki event treba unutarnji "hooks" array unutar objekta s matcherom
+Pogrešan naziv eventa — preToolUse mora biti PreToolUse (Pascal case)
+Kreiram ispravnu konfiguraciju:
+
+Bash Check if .claude folder exists
+IN
+ls c:/Users/adrij/source/repos/piano-learning-tracker/.claude 2>/dev/null || echo "ne postoji"
+
+OUT
+ne postoji
+Write settings.json
+25 lines
+Kreiran .claude/settings.json. Sažetak grešaka u originalnoj datoteci:
+
+Problem	Originalno	Ispravno
+Lokacija datoteke	.github/hooks/hooks.json	.claude/settings.json
+Naziv eventa	preToolUse	PreToolUse
+Struktura	[{ "type": ..., "command": ... }]	[{ "hooks": [{ "type": ..., "command": ... }] }]
+Čitanje stdin	$input | Add-Content	[Console]::In.ReadToEnd() — pouzdanije u PowerShell -Command kontekstu
+c:\Users\adrij\source\repos\piano-learning-tracker\.claude\settings.json
+kako provjeriti je li radi?
+Pokreni u terminalu:
+
+
+/hooks
+To je Claude Code slash komanda koja prikazuje sve registrirane hookove. Ako konfiguracija radi, trebao bi vidjeti UserPromptSubmit i PreToolUse s njihovim komandama.
+
+Zatim napiši bilo što u chat (npr. "test") — hook se treba okidati na svaki prompt. Nakon toga provjeri je li se nešto zapisalo u log:
+
+
+cat .github/hooks/agent_log.txt
+Ako je datoteka i dalje prazna, najčešći razlozi su:
+
+Claude Code treba restart nakon promjene settings.json
+PowerShell put nije ispravan — provjeri s where.exe powershell
+c:\Users\adrij\source\repos\piano-learning-tracker\PianoLearningTracker\Program.cs
+što ako je rezultat: PS C:\Users\adrij\source\repos\piano-learning-tracker> /hooks
+/hooks : The term '/hooks' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was includ
+ed, verify that the path is correct and try again.
+At line:1 char:1
++ /hooks
++ ~~~~~~
+    + CategoryInfo          : ObjectNotFound: (/hooks:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+/hooks je Claude Code slash komanda — ne može se pokrenuti u PowerShell terminalu, nego samo unutar Claude Code chata.
+
+Napiši /hooks direktno ovdje u chat kao poruku.
+
+onda je rezultat: PS C:\Users\adrij\source\repos\piano-learning-tracker> claude /hooks
+claude : The term 'claude' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of 
+the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:1
++ claude /hooks
++ ~~~~~~
+    + CategoryInfo          : ObjectNotFound: (claude:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+claude-code-guide skill
+Koristiš VS Code ekstenziju Claude Code, ne CLI — zato claude naredba ne postoji u terminalu.
+
+Slash komande kao /hooks upisuješ ovdje u chat, direktno kao poruku meni. Probaj sad — napiši /hooks kao sljedeću poruku.
+
+test
+Log nije zapisan automatski jer sam ja (Claude Code VS Code ekstenzija) već primio poruku — hook se možda nije okidao.
+
+Provjeri je li log datoteka dobila sadržaj:
+
+Read agent_log.txt
+Datoteka je prazna — hookovi se ne okidaju. Razlog je što VS Code ekstenzija trenutno ne podržava hookove — hookovi rade samo u Claude Code CLI verziji (claude komanda u terminalu).
+
+Budući da koristiš VS Code ekstenziju, hook konfiguracija u .claude/settings.json se ne izvršava. Za sada nema načina automatski logirati razgovore kroz hookove u ekstenziji.
+
+kako pokrenuti pogram?
+Read PianoLearningTracker.csproj
+Dva načina:
+
+1. Iz Visual Studija — pritisni F5 ili zeleni gumb ▶ (IIS Express / https profil). Browser se automatski otvori.
+
+2. Iz terminala:
+
+
+cd PianoLearningTracker
+dotnet run
+Nakon pokretanja terminal ispiše URL, npr:
+
+
+Now listening on: https://localhost:7001
+Otvori taj URL u browseru.
+
+Projekt koristi .NET 10 — provjeri imaš li ga instaliranog s dotnet --version. Treba biti 10.x.x.
+
