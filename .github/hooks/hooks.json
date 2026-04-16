@@ -3,13 +3,25 @@
     "UserPromptSubmit": [
       {
         "type": "command",
-        "command": "powershell.exe -ExecutionPolicy Bypass -Command \"$input | Add-Content -Path '.github/hooks/agent_log.txt'\""
+        "command": "powershell.exe -ExecutionPolicy Bypass -Command \"$timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'; \\\"[UserPrompt] $timestamp - $input\\\" | Add-Content -Path '.github/hooks/lab2/agent_log.txt'\""
       }
     ],
     "preToolUse": [
       {
         "type": "command",
-        "command": "powershell.exe -ExecutionPolicy Bypass -Command \"$input | Add-Content -Path '.github/hooks/agent_log.txt'\""
+        "command": "powershell.exe -ExecutionPolicy Bypass -Command \"$timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'; \\\"[ToolUse] $timestamp - $input\\\" | Add-Content -Path '.github/hooks/lab2/agent_log.txt'\""
+      }
+    ],
+    "postToolUse": [
+      {
+        "type": "command",
+        "command": "powershell.exe -ExecutionPolicy Bypass -Command \"$timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'; \\\"[ToolResult] $timestamp - $input\\\" | Add-Content -Path '.github/hooks/lab2/agent_log.txt'\""
+      }
+    ],
+    "ResponseGenerated": [
+      {
+        "type": "command",
+        "command": "powershell.exe -ExecutionPolicy Bypass -Command \"$timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'; \\\"[Response] $timestamp - $input\\\" | Add-Content -Path '.github/hooks/lab2/agent_log.txt'\""
       }
     ]
   }

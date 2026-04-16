@@ -1,0 +1,40 @@
+@model PianoLearningTracker.Models.PracticeSession
+
+@{
+    ViewData["Title"] = "Practice session details";
+}
+
+<ul class="breadcrumb-list">
+    <li><a asp-controller="PracticeSession" asp-action="Index">Practice Sessions</a></li>
+    <li>Session #@Model.Id</li>
+</ul>
+
+<div class="detail-panel">
+    <section class="detail-card">
+        <h2>Session #@Model.Id</h2>
+        <p class="detail-label">Date</p>
+        <p class="detail-value">@Model.Date:dddd, MMM d yyyy HH:mm</p>
+        <p class="detail-label">Duration</p>
+        <p class="detail-value">@Model.DurationMinutes minutes</p>
+        <p class="detail-label">Quality rating</p>
+        <p class="detail-value">@Model.QualityRating / 5</p>
+        <p class="detail-label">Goals</p>
+        <p class="detail-value">@Model.Goals</p>
+        <p class="detail-label">Notes</p>
+        <p class="detail-value">@Model.Notes</p>
+    </section>
+
+    <section class="detail-card">
+        <h2>Context</h2>
+        <ul class="detail-list">
+            <li>
+                <span class="detail-label">Student</span>
+                <span class="detail-value">@Model.Student.FirstName @Model.Student.LastName</span>
+            </li>
+            <li>
+                <span class="detail-label">Piece</span>
+                <span class="detail-value">@Model.Piece.Title</span>
+            </li>
+        </ul>
+    </section>
+</div>

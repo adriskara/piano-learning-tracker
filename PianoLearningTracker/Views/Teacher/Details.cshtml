@@ -1,0 +1,58 @@
+@model PianoLearningTracker.Models.Teacher
+
+@{
+    ViewData["Title"] = "Teacher details";
+}
+
+<ul class="breadcrumb-list">
+    <li><a asp-controller="Teacher" asp-action="Index">Teachers</a></li>
+    <li>@Model.FirstName @Model.LastName</li>
+</ul>
+
+<div class="detail-panel">
+    <section class="detail-card">
+        <h2>@Model.FirstName @Model.LastName</h2>
+        <p class="detail-label">Specialization</p>
+        <p class="detail-value">@Model.Specialization</p>
+        <p class="detail-label">Experience</p>
+        <p class="detail-value">@Model.YearsOfExperience years</p>
+
+        <ul class="detail-list">
+            <li>
+                <span class="detail-label">Email</span>
+                <span class="detail-value">@Model.Email</span>
+            </li>
+            <li>
+                <span class="detail-label">Phone</span>
+                <span class="detail-value">@Model.PhoneNumber</span>
+            </li>
+            <li>
+                <span class="detail-label">Hire date</span>
+                <span class="detail-value">@Model.HireDate:MMMM d, yyyy</span>
+            </li>
+            <li>
+                <span class="detail-label">Biography</span>
+                <span class="detail-value">@Model.Biography</span>
+            </li>
+        </ul>
+    </section>
+
+    <section class="detail-card">
+        <h2>Lesson schedule</h2>
+        @if (Model.Lessons.Any())
+        {
+            <ul class="detail-list">
+                @foreach (var lesson in Model.Lessons.OrderBy(l => l.ScheduledDate))
+                {
+                    <li>
+                        <strong>@lesson.ScheduledDate:MMM d</strong> – <a asp-controller="Lesson" asp-action="Details" asp-route-id="@lesson.Id">Lesson #@lesson.Id</a> with @lesson.Student.FirstName @lesson.Student.LastName
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="detail-value">No lessons are currently assigned.</p>
+        }
+    </section>
+</div>

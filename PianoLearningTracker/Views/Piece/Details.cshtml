@@ -1,0 +1,74 @@
+@model PianoLearningTracker.Models.Piece
+
+@{
+    ViewData["Title"] = "Piece details";
+}
+
+<ul class="breadcrumb-list">
+    <li><a asp-controller="Piece" asp-action="Index">Pieces</a></li>
+    <li>@Model.Title</li>
+</ul>
+
+<div class="detail-panel">
+    <section class="detail-card">
+        <h2>@Model.Title</h2>
+        <p class="detail-label">Composer</p>
+        <p class="detail-value">@Model.Composer</p>
+        <p class="detail-label">Difficulty</p>
+        <p class="detail-value">@Model.Difficulty</p>
+        <p class="detail-label">Genre</p>
+        <p class="detail-value">@Model.Genre</p>
+        <p class="detail-label">Duration</p>
+        <p class="detail-value">@Model.DurationMinutes min</p>
+        <p class="detail-label">Year composed</p>
+        <p class="detail-value">@Model.YearComposed</p>
+        <p class="detail-label">Description</p>
+        <p class="detail-value">@Model.Description</p>
+    </section>
+
+    <section class="detail-card">
+        <h2>Assignments</h2>
+        @if (Model.StudentPieces.Any())
+        {
+            <ul class="detail-list">
+                @foreach (var assignment in Model.StudentPieces)
+                {
+                    <li>
+                        <strong>@assignment.Student.FirstName @assignment.Student.LastName</strong>
+                        @if (assignment.IsCompleted)
+                        {
+                            <span class="badge bg-success badge-pill ms-2">Completed</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark badge-pill ms-2">In progress</span>
+                        }
+                        <div class="detail-label">Progress: @assignment.ProgressRating/10</div>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="detail-value">No student assignments yet.</p>
+        }
+
+        <h3 class="mt-4">Practice sessions</h3>
+        @if (Model.PracticeSessions.Any())
+        {
+            <ul class="detail-list">
+                @foreach (var session in Model.PracticeSessions)
+                {
+                    <li>
+                        <strong>@session.Date:MMM d</strong> – <a asp-controller="PracticeSession" asp-action="Details" asp-route-id="@session.Id">Session #@session.Id</a>
+                        <div class="detail-label">Student: @session.Student.FirstName @session.Student.LastName</div>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="detail-value">No practice sessions logged for this piece yet.</p>
+        }
+    </section>
+</div>

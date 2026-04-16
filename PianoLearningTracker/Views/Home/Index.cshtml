@@ -1,8 +1,121 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model PianoLearningTracker.Models.HomeIndexViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="dashboard-top">
+    <div class="dashboard-intro">
+        <span class="eyebrow">Control Center</span>
+        <h1>Studio pulse &amp; progress dashboard</h1>
+        <p>Monitor mock student progress, upcoming lessons, and the latest practice activity from the Lab 1 data repository.</p>
+    </div>
+    <div class="dashboard-metrics">
+        <article class="metric-card metric-primary">
+            <h3>Students</h3>
+            <p class="metric-value">@Model.StudentCount</p>
+            <p class="metric-desc">Active learners in the mock dataset.</p>
+        </article>
+        <article class="metric-card metric-secondary">
+            <h3>Teachers</h3>
+            <p class="metric-value">@Model.TeacherCount</p>
+            <p class="metric-desc">Instructors available for lessons.</p>
+        </article>
+        <article class="metric-card metric-accent">
+            <h3>Pieces</h3>
+            <p class="metric-value">@Model.PieceCount</p>
+            <p class="metric-desc">Repertoire items currently assigned.</p>
+        </article>
+        <article class="metric-card metric-info">
+            <h3>Lessons</h3>
+            <p class="metric-value">@Model.LessonCount</p>
+            <p class="metric-desc">Total lesson records in the repository.</p>
+        </article>
+        <article class="metric-card metric-warning">
+            <h3>Practice sessions</h3>
+            <p class="metric-value">@Model.PracticeSessionCount</p>
+            <p class="metric-desc">Recorded practice entries.</p>
+        </article>
+        <article class="metric-card metric-tertiary">
+            <h3>Upcoming</h3>
+            <p class="metric-value">@Model.ScheduledLessonCount</p>
+            <p class="metric-desc">Lessons still scheduled to happen.</p>
+        </article>
+    </div>
+</section>
+
+<section class="dashboard-grid">
+    <article class="dashboard-panel">
+        <div class="panel-header">
+            <div>
+                <h2>Next scheduled lesson</h2>
+                <p class="panel-subtitle">A quick preview of the next lesson in the queue.</p>
+            </div>
+            <a class="btn btn-sm btn-outline-primary" asp-controller="Lesson" asp-action="Index">View all lessons</a>
+        </div>
+
+        @if (Model.NextLesson is not null)
+        {
+            <div class="panel-card">
+                <p class="panel-label">Lesson #@Model.NextLesson.Id | @Model.NextLesson.ScheduledDate:dddd, MMM d</p>
+                <h3>@Model.NextLesson.Student.FirstName @Model.NextLesson.Student.LastName</h3>
+                <p class="panel-meta">Teacher: @Model.NextLesson.Teacher.FirstName @Model.NextLesson.Teacher.LastName</p>
+                <p class="panel-meta">Duration: @Model.NextLesson.DurationMinutes min • Status: @Model.NextLesson.Status</p>
+                <p class="panel-note">Homework: @Model.NextLesson.HomeworkAssigned</p>
+                <div class="panel-actions">
+                    <a class="btn btn-primary btn-sm" asp-controller="Lesson" asp-action="Details" asp-route-id="@Model.NextLesson.Id">Open details</a>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="panel-card panel-empty">
+                <p>No future lesson is scheduled right now.</p>
+            </div>
+        }
+    </article>
+
+    <article class="dashboard-panel">
+        <div class="panel-header">
+            <div>
+                <h2>Latest practice session</h2>
+                <p class="panel-subtitle">Most recent study session captured from the mock data.</p>
+            </div>
+            <a class="btn btn-sm btn-outline-primary" asp-controller="PracticeSession" asp-action="Index">View all sessions</a>
+        </div>
+
+        @if (Model.LatestPracticeSession is not null)
+        {
+            <div class="panel-card">
+                <p class="panel-label">Session #@Model.LatestPracticeSession.Id | @Model.LatestPracticeSession.Date:MMM d, yyyy</p>
+                <h3>@Model.LatestPracticeSession.Student.FirstName @Model.LatestPracticeSession.Student.LastName</h3>
+                <p class="panel-meta">Piece: @Model.LatestPracticeSession.Piece.Title</p>
+                <p class="panel-meta">Duration: @Model.LatestPracticeSession.DurationMinutes min • Rating: @Model.LatestPracticeSession.QualityRating/5</p>
+                <p class="panel-note">Goals: @Model.LatestPracticeSession.Goals</p>
+                <div class="panel-actions">
+                    <a class="btn btn-primary btn-sm" asp-controller="PracticeSession" asp-action="Details" asp-route-id="@Model.LatestPracticeSession.Id">Open details</a>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="panel-card panel-empty">
+                <p>No practice sessions have been recorded yet.</p>
+            </div>
+        }
+    </article>
+
+    <article class="dashboard-panel dashboard-cta">
+        <div class="panel-header">
+            <h2>Navigate the studio</h2>
+        </div>
+        <div class="dashboard-links">
+            <a class="nav-chip" asp-controller="Student" asp-action="Index">Students</a>
+            <a class="nav-chip" asp-controller="Teacher" asp-action="Index">Teachers</a>
+            <a class="nav-chip" asp-controller="Piece" asp-action="Index">Pieces</a>
+            <a class="nav-chip" asp-controller="Lesson" asp-action="Index">Lessons</a>
+            <a class="nav-chip" asp-controller="PracticeSession" asp-action="Index">Practice Sessions</a>
+        </div>
+        <p class="panel-desc">The dashboard presents a central custom home page with access to all entity views and a summary of the Lab 1 mock repository.</p>
+    </article>
+</section>

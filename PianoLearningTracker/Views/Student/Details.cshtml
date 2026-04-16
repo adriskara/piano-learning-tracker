@@ -1,0 +1,85 @@
+@model PianoLearningTracker.Models.Student
+
+@{
+    ViewData["Title"] = "Student details";
+}
+
+<ul class="breadcrumb-list">
+    <li><a asp-controller="Student" asp-action="Index">Students</a></li>
+    <li>@Model.FirstName @Model.LastName</li>
+</ul>
+
+<div class="detail-panel">
+    <section class="detail-card">
+        <h2>@Model.FirstName @Model.LastName</h2>
+        <p class="detail-label">Grade</p>
+        <p class="detail-value">@Model.Grade</p>
+
+        <ul class="detail-list">
+            <li>
+                <span class="detail-label">Email</span>
+                <span class="detail-value">@Model.Email</span>
+            </li>
+            <li>
+                <span class="detail-label">Phone</span>
+                <span class="detail-value">@Model.PhoneNumber</span>
+            </li>
+            <li>
+                <span class="detail-label">Date of birth</span>
+                <span class="detail-value">@Model.DateOfBirth:MMMM d, yyyy</span>
+            </li>
+            <li>
+                <span class="detail-label">Enrollment date</span>
+                <span class="detail-value">@Model.EnrollmentDate:MMMM d, yyyy</span>
+            </li>
+            <li>
+                <span class="detail-label">Notes</span>
+                <span class="detail-value">@Model.Notes</span>
+            </li>
+        </ul>
+    </section>
+
+    <section class="detail-card">
+        <h2>Progress overview</h2>
+        <ul class="detail-list">
+            <li>
+                <span class="detail-label">Lessons</span>
+                <span class="detail-value">@Model.Lessons.Count</span>
+            </li>
+            <li>
+                <span class="detail-label">Practice sessions</span>
+                <span class="detail-value">@Model.PracticeSessions.Count</span>
+            </li>
+            <li>
+                <span class="detail-label">Assigned pieces</span>
+                <span class="detail-value">@Model.StudentPieces.Count</span>
+            </li>
+        </ul>
+
+        @if (Model.Lessons.Any())
+        {
+            <h3 class="mt-4">Lessons</h3>
+            <ul class="detail-list">
+                @foreach (var lesson in Model.Lessons)
+                {
+                    <li>
+                        <strong>@lesson.ScheduledDate:MMM d</strong> – <a asp-controller="Lesson" asp-action="Details" asp-route-id="@lesson.Id">Lesson #@lesson.Id</a>
+                    </li>
+                }
+            </ul>
+        }
+
+        @if (Model.PracticeSessions.Any())
+        {
+            <h3 class="mt-4">Practice sessions</h3>
+            <ul class="detail-list">
+                @foreach (var session in Model.PracticeSessions)
+                {
+                    <li>
+                        <strong>@session.Date:MMM d</strong> – <a asp-controller="PracticeSession" asp-action="Details" asp-route-id="@session.Id">Session #@session.Id</a>
+                    </li>
+                }
+            </ul>
+        }
+    </section>
+</div>

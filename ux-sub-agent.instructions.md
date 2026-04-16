@@ -18,7 +18,7 @@ This sub-agent is responsible for defining and shaping the user experience for t
 - Preserve accessibility: legible font sizes, adequate contrast, and keyboard-friendly links.
 
 ## Components and patterns
-- Implement a main navigation area that is more polished than a standard navbar, such as a horizontal top bar with accent badges or a side panel with a custom highlight.
+- Implement a main navigation area that is more polished than a standard navbar, such as a sidebar or side panel with a custom highlight.
 - Add breadcrumbs or a contextual header on detail pages so users understand where they are.
 - Use list pages that group similar entities into card grids or stylized tables with hover states.
 - Use detail pages with an info summary panel and contextual subsections.
@@ -43,3 +43,51 @@ This sub-agent is responsible for defining and shaping the user experience for t
 - If asked to generate code, produce the Razor views and CSS needed for a unique UX.
 - Mention where navigation and page relationships are defined.
 - Use the existing `PianoLearningTracker` app structure, controllers, and views.
+
+## Implementation suggestions
+- Use `_Layout.cshtml` to define a persistent left sidebar and a main content wrapper.
+- Put sidebar nav links in a semantic `<aside>` with a vertical list, active item highlight, and a compact app logo/title.
+- Render page titles and breadcrumbs inside a top header bar above the main content area.
+- Use reusable Razor partials or components for cards, progress panels, and detail sections.
+- Use strongly typed view models for list and details pages, passing `List<...>` to Index views and a single entity to Details views.
+- Keep view structure simple: header, hero/summary cards, section cards, and footer note.
+
+## CSS structure
+- Create custom utility classes in `wwwroot/css/site.css` such as `.app-shell`, `.sidebar-panel`, `.content-panel`, `.dashboard-card`, `.metric-badge`, and `.progress-line`.
+- Define a base palette in CSS variables: `--bg`, `--surface`, `--text`, `--accent`, `--accent-soft`, `--success`, `--warning`.
+- Use a grid layout for the main page: `display: grid; grid-template-columns: 260px 1fr; gap: 24px;`.
+- Style cards with `border-radius: 24px`, `box-shadow: 0 16px 40px rgba(20, 30, 50, 0.08)`, `background: var(--surface)`.
+- Use quick transitions: `transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease`.
+- Use subtle separators like a horizontal line with a light translucent border or a vertical accent band inside cards.
+- Add progress bars with layered backgrounds and a short `height: 12px` track and rounded pill shape.
+- Keep typography consistent with headings using `font-weight: 700` and card labels using a softer color for secondary text.
+- Add hover state styles to cards and buttons: slight `transform: translateY(-2px)` and increased shadow.
+
+## Razor guidance
+- In `_ViewImports.cshtml`, import the common models or namespaces used by views.
+- In list views, use `@model IEnumerable<YourModel>` and render each item as a card linking to `Details` with `asp-action` and `asp-route-id`.
+- In details views, use a summary card at the top, then grouped detail cards for related fields.
+- Implement consistent navigation using `asp-controller` and `asp-action` tag helpers.
+- For the dashboard, include a summary row of metric cards and a vertical list of upcoming lessons or recent practice sessions.
+
+## UX notes for generated code
+- Keep the layout responsive: collapse the sidebar into a top drawer on mobile and stack cards vertically.
+- Use music-inspired icons or small decorative bars in card headers, not full illustrations.
+- Make the dashboard feel like a progress hub, with cards for practice streaks, lesson status, and recent achievements.
+
+## Additional project-specific guidance
+- The app is used by piano students (children, teenagers, and adults) and piano teachers tracking student progress.
+- Design a modern, engaging, slightly playful UI that still feels professional.
+- Use a sidebar navigation layout rather than a top navbar.
+- Prefer cards, progress bars, badges, and subtle music-related icons; use tables only when necessary.
+- Keep a light base palette with soft blue, purple, or warm accent tones and optional green/gold progress highlights.
+- Include a dashboard overview, list pages, and details pages with consistent navigation.
+- Balance motivation for students with clarity and structure for teachers.
+- Avoid a boring corporate UI and avoid childish or cartoonish styling.
+
+ADDITIONAL GUIDANCE:
+- Add subtle music-themed visual cues like piano key separators, rhythm lines, or note-inspired iconography without overdoing them.
+- Include a dashboard card that highlights today’s practice focus, upcoming lessons, and student progress streaks.
+- Use a secondary panel or mini-card area for teacher actions such as reviewing recent student activity.
+- For details pages, include a compact performance summary, next goals, and a timeline or milestone section.
+- Keep interactions simple and intuitive so students and teachers can focus on progress, not on complex navigation.

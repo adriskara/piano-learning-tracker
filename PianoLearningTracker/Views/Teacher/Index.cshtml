@@ -1,0 +1,24 @@
+@model IEnumerable<PianoLearningTracker.Models.Teacher>
+
+@{
+    ViewData["Title"] = "Teachers";
+}
+
+<ul class="breadcrumb-list">
+    <li>Dashboard</li>
+    <li>Teachers</li>
+</ul>
+
+<div class="entity-grid">
+    @foreach (var teacher in Model)
+    {
+        <article class="entity-card">
+            <h2 class="entity-card-title">@teacher.FirstName @teacher.LastName</h2>
+            <p class="entity-card-meta">Specialization: @teacher.Specialization</p>
+            <p class="entity-card-meta">Experience: @teacher.YearsOfExperience years</p>
+            <div class="entity-card-actions">
+                <a class="btn btn-primary btn-sm" asp-action="Details" asp-route-id="@teacher.Id">View details</a>
+            </div>
+        </article>
+    }
+</div>

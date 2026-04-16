@@ -515,3 +515,4 @@ Otvori taj URL u browseru.
 
 Projekt koristi .NET 10 — provjeri imaš li ga instaliranog s dotnet --version. Treba biti 10.x.x.
 
+Test promjena dodana od strane korisnika - 04/16/2026 15:47:53
