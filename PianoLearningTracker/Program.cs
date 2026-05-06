@@ -1,11 +1,17 @@
 using PianoLearningTracker.Models;
 using PianoLearningTracker.Repositories;
+using PianoLearningTracker.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<IMockRepository, MockRepository>();
+
+builder.Services.AddHttpClient();
+builder.Services.AddSingleton<IAiLoggerService, AiLoggerService>();
+builder.Services.AddScoped<IAnthropicService, AnthropicService>();
+builder.Services.AddSession();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
@@ -21,6 +27,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
+app.UseSession();
 app.UseAuthorization();
 
 app.MapStaticAssets();

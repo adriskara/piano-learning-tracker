@@ -1,0 +1,323 @@
+# Lab 3 - AI Usage Log
+# Format: [EventType] YYYY-MM-DD HH:mm:ss - detail
+# Events: UserPromptSubmit | PreToolUse | PostToolUse | ResponseGenerated
+[Test] 2026-04-24 12:00:00 - Test logging functionality
+[UserPromptSubmit] 2026-04-30 18:39:22 - prompt: (no prompt content)
+{"session_id":"8bb7dd8e-13a0-489b-b045-d067898c4b4d","transcript_path":"C:\\Users\\adrij\\.claude\\projects\\c--Users-adrij-source-repos-piano-learning-tracker\\8bb7dd8e-13a0-489b-b045-d067898c4b4d.jsonl","cwd":"c:\\Users\\adrij\\source\\repos\\piano-learning-tracker","permission_mode":"default","hook_event_name":"UserPromptSubmit","prompt":"<ide_opened_file>The user opened the file c:\\Users\\adrij\\source\\repos\\piano-learning-tracker\\.claude\\settings.json in the IDE. This may or may not be related to the current task.</ide_opened_file>\ntest"}
+
+{"session_id":"8bb7dd8e-13a0-489b-b045-d067898c4b4d","transcript_path":"C:\\Users\\adrij\\.claude\\projects\\c--Users-adrij-source-repos-piano-learning-tracker\\8bb7dd8e-13a0-489b-b045-d067898c4b4d.jsonl","cwd":"c:\\Users\\adrij\\source\\repos\\piano-learning-tracker","permission_mode":"default","hook_event_name":"PreToolUse","tool_name":"PowerShell","tool_input":{"command":"Get-Content \"C:\\Users\\adrij\\source\\repos\\piano-learning-tracker\\.github\\hooks\\lab2\\agent_log.txt\" | Select-Object -Last 5","description":"Check last 5 lines of log"},"tool_use_id":"toolu_01Aw2cnejXTVXJSdSEo1Lgam"}
+
+{"session_id":"8bb7dd8e-13a0-489b-b045-d067898c4b4d","transcript_path":"C:\\Users\\adrij\\.claude\\projects\\c--Users-adrij-source-repos-piano-learning-tracker\\8bb7dd8e-13a0-489b-b045-d067898c4b4d.jsonl","cwd":"C:\\Users\\adrij\\source\\repos\\piano-learning-tracker","permission_mode":"default","hook_event_name":"PostToolUse","tool_name":"PowerShell","tool_input":{"command":"Get-Content \"C:\\Users\\adrij\\source\\repos\\piano-learning-tracker\\.github\\hooks\\lab2\\agent_log.txt\" | Select-Object -Last 5","description":"Check last 5 lines of log"},"tool_response":{"stdout":"[UserPromptSubmit] 2026-04-24 13:56:47 - prompt: (no content)\r\n[PreToolUse] 2026-04-24 13:58:37 - tool: unknown\r\n[PostToolUse] 2026-04-24 13:58:45 - tool: unknown\r\n[UserPromptSubmit] 2026-04-24 14:01:42 - prompt: (no content)\r\n[ManualTest] 2026-04-24 13:01:31","stderr":"","interrupted":false,"isImage":false},"tool_use_id":"toolu_01Aw2cnejXTVXJSdSEo1Lgam","duration_ms":333}
+
+{"session_id":"8bb7dd8e-13a0-489b-b045-d067898c4b4d","transcript_path":"C:\\Users\\adrij\\.claude\\projects\\c--Users-adrij-source-repos-piano-learning-tracker\\8bb7dd8e-13a0-489b-b045-d067898c4b4d.jsonl","cwd":"C:\\Users\\adrij\\source\\repos\\piano-learning-tracker","permission_mode":"default","hook_event_name":"PreToolUse","tool_name":"Glob","tool_input":{"pattern":".github/hooks/*.ps1","path":"c:\\Users\\adrij\\source\\repos\\piano-learning-tracker"},"tool_use_id":"toolu_0112Kd4PHhHdRS5kbBELps6p"}
+
+{"session_id":"8bb7dd8e-13a0-489b-b045-d067898c4b4d","transcript_path":"C:\\Users\\adrij\\.claude\\projects\\c--Users-adrij-source-repos-piano-learning-tracker\\8bb7dd8e-13a0-489b-b045-d067898c4b4d.jsonl","cwd":"C:\\Users\\adrij\\source\\repos\\piano-learning-tracker","permission_mode":"default","hook_event_name":"PostToolUse","tool_name":"Glob","tool_input":{"pattern":".github/hooks/*.ps1","path":"c:\\Users\\adrij\\source\\repos\\piano-learning-tracker"},"tool_response":{"filenames":[".github\\hooks\\log_ai.ps1",".github\\hooks\\log_copilot.ps1",".github\\hooks\\enable_copilot_logging.ps1",".github\\hooks\\logs.ps1",".github\\hooks\\hook-log.ps1"],"durationMs":71,"numFiles":5,"truncated":false},"tool_use_id":"toolu_0112Kd4PHhHdRS5kbBELps6p","duration_ms":71}
+
+{"session_id":"8bb7dd8e-13a0-489b-b045-d067898c4b4d","transcript_path":"C:\\Users\\adrij\\.claude\\projects\\c--Users-adrij-source-repos-piano-learning-tracker\\8bb7dd8e-13a0-489b-b045-d067898c4b4d.jsonl","cwd":"c:\\Users\\adrij\\source\\repos\\piano-learning-tracker","permission_mode":"default","hook_event_name":"UserPromptSubmit","prompt":"<ide_opened_file>The user opened the file c:\\Users\\adrij\\source\\repos\\piano-learning-tracker\\.github\\hooks\\lab3\\agent_log.txt in the IDE. This may or may not be related to the current task.</ide_opened_file>\nmogu li ovi logovi biti sa┼żetiji,. ─Źitljiviji"}
+
+{"session_id":"8bb7dd8e-13a0-489b-b045-d067898c4b4d","transcript_path":"C:\\Users\\adrij\\.claude\\projects\\c--Users-adrij-source-repos-piano-learning-tracker\\8bb7dd8e-13a0-489b-b045-d067898c4b4d.jsonl","cwd":"c:\\Users\\adrij\\source\\repos\\piano-learning-tracker","permission_mode":"default","hook_event_name":"PreToolUse","tool_name":"PowerShell","tool_input":{"command":"Get-Content \"C:\\Users\\adrij\\source\\repos\\piano-learning-tracker\\.github\\hooks\\lab3\\agent_log.txt\" | Select-Object -Last 20","description":"Show last 20 lines of lab3 log"},"tool_use_id":"toolu_01JGGexNHpVSp5u95nqXhQTW"}
+
+{"session_id":"8bb7dd8e-13a0-489b-b045-d067898c4b4d","transcript_path":"C:\\Users\\adrij\\.claude\\projects\\c--Users-adrij-source-repos-piano-learning-tracker\\8bb7dd8e-13a0-489b-b045-d067898c4b4d.jsonl","cwd":"C:\\Users\\adrij\\source\\repos\\piano-learning-tracker","permission_mode":"default","hook_event_name":"PostToolUse","tool_name":"PowerShell","tool_input":{"command":"Get-Content \"C:\\Users\\adrij\\source\\repos\\piano-learning-tracker\\.github\\hooks\\lab3\\agent_log.txt\" | Select-Object -Last 20","description":"Show last 20 lines of lab3 log"},"tool_response":{"stdout":"# Lab 3 - AI Usage Log\r\n# Format: [EventType] YYYY-MM-DD HH:mm:ss - detail\r\n# Events: UserPromptSubmit | PreToolUse | PostToolUse | ResponseGenerated\r\n[Test] 2026-04-24 12:00:00 - Test logging functionality\r\n[UserPromptSubmit] 2026-04-30 18:39:22 - prompt: (no prompt content)\r\n{\"session_id\":\"8bb7dd8e-13a0-489b-b045-d067898c4b4d\",\"transcript_path\":\"C:\\\\Users\\\\adrij\\\\.claude\\\\projects\\\\c--Users-adrij-source-repos-piano-learning-tracker\\\\8bb7dd8e-13a0-489b-b045-d067898c4b4d.jsonl\",\"cwd\":\"c:\\\\Users\\\\adrij\\\\source\\\\repos\\\\piano-learning-tracker\",\"permission_mode\":\"default\",\"hook_event_name\":\"UserPromptSubmit\",\"prompt\":\"<ide_opened_file>The user opened the file c:\\\\Users\\\\adrij\\\\source\\\\repos\\\\piano-learning-tracker\\\\.claude\\\\settings.json in the IDE. This may or may not be related to the current task.</ide_opened_file>\\ntest\"}\r\n\r\n{\"session_id\":\"8bb7dd8e-13a0-489b-b045-d067898c4b4d\",\"transcript_path\":\"C:\\\\Users\\\\adrij\\\\.claude\\\\projects\\\\c--Users-adrij-source-repos-piano-learning-tracker\\\\8bb7dd8e-13a0-489b-b045-d067898c4b4d.jsonl\",\"cwd\":\"c:\\\\Users\\\\adrij\\\\source\\\\repos\\\\piano-learning-tracker\",\"permission_mode\":\"default\",\"hook_event_name\":\"PreToolUse\",\"tool_name\":\"PowerShell\",\"tool_input\":{\"command\":\"Get-Content \\\"C:\\\\Users\\\\adrij\\\\source\\\\repos\\\\piano-learning-tracker\\\\.github\\\\hooks\\\\lab2\\\\agent_log.txt\\\" | Select-Object -Last 5\",\"description\":\"Check last 5 lines of log\"},\"tool_use_id\":\"toolu_01Aw2cnejXTVXJSdSEo1Lgam\"}\r\n\r\n{\"session_id\":\"8bb7dd8e-13a0-489b-b045-d067898c4b4d\",\"transcript_path\":\"C:\\\\Users\\\\adrij\\\\.claude\\\\projects\\\\c--Users-adrij-source-repos-piano-learning-tracker\\\\8bb7dd8e-13a0-489b-b045-d067898c4b4d.jsonl\",\"cwd\":\"C:\\\\Users\\\\adrij\\\\source\\\\repos\\\\piano-learning-tracker\",\"permission_mode\":\"default\",\"hook_event_name\":\"PostToolUse\",\"tool_name\":\"PowerShell\",\"tool_input\":{\"command\":\"Get-Content \\\"C:\\\\Users\\\\adrij\\\\source\\\\repos\\\\piano-learning-tracker\\\\.github\\\\hooks\\\\lab2\\\\agent_log.txt\\\" | Select-Object -Last 5\",\"description\":\"Check last 5 lines of log\"},\"tool_response\":{\"stdout\":\"[UserPromptSubmit] 2026-04-24 13:56:47 - prompt: (no content)\\r\\n[PreToolUse] 2026-04-24 13:58:37 - tool: unknown\\r\\n[PostToolUse] 2026-04-24 13:58:45 - tool: unknown\\r\\n[UserPromptSubmit] 2026-04-24 14:01:42 - prompt: (no content)\\r\\n[ManualTest] 2026-04-24 13:01:31\",\"stderr\":\"\",\"interrupted\":false,\"isImage\":false},\"tool_use_id\":\"toolu_01Aw2cnejXTVXJSdSEo1Lgam\",\"duration_ms\":333}\r\n\r\n{\"session_id\":\"8bb7dd8e-13a0-489b-b045-d067898c4b4d\",\"transcript_path\":\"C:\\\\Users\\\\adrij\\\\.claude\\\\projects\\\\c--Users-adrij-source-repos-piano-learning-tracker\\\\8bb7dd8e-13a0-489b-b045-d067898c4b4d.jsonl\",\"cwd\":\"C:\\\\Users\\\\adrij\\\\source\\\\repos\\\\piano-learning-tracker\",\"permission_mode\":\"default\",\"hook_event_name\":\"PreToolUse\",\"tool_name\":\"Glob\",\"tool_input\":{\"pattern\":\".github/hooks/*.ps1\",\"path\":\"c:\\\\Users\\\\adrij\\\\source\\\\repos\\\\piano-learning-tracker\"},\"tool_use_id\":\"toolu_0112Kd4PHhHdRS5kbBELps6p\"}\r\n\r\n{\"session_id\":\"8bb7dd8e-13a0-489b-b045-d067898c4b4d\",\"transcript_path\":\"C:\\\\Users\\\\adrij\\\\.claude\\\\projects\\\\c--Users-adrij-source-repos-piano-learning-tracker\\\\8bb7dd8e-13a0-489b-b045-d067898c4b4d.jsonl\",\"cwd\":\"C:\\\\Users\\\\adrij\\\\source\\\\repos\\\\piano-learning-tracker\",\"permission_mode\":\"default\",\"hook_event_name\":\"PostToolUse\",\"tool_name\":\"Glob\",\"tool_input\":{\"pattern\":\".github/hooks/*.ps1\",\"path\":\"c:\\\\Users\\\\adrij\\\\source\\\\repos\\\\piano-learning-tracker\"},\"tool_response\":{\"filenames\":[\".github\\\\hooks\\\\log_ai.ps1\",\".github\\\\hooks\\\\log_copilot.ps1\",\".github\\\\hooks\\\\enable_copilot_logging.ps1\",\".github\\\\hooks\\\\logs.ps1\",\".github\\\\hooks\\\\hook-log.ps1\"],\"durationMs\":71,\"numFiles\":5,\"truncated\":false},\"tool_use_id\":\"toolu_0112Kd4PHhHdRS5kbBELps6p\",\"duration_ms\":71}\r\n\r\n{\"session_id\":\"8bb7dd8e-13a0-489b-b045-d067898c4b4d\",\"transcript_path\":\"C:\\\\Users\\\\adrij\\\\.claude\\\\projects\\\\c--Users-adrij-source-repos-piano-learning-tracker\\\\8bb7dd8e-13a0-489b-b045-d067898c4b4d.jsonl\",\"cwd\":\"c:\\\\Users\\\\adrij\\\\source\\\\repos\\\\piano-learning-tracker\",\"permission_mode\":\"default\",\"hook_event_name\":\"UserPromptSubmit\",\"prompt\":\"<ide_opened_file>The user opened the file c:\\\\Users\\\\adrij\\\\source\\\\repos\\\\piano-learning-tracker\\\\.github\\\\hooks\\\\lab3\\\\agent_log.txt in the IDE. This may or may not be related to the current task.</ide_opened_file>\\nmogu li ovi logovi biti sa├óÔÇŁ─Ż─╣─Żetiji,. ├óÔÇŁÔéČ─╣─ůitljiviji\"}\r\n\r\n{\"session_id\":\"8bb7dd8e-13a0-489b-b045-d067898c4b4d\",\"transcript_path\":\"C:\\\\Users\\\\adrij\\\\.claude\\\\projects\\\\c--Users-adrij-source-repos-piano-learning-tracker\\\\8bb7dd8e-13a0-489b-b045-d067898c4b4d.jsonl\",\"cwd\":\"c:\\\\Users\\\\adrij\\\\source\\\\repos\\\\piano-learning-tracker\",\"permission_mode\":\"default\",\"hook_event_name\":\"PreToolUse\",\"tool_name\":\"PowerShell\",\"tool_input\":{\"command\":\"Get-Content \\\"C:\\\\Users\\\\adrij\\\\source\\\\repos\\\\piano-learning-tracker\\\\.github\\\\hooks\\\\lab3\\\\agent_log.txt\\\" | Select-Object -Last 20\",\"description\":\"Show last 20 lines of lab3 log\"},\"tool_use_id\":\"toolu_01JGGexNHpVSp5u95nqXhQTW\"}","stderr":"","interrupted":false,"isImage":false},"tool_use_id":"toolu_01JGGexNHpVSp5u95nqXhQTW","duration_ms":282}
+
+{"session_id":"8bb7dd8e-13a0-489b-b045-d067898c4b4d","transcript_path":"C:\\Users\\adrij\\.claude\\projects\\c--Users-adrij-source-repos-piano-learning-tracker\\8bb7dd8e-13a0-489b-b045-d067898c4b4d.jsonl","cwd":"C:\\Users\\adrij\\source\\repos\\piano-learning-tracker","permission_mode":"default","hook_event_name":"PreToolUse","tool_name":"Read","tool_input":{"file_path":"c:\\Users\\adrij\\source\\repos\\piano-learning-tracker\\.github\\hooks\\hook-log.ps1"},"tool_use_id":"toolu_01AUUVzyUbzpMw2MSnxPuFL5"}
+
+{"session_id":"8bb7dd8e-13a0-489b-b045-d067898c4b4d","transcript_path":"C:\\Users\\adrij\\.claude\\projects\\c--Users-adrij-source-repos-piano-learning-tracker\\8bb7dd8e-13a0-489b-b045-d067898c4b4d.jsonl","cwd":"C:\\Users\\adrij\\source\\repos\\piano-learning-tracker","permission_mode":"default","hook_event_name":"PostToolUse","tool_name":"Read","tool_input":{"file_path":"c:\\Users\\adrij\\source\\repos\\piano-learning-tracker\\.github\\hooks\\hook-log.ps1"},"tool_response":{"type":"text","file":{"filePath":"c:\\Users\\adrij\\source\\repos\\piano-learning-tracker\\.github\\hooks\\hook-log.ps1","content":"param($payload)\n\n$logPath = 'C:\\Users\\adrij\\source\\repos\\piano-learning-tracker\\.github\\hooks\\lab3\\agent_log.txt'\n\nif ($payload) {\n    Add-Content -Path $logPath -Value $payload -Encoding UTF8\n}\nelseif ($input) {\n    $input | Out-String | Add-Content -Path $logPath -Encoding UTF8\n}\n","numLines":11,"startLine":1,"totalLines":11}},"tool_use_id":"toolu_01AUUVzyUbzpMw2MSnxPuFL5","duration_ms":2}
+
+{"session_id":"8bb7dd8e-13a0-489b-b045-d067898c4b4d","transcript_path":"C:\\Users\\adrij\\.claude\\projects\\c--Users-adrij-source-repos-piano-learning-tracker\\8bb7dd8e-13a0-489b-b045-d067898c4b4d.jsonl","cwd":"C:\\Users\\adrij\\source\\repos\\piano-learning-tracker","permission_mode":"default","hook_event_name":"PreToolUse","tool_name":"Write","tool_input":{"file_path":"c:\\Users\\adrij\\source\\repos\\piano-learning-tracker\\.github\\hooks\\hook-log.ps1","content":"$logPath = 'C:\\Users\\adrij\\source\\repos\\piano-learning-tracker\\.github\\hooks\\lab3\\agent_log.txt'\n$timestamp = Get-Date -Format 'HH:mm:ss'\n\ntry {\n    $raw = [Console]::In.ReadToEnd()\n    $data = $raw | ConvertFrom-Json -ErrorAction Stop\n} catch {\n    Add-Content -Path $logPath -Value \"[$timestamp] (parse error)\" -Encoding UTF8\n    exit 0\n}\n\n$event = $data.hook_event_name\n\n$line = switch ($event) {\n    'UserPromptSubmit' {\n        $prompt = ($data.prompt -replace '\\s+', ' ').Trim()\n        # Ukloni <ide_opened_file> tagove\n        $prompt = $prompt -replace '<ide_opened_file>.*?</ide_opened_file>\\s*', ''\n        $prompt = $prompt.Trim()\n        if ($prompt.Length -gt 100) { $prompt = $prompt.Substring(0, 100) + '...' }\n        \"[PROMPT]  $timestamp  \"\"$prompt\"\"\"\n    }\n    'PreToolUse' {\n        $tool = $data.tool_name\n        $detail = switch ($tool) {\n            'Bash'       { $data.tool_input.command -replace '\\s+', ' ' | ForEach-Object { if ($_.Length -gt 60) { $_.Substring(0,60)+'...' } else { $_ } } }\n            'PowerShell' { $data.tool_input.command -replace '\\s+', ' ' | ForEach-Object { if ($_.Length -gt 60) { $_.Substring(0,60)+'...' } else { $_ } } }\n            'Read'       { $data.tool_input.file_path -replace '.*\\\\repos\\\\', '~\\' }\n            'Write'      { $data.tool_input.file_path -replace '.*\\\\repos\\\\', '~\\' }\n            'Edit'       { $data.tool_input.file_path -replace '.*\\\\repos\\\\', '~\\' }\n            'Glob'       { $data.tool_input.pattern }\n            'Grep'       { \"\"\"$($data.tool_input.pattern)\"\"\" }\n            default      { '' }\n        }\n        if ($detail) { \"[TOOL]    $timestamp  $tool  $detail\" }\n        else          { \"[TOOL]    $timestamp  $tool\" }\n    }\n    'PostToolUse' {\n        $tool = $data.tool_name\n        $ms   = $data.duration_ms\n        \"[DONE]    $timestamp  $tool  (${ms}ms)\"\n    }\n    'Stop' {\n        \"[STOP]    $timestamp\"\n    }\n    default {\n        \"[${event}]  $timestamp\"\n    }\n}\n\nif ($line) {\n    Add-Content -Path $logPath -Value $line -Encoding UTF8\n}\n"},"tool_use_id":"toolu_01C4je1dtSCxvAYaPX67zQyt"}
+
+[DONE]    18:24:45  Write  (17ms)
+[PROMPT]  18:25:38  "test"
+[TOOL]    18:25:45  PowerShell  Get-Content "C:\Users\adrij\source\repos\piano-learning-trac...
+[DONE]    18:25:46  PowerShell  (293ms)
+[PROMPT]  18:26:39  "┼íto se mo┼że jo┼í dodati kao sadr┼żaj loga (osim npr datuma uz vrijeme)"
+[PROMPT]  18:28:42  "mo┼że┼í li dodati i datum uz vrijeme"
+[TOOL]    18:30:00  Edit  ~\piano-learning-tracker\.github\hooks\hook-log.ps1
+[DONE]    2026-05-05 18:30:19  Edit  (14ms)
+[PROMPT]  2026-05-05 18:37:09  "test direct hook save"
+[RESPONSE]  2026-05-05 18:44:19  This is a test response message from the hook. 100
+[PROMPT]    2026-05-05 18:45:07  Provjera direktnog zapisa u log
+[PROMPT]    2026-05-05 18:58:44  [unknown]  je li se u logu ispisuje tool koji korisitim (Github copilot ili Claude ekstenzija)
+[PROMPT]    2026-05-05 19:02:02  [unknown]  (empty prompt)
+[RESPONSE]  2026-05-05 19:02:03  [unknown]  (empty response) 100
+[PROMPT]    2026-05-05 19:02:43  [Claude]  Test prompt for tool source
+[RESPONSE]  2026-05-05 19:02:43  [Claude]  This is a test response from Claude 100
+[PROMPT]    2026-05-05 19:06:23  [Copilot]  Provjera da li se ispisuje Copilot
+[PROMPT]    2026-05-05 19:11:25  [unknown]  mo┼że┼í li ozna─Źiti u ovom mom projektu nepotrebne foldere i fileove koje mogu obrisati. i mo┼że┼í li ozna─Źiti neuobi─...
+[TOOL]      2026-05-05 19:11:32  Agent
+[TOOL]      2026-05-05 19:11:35  Bash   80
+[TOOL]      2026-05-05 19:11:45  PowerShell   80
+[DONE]      2026-05-05 19:11:56  PowerShell  (466ms)
+[TOOL]      2026-05-05 19:11:59  Read
+[TOOL]      2026-05-05 19:12:00  Read
+[TOOL]      2026-05-05 19:12:00  Read
+[TOOL]      2026-05-05 19:12:00  Read
+[DONE]      2026-05-05 19:12:01  Read  (2ms)
+[DONE]      2026-05-05 19:12:01  Read  (2ms)
+[DONE]      2026-05-05 19:12:01  Read  (1ms)
+[TOOL]      2026-05-05 19:12:05  Read
+[DONE]      2026-05-05 19:12:06  Read  (722ms)
+[TOOL]      2026-05-05 19:12:06  PowerShell   80
+[DONE]      2026-05-05 19:12:07  PowerShell  (272ms)
+[TOOL]      2026-05-05 19:12:08  PowerShell   80
+[DONE]      2026-05-05 19:12:09  PowerShell  (355ms)
+[TOOL]      2026-05-05 19:12:13  Read
+[TOOL]      2026-05-05 19:12:13  Read
+[DONE]      2026-05-05 19:12:14  Read  (2ms)
+[DONE]      2026-05-05 19:12:15  Read  (811ms)
+[TOOL]      2026-05-05 19:12:18  Glob   80
+[TOOL]      2026-05-05 19:12:19  Glob   80
+[TOOL]      2026-05-05 19:12:19  Glob   80
+[DONE]      2026-05-05 19:12:19  Glob  (95ms)
+[DONE]      2026-05-05 19:12:20  Glob  (87ms)
+[DONE]      2026-05-05 19:12:20  Glob  (75ms)
+[TOOL]      2026-05-05 19:12:22  Read
+[TOOL]      2026-05-05 19:12:23  Read
+[DONE]      2026-05-05 19:12:23  Read  (1ms)
+[DONE]      2026-05-05 19:12:23  Read  (1ms)
+[DONE]      2026-05-05 19:12:54  Agent  (81600ms)
+[TOOL]      2026-05-05 19:13:13  Glob   80
+[TOOL]      2026-05-05 19:13:13  Glob   80
+[DONE]      2026-05-05 19:13:13  Glob  (77ms)
+[DONE]      2026-05-05 19:13:14  Glob  (79ms)
+[TOOL]      2026-05-05 19:13:17  Glob   80
+[TOOL]      2026-05-05 19:13:17  Read
+[DONE]      2026-05-05 19:13:17  Glob  (71ms)
+[DONE]      2026-05-05 19:13:17  Read  (2ms)
+[PROMPT]    2026-05-05 22:12:51  [unknown]  gdje zapisuje┼í logove, daj mi putanju
+[PROMPT]    2026-05-05 22:33:54  [unknown]  mo┼że┼í lab3/ (root), preview.html, premjestiti Lab md fajlove
+[TOOL]      2026-05-05 22:33:59  Read
+[TOOL]      2026-05-05 22:34:00  Read
+[DONE]      2026-05-05 22:34:00  Read  (2ms)
+[DONE]      2026-05-05 22:34:00  Read  (1ms)
+[TOOL]      2026-05-05 22:34:04  Read
+[TOOL]      2026-05-05 22:34:04  Read
+[DONE]      2026-05-05 22:34:05  Read  (2ms)
+[DONE]      2026-05-05 22:34:06  Read  (918ms)
+[TOOL]      2026-05-05 22:36:23  Write
+[DONE]      2026-05-05 22:38:56  Write  (19ms)
+[TOOL]      2026-05-05 22:42:28  Write
+[DONE]      2026-05-05 22:42:50  Write  (16ms)
+[TOOL]      2026-05-05 22:42:59  PowerShell   80
+[DONE]      2026-05-05 22:43:14  PowerShell  (317ms)
+[PROMPT]    2026-05-05 22:44:25  [unknown]  i dalje vidim lab3/ (root)
+[TOOL]      2026-05-05 22:44:29  PowerShell   80
+[DONE]      2026-05-05 22:44:31  PowerShell  (360ms)
+[TOOL]      2026-05-05 22:44:37  PowerShell   80
+[DONE]      2026-05-05 22:44:41  PowerShell  (300ms)
+[PROMPT]    2026-05-05 22:45:25  [unknown]  evo ga, otvoren, jo┼í je tu
+[TOOL]      2026-05-05 22:45:31  PowerShell   80
+[DONE]      2026-05-05 22:45:32  PowerShell  (280ms)
+[TOOL]      2026-05-05 22:45:37  PowerShell   80
+[DONE]      2026-05-05 22:46:08  PowerShell  (294ms)
+[PROMPT]    2026-05-05 22:46:45  [unknown]  i dalje je tu
+[TOOL]      2026-05-05 22:46:50  PowerShell   80
+[DONE]      2026-05-05 22:47:10  PowerShell  (339ms)
+[TOOL]      2026-05-05 22:47:14  Bash   80
+[DONE]      2026-05-05 22:47:15  Bash  (186ms)
+[TOOL]      2026-05-05 22:47:21  Bash   80
+[DONE]      2026-05-05 22:47:26  Bash  (195ms)
+[PROMPT]    2026-05-05 22:47:52  [unknown]  tu je i dalje!
+[TOOL]      2026-05-05 22:47:56  Bash   80
+[DONE]      2026-05-05 22:47:56  Bash  (167ms)
+[TOOL]      2026-05-05 22:47:59  Bash   80
+[DONE]      2026-05-05 22:48:03  Bash  (152ms)
+[TOOL]      2026-05-05 22:48:13  Read
+[TOOL]      2026-05-05 22:48:13  Read
+[DONE]      2026-05-05 22:48:13  Read  (2ms)
+[DONE]      2026-05-05 22:48:14  Read  (1ms)
+[TOOL]      2026-05-05 22:48:22  Read
+[DONE]      2026-05-05 22:48:23  Read  (1ms)
+[TOOL]      2026-05-05 22:49:11  Bash   80
+[TOOL]      2026-05-05 22:49:12  Bash   80
+[DONE]      2026-05-05 22:49:12  Bash  (199ms)
+[DONE]      2026-05-05 22:49:12  Bash  (169ms)
+[TOOL]      2026-05-05 22:49:25  Bash   80
+[DONE]      2026-05-05 22:49:25  Bash  (143ms)
+[TOOL]      2026-05-05 22:49:26  Bash   80
+[DONE]      2026-05-05 22:49:27  Bash  (177ms)
+[TOOL]      2026-05-05 22:49:31  Bash   80
+[DONE]      2026-05-05 22:49:32  Bash  (224ms)
+[TOOL]      2026-05-05 22:49:47  Bash   80
+[DONE]      2026-05-05 23:02:59  Bash  (157ms)
+[TOOL]      2026-05-05 23:03:12  Read
+[DONE]      2026-05-05 23:03:12  Read  (2ms)
+[TOOL]      2026-05-05 23:03:18  Edit
+[DONE]      2026-05-05 23:03:28  Edit  (20ms)
+[PostToolUse] 2026-05-05 23:03:28 - tool: unknown tool
+[PreToolUse] 2026-05-05 23:03:35 - tool: unknown tool
+[TOOL]      2026-05-05 23:03:35  Edit
+[DONE]      2026-05-05 23:03:44  Edit  (11ms)
+[PostToolUse] 2026-05-05 23:03:44 - tool: unknown tool
+[PreToolUse] 2026-05-05 23:03:45 - tool: unknown tool
+[TOOL]      2026-05-05 23:03:45  Edit
+[DONE]      2026-05-05 23:03:54  Edit  (5ms)
+[PostToolUse] 2026-05-05 23:03:54 - tool: unknown tool
+[PreToolUse] 2026-05-05 23:03:59 - tool: unknown tool
+[TOOL]      2026-05-05 23:03:59  Bash   80
+[DONE]      2026-05-05 23:04:07  Bash  (148ms)
+[PostToolUse] 2026-05-05 23:04:07 - tool: unknown tool
+[UserPromptSubmit] 2026-05-05 23:07:08 - prompt: (no prompt content)
+[PROMPT]    2026-05-05 23:07:08  [unknown]  ipak odvojeno zapisuj te logove
+[PreToolUse] 2026-05-05 23:07:33 - tool: unknown tool
+[TOOL]      2026-05-05 23:07:33  Edit
+[UserPromptSubmit] 2026-05-05 23:08:45 - prompt: (no prompt content)
+[PROMPT]    2026-05-05 23:08:45  [unknown]  ipak odvojeno zapisuj te logove u novi file agent_log2.txt
+[PreToolUse] 2026-05-05 23:08:53 - tool: unknown tool
+[TOOL]      2026-05-05 23:08:53  Edit
+[DONE]      2026-05-05 23:09:07  Edit  (20ms)
+[PROMPT]    2026-05-05 23:09:23  [unknown]  hvala
+[PROMPT]    2026-05-05 23:10:26  [unknown]  treba li ovaj file
+[TOOL]      2026-05-05 23:10:33  Read
+[DONE]      2026-05-05 23:10:33  Read  (2ms)
+[PROMPT]    2026-05-05 23:11:39  [unknown]  treba li ovaj file
+[TOOL]      2026-05-05 23:11:51  Read
+[DONE]      2026-05-05 23:11:51  Read  (1ms)
+[PROMPT]    2026-05-05 23:12:40  [unknown]  mo┼że┼í li mi objasniti kako radi ova sintaksa
+[PROMPT]    2026-05-05 23:18:27  [unknown]  mo┼że┼í li mi otvoriti _Layout.cshtml? ne mogu ga prona─çi
+[PROMPT]    2026-05-05 23:20:50  [unknown]  <ide_selection>The user selected the lines 2 to 2 from c:\Users\adrij\source\repos\piano-learning-tracker\PianoLearningT...
+[PROMPT]    2026-05-05 23:23:20  [unknown]  je li potreban ovaj file?
+[TOOL]      2026-05-05 23:23:25  Read
+[DONE]      2026-05-05 23:23:26  Read  (2ms)
+[PROMPT]    2026-05-05 23:25:26  [unknown]  koja je razlika izme─Ĺu _Layout.cshtml i site.css
+[PROMPT]    2026-05-05 23:27:49  [unknown]  za┼íto onda i na po─Źetku _Layout.cshtml imam css? koga moj projekt slu┼ía, ┼íto nadja─Źa?
+[TOOL]      2026-05-05 23:27:53  Read
+[DONE]      2026-05-05 23:27:54  Read  (2ms)
+[PROMPT]    2026-05-05 23:29:03  [unknown]  mo┼że
+[TOOL]      2026-05-05 23:29:09  Read
+[DONE]      2026-05-05 23:29:09  Read  (1ms)
+[TOOL]      2026-05-05 23:30:13  Edit
+[PROMPT]    2026-05-05 23:34:59  [unknown]  mo┼że
+[TOOL]      2026-05-05 23:35:09  Read
+[DONE]      2026-05-05 23:35:09  Read  (2ms)
+[TOOL]      2026-05-05 23:36:28  Edit
+[DONE]      2026-05-05 23:36:37  Edit  (33ms)
+[PROMPT]    2026-05-05 23:39:43  [unknown]  kad pokrenem aplikaciju css se ne primjenjuje? je li dobra putanja?
+[TOOL]      2026-05-05 23:39:54  Read
+[DONE]      2026-05-05 23:39:55  Read  (2ms)
+[DONE]      2026-05-05 23:39:55  Read  (2ms)
+[TOOL]      2026-05-05 23:40:55  Edit
+[DONE]      2026-05-05 23:41:54  Edit  (18ms)
+[PROMPT]    2026-05-05 23:43:36  [unknown]  i dalje ne primjenjuje css
+[TOOL]      2026-05-05 23:44:01  Read
+[DONE]      2026-05-05 23:44:02  Read  (1ms)
+[TOOL]      2026-05-05 23:44:02  Bash   80
+[DONE]      2026-05-05 23:44:04  Bash  (994ms)
+[TOOL]      2026-05-05 23:44:27  Edit
+[DONE]      2026-05-05 23:44:58  Edit  (14ms)
+[PROMPT]    2026-05-05 23:46:52  [unknown]  status 200
+[PROMPT]    2026-05-05 23:48:20  [unknown]  prazan je Response tab
+[TOOL]      2026-05-05 23:49:08  Edit
+[DONE]      2026-05-05 23:50:57  Edit  (16ms)
+[PROMPT]    2026-05-05 23:53:48  [unknown]  prije sam otvorila direktno URL CSS fajla u browseru i bila je prazna stranica, a sad nakon ovog status je 404
+[TOOL]      2026-05-05 23:54:27  Edit
+[DONE]      2026-05-05 23:56:25  Edit  (13ms)
+[PROMPT]    2026-05-05 23:58:42  [unknown]  nema Content-Encoding
+[TOOL]      2026-05-05 23:58:57  Bash   80
+[DONE]      2026-05-05 23:59:36  Bash  (18758ms)
+[PROMPT]    2026-05-06 00:02:39  [unknown]  i dalje isto
+[TOOL]      2026-05-06 00:03:47  Edit
+[DONE]      2026-05-06 00:05:12  Edit  (12ms)
+[PROMPT]    2026-05-06 00:07:36  [unknown]  http://localhost:5000/css/site.css
+[TOOL]      2026-05-06 00:08:22  Read
+[DONE]      2026-05-06 00:08:23  Read  (1ms)
+[TOOL]      2026-05-06 00:09:38  Edit
+[DONE]      2026-05-06 00:09:52  Edit  (31ms)
+[PROMPT]    2026-05-06 00:10:39  [unknown]  mo┼że┼í li mi samo teoretski objasniti ┼íto bi onda trebalo napraviti da tako radi
+[PROMPT]    2026-05-06 00:14:23  [unknown]  zaustavila sam, kliknula rebuild Program.cs u Visual Studiu i dalje nije radilo
+[PROMPT]    2026-05-06 10:35:22  [unknown]  <ide_selection>The user selected the lines 5 to 17 from c:\Users\adrij\source\repos\piano-learning-tracker\PianoLearning...
+[PROMPT]    2026-05-06 10:42:34  [unknown]  ┼íto je builder
+[PROMPT]    2026-05-06 10:46:58  [unknown]  ┼íto je Builder? ┼íto je DI kontejner?
+[PROMPT]    2026-05-06 11:01:35  [unknown]  ┼áto je dependency injection? ┼íto su MockRepository i IMockrepository?
+[TOOL]      2026-05-06 11:01:40  Read
+[DONE]      2026-05-06 11:01:41  Read  (15ms)
+[PROMPT]    2026-05-06 11:16:42  [unknown]  <ide_selection>The user selected the lines 25 to 26 from c:\Users\adrij\source\repos\piano-learning-tracker\PianoLearnin...
+[PROMPT]    2026-05-06 23:22:35  [unknown]  koristi li se ovaj file? mo┼że li se obrisati?
+[TOOL]      2026-05-06 23:22:40  Grep  " 80"
+[DONE]      2026-05-06 23:22:43  Grep  (2569ms)
+[TOOL]      2026-05-06 23:22:46  Grep  " 80"
+[DONE]      2026-05-06 23:22:47  Grep  (153ms)
+[TOOL]      2026-05-06 23:22:51  Grep  " 80"
+[DONE]      2026-05-06 23:22:52  Grep  (142ms)
+[PROMPT]    2026-05-06 23:25:15  [unknown]  ali u njemu nema zaposanih logova
+[TOOL]      2026-05-06 23:25:19  Read
+[DONE]      2026-05-06 23:25:20  Read  (4ms)
+[PROMPT]    2026-05-06 23:26:14  [unknown]  mo┼że┼í li izbrisati
+[TOOL]      2026-05-06 23:26:19  Bash   80
+[TOOL]      2026-05-06 23:26:30  PowerShell   80
+[DONE]      2026-05-06 23:26:33  PowerShell  (600ms)
+[TOOL]      2026-05-06 23:26:36  PowerShell   80
+[DONE]      2026-05-06 23:26:42  PowerShell  (671ms)
+[PROMPT]    2026-05-06 23:27:01  [unknown]  da
+[TOOL]      2026-05-06 23:27:04  PowerShell   80
+[DONE]      2026-05-06 23:27:10  PowerShell  (684ms)
+[PROMPT]    2026-05-06 23:28:18  [unknown]  ─Źemu lu┼żi ovaj file
+[TOOL]      2026-05-06 23:28:21  Read
+[DONE]      2026-05-06 23:28:22  Read  (4ms)
+[PROMPT]    2026-05-06 23:29:55  [unknown]  mo┼że li se obrisati?
+[PROMPT]    2026-05-06 23:36:45  [unknown]  obri┼íi ga
+[TOOL]      2026-05-06 23:36:47  PowerShell   80
+[DONE]      2026-05-06 23:36:53  PowerShell  (690ms)
+[PROMPT]    2026-05-06 23:39:20  [unknown]  koristi li se ovaj file? mo┼że li se obrisati?
+[TOOL]      2026-05-06 23:39:23  Read
+[TOOL]      2026-05-06 23:39:23  Grep  " 80"
+[DONE]      2026-05-06 23:39:24  Read  (3ms)
+[DONE]      2026-05-06 23:39:25  Grep  (270ms)
+[PROMPT]    2026-05-06 23:41:05  [unknown]  obri┼íi
+[TOOL]      2026-05-06 23:41:10  PowerShell   80
+[DONE]      2026-05-06 23:41:15  PowerShell  (650ms)
+[PROMPT]    2026-05-06 23:41:39  [unknown]  koristi li se ovaj file? mo┼że li se obrisati?
+[TOOL]      2026-05-06 23:41:42  Read
+[TOOL]      2026-05-06 23:41:42  Grep  " 80"
+[DONE]      2026-05-06 23:41:43  Read  (2ms)
+[DONE]      2026-05-06 23:41:43  Grep  (170ms)
+[PROMPT]    2026-05-06 23:42:47  [unknown]  koristi li se ovaj file? mo┼że li se obrisati?
+[TOOL]      2026-05-06 23:42:51  Read
+[TOOL]      2026-05-06 23:42:51  Grep  " 80"
+[DONE]      2026-05-06 23:42:52  Read  (2ms)
+[DONE]      2026-05-06 23:42:52  Grep  (158ms)
+[PROMPT]    2026-05-06 23:44:47  [unknown]  koristi li se ovaj file? mo┼że li se obrisati?
+[TOOL]      2026-05-06 23:44:51  Read
+[TOOL]      2026-05-06 23:44:51  Grep  " 80"
+[DONE]      2026-05-06 23:44:52  Read  (2ms)
+[DONE]      2026-05-06 23:44:52  Grep  (153ms)
+[PROMPT]    2026-05-06 23:45:27  [unknown]  obri┼íi
+[TOOL]      2026-05-06 23:45:31  PowerShell   80
+[DONE]      2026-05-06 23:45:35  PowerShell  (651ms)
+[PROMPT]    2026-05-06 23:45:52  [unknown]  koristi li se ovaj file? mo┼że li se obrisati?
+[TOOL]      2026-05-06 23:45:55  Read
+[TOOL]      2026-05-06 23:45:56  Grep  " 80"
+[DONE]      2026-05-06 23:45:56  Read  (3ms)
+[DONE]      2026-05-06 23:45:57  Grep  (179ms)
+[PROMPT]    2026-05-06 23:47:20  [unknown]  obri┼íi
+[TOOL]      2026-05-06 23:47:23  PowerShell   80
+[DONE]      2026-05-06 23:47:27  PowerShell  (684ms)
+[PROMPT]    2026-05-06 23:47:45  [unknown]  koristi li se ovaj file? mo┼że li se obrisati?
+[TOOL]      2026-05-06 23:47:49  Read
+[TOOL]      2026-05-06 23:47:49  Grep  " 80"
+[DONE]      2026-05-06 23:47:50  Read  (2ms)
+[DONE]      2026-05-06 23:47:50  Grep  (195ms)
+[PROMPT]    2026-05-06 23:48:09  [unknown]  obri┼íi
+[TOOL]      2026-05-06 23:48:12  PowerShell   80
+[DONE]      2026-05-06 23:48:16  PowerShell  (629ms)
+[PROMPT]    2026-05-06 23:49:07  [unknown]  koristi li se ovaj file? mo┼że li se obrisati?
+[TOOL]      2026-05-06 23:49:10  Read
+[TOOL]      2026-05-06 23:49:10  Grep  " 80"
+[DONE]      2026-05-06 23:49:11  Read  (3ms)
+[DONE]      2026-05-06 23:49:12  Grep  (195ms)
+[PROMPT]    2026-05-06 23:50:10  [unknown]  obri┼íi
+[TOOL]      2026-05-06 23:50:14  PowerShell   80
+[DONE]      2026-05-06 23:50:21  PowerShell  (651ms)
+[PROMPT]    2026-05-06 23:51:13  [unknown]  koristi li se ovaj file?
+[TOOL]      2026-05-06 23:51:18  Read
+[TOOL]      2026-05-06 23:51:18  Grep  " 80"
+[DONE]      2026-05-06 23:51:19  Read  (4ms)
+[DONE]      2026-05-06 23:51:19  Grep  (187ms)
+[PROMPT]    2026-05-06 23:52:34  [unknown]  ─Źemu slu┼żi ovaj file
+[TOOL]      2026-05-06 23:52:37  Read
+[DONE]      2026-05-06 23:52:38  Read  (3ms)
+[PROMPT]    2026-05-06 23:54:13  [unknown]  ─Źemu slu┼żi ovaj file
+[TOOL]      2026-05-06 23:54:16  Read
+[DONE]      2026-05-06 23:54:17  Read  (2ms)
+[PROMPT]    2026-05-06 23:59:00  [unknown]  ─Źemu slu┼żi ovaj file
+[TOOL]      2026-05-06 23:59:05  Read
+[DONE]      2026-05-06 23:59:06  Read  (3ms)

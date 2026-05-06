@@ -12,11 +12,7 @@ body{min-height:100vh;background:linear-gradient(180deg,var(--bg) 0%,#f8fbff 100
 a{color:inherit;text-decoration:none}
 button,input,select,textarea{font:inherit}
 h1,h2,h3,h4{line-height:1.2}
-
-/* Shell */
 .app-shell{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
-
-/* Sidebar */
 .app-sidebar{padding:2rem 1.5rem;background:linear-gradient(180deg,var(--sidebar-bg) 0%,var(--sidebar-end) 100%);color:#f8fafc;display:flex;flex-direction:column;gap:1.5rem;position:sticky;top:0;height:100vh;overflow-y:auto}
 .brand-panel{display:flex;align-items:center;gap:.9rem;padding:.85rem 1rem;border-radius:1.5rem;background:rgba(255,255,255,.08);color:#fff}
 .brand-mark{width:44px;height:44px;display:grid;place-items:center;border-radius:16px;background:rgba(168,199,255,.18);color:#dbeafe;font-size:1.4rem}
@@ -32,22 +28,14 @@ h1,h2,h3,h4{line-height:1.2}
 .sidebar-link:hover,.sidebar-link.active{background:rgba(255,255,255,.08);color:#fff;transform:translateX(3px)}
 .sidebar-link.active .nav-icon{opacity:1}
 .sidebar-note{margin-top:auto;padding:.75rem 1rem .25rem;color:#94a3b8;font-size:.85rem;line-height:1.6}
-
-/* Hamburger */
 .hamburger{display:none;position:fixed;top:1rem;left:1rem;z-index:200;background:var(--accent);color:#fff;border:none;border-radius:.75rem;width:44px;height:44px;font-size:1.2rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(37,99,235,.35)}
-
-/* Main */
 .app-main{padding:2rem 2.5rem;min-width:0}
 .page-header{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.75rem}
 .page-header h1{font-size:clamp(1.8rem,2.5vw,2.6rem);font-weight:800;letter-spacing:-.04em}
 .app-footer{margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;color:var(--text-soft);font-size:.9rem}
-
-/* Breadcrumb */
 .breadcrumb-list{display:flex;flex-wrap:wrap;gap:.4rem;margin:0 0 1.5rem;list-style:none;color:var(--text-muted);font-size:.88rem}
 .breadcrumb-list li::after{content:"›";margin:0 .35rem;color:#cbd5e1}
 .breadcrumb-list li:last-child::after{content:none}
-
-/* Entity grid + cards */
 .entity-grid{display:grid;gap:1.25rem;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
 .entity-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-lg);border:1px solid var(--border);padding:1.4rem;transition:transform var(--transition),box-shadow var(--transition);position:relative;overflow:hidden}
 .entity-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),#818cf8);opacity:0;transition:opacity var(--transition)}
@@ -56,8 +44,6 @@ h1,h2,h3,h4{line-height:1.2}
 .entity-card-title{font-size:1.05rem;font-weight:700;margin-bottom:.6rem}
 .entity-card-meta{color:var(--text-muted);font-size:.9rem;margin-bottom:.3rem}
 .entity-card-actions{margin-top:1.25rem}
-
-/* Badges */
 .status-badge{display:inline-flex;align-items:center;gap:.3rem;padding:.28rem .75rem;border-radius:var(--radius-pill);font-size:.78rem;font-weight:700}
 .status-badge.completed{background:var(--success-soft);color:var(--success)}
 .status-badge.scheduled{background:#dbeafe;color:#1d4ed8}
@@ -67,8 +53,6 @@ h1,h2,h3,h4{line-height:1.2}
 .diff-badge.elementary{background:#dbeafe;color:#1d4ed8}
 .diff-badge.intermediate{background:var(--warning-soft);color:var(--warning)}
 .diff-badge.advanced{background:#fce7f3;color:#be185d}
-
-/* Progress */
 .progress-block{margin-bottom:.2rem}
 .progress-label{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.3rem}
 .progress-label span{font-size:.85rem;color:var(--text-muted)}
@@ -77,16 +61,10 @@ h1,h2,h3,h4{line-height:1.2}
 .progress-fill{height:100%;border-radius:var(--radius-pill);background:linear-gradient(90deg,var(--accent),#818cf8);transition:width .5s ease}
 .progress-fill.done{background:linear-gradient(90deg,var(--success),#4ade80)}
 .progress-fill.gold{background:linear-gradient(90deg,var(--gold),#fbbf24)}
-
-/* Achievement */
 .achievement-badge{display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .75rem;border-radius:var(--radius-pill);background:var(--gold-soft);color:var(--gold);font-size:.8rem;font-weight:700;border:1px solid #fde68a}
-
-/* Stars */
 .quality-stars{display:inline-flex;gap:1px;font-size:.9rem}
 .star-on{color:#f59e0b}
 .star-off{color:#e2e8f0}
-
-/* Detail */
 .detail-panel{display:grid;gap:1.2rem;grid-template-columns:minmax(0,2fr) minmax(280px,1fr)}
 .detail-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-lg);border:1px solid var(--border);padding:1.6rem}
 .detail-card h2{margin-top:0}
@@ -102,8 +80,6 @@ h1,h2,h3,h4{line-height:1.2}
 .piece-row-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem}
 .piece-row-title{font-weight:700;font-size:.95rem}
 .piece-row-note{font-size:.83rem;color:var(--text-muted);margin-top:.5rem}
-
-/* Timeline */
 .timeline{list-style:none;position:relative}
 .timeline::before{content:'';position:absolute;left:9px;top:0;bottom:0;width:2px;background:var(--border)}
 .timeline-item{padding:0 0 1.1rem 2rem;position:relative}
@@ -113,15 +89,11 @@ h1,h2,h3,h4{line-height:1.2}
 .timeline-date{font-size:.8rem;color:var(--text-soft);margin-bottom:.15rem}
 .timeline-title{font-weight:600;font-size:.93rem}
 .timeline-note{font-size:.85rem;color:var(--text-muted)}
-
-/* Activity (teacher) */
 .activity-row{display:flex;align-items:flex-start;gap:.75rem;padding:.85rem 0;border-bottom:1px solid var(--border)}
 .activity-row:last-child{border-bottom:none}
 .activity-avatar{width:34px;height:34px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:800;font-size:.85rem;flex-shrink:0}
 .activity-name{font-weight:600;font-size:.92rem}
 .activity-meta{font-size:.82rem;color:var(--text-soft);margin-top:.1rem}
-
-/* Dashboard */
 .dashboard-top{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(320px,1fr);gap:1.5rem;margin-bottom:1.75rem}
 .dashboard-intro{padding:2rem;border-radius:2rem;background:linear-gradient(160deg,#eef5ff,var(--surface-soft));border:1px solid rgba(37,99,235,.08)}
 .eyebrow{display:inline-flex;margin-bottom:.85rem;padding:.4rem .85rem;border-radius:var(--radius-pill);background:#dbeafe;color:#1d4ed8;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
@@ -161,8 +133,6 @@ h1,h2,h3,h4{line-height:1.2}
 .nav-chip{display:inline-flex;align-items:center;gap:.3rem;padding:.65rem .9rem;border-radius:var(--radius-pill);border:1px solid rgba(37,99,235,.2);color:var(--accent);background:var(--accent-soft);font-weight:700;font-size:.85rem;transition:background var(--transition)}
 .nav-chip:hover{background:rgba(37,99,235,.16)}
 .panel-desc{color:var(--text-muted);font-size:.86rem}
-
-/* Buttons */
 .btn{display:inline-flex;align-items:center;justify-content:center;padding:.45rem 1.1rem;border-radius:.75rem;font-size:.88rem;font-weight:600;cursor:pointer;border:1px solid transparent;transition:background var(--transition),border-color var(--transition),transform var(--transition);white-space:nowrap}
 .btn:hover{transform:translateY(-1px)}
 .btn-sm{padding:.32rem .8rem;font-size:.8rem;border-radius:.6rem}
@@ -170,11 +140,7 @@ h1,h2,h3,h4{line-height:1.2}
 .btn-primary:hover{background:var(--accent-mid);border-color:var(--accent-mid)}
 .btn-outline-primary{background:transparent;color:var(--accent);border-color:rgba(37,99,235,.4)}
 .btn-outline-primary:hover{background:var(--accent-soft)}
-
-/* Utilities */
 .mt-3{margin-top:1rem}.mt-4{margin-top:1.5rem}.pb-3{padding-bottom:1rem}
-
-/* Responsive */
 @@media (max-width:991px){
   .app-shell{grid-template-columns:1fr}
   .app-sidebar{position:fixed;left:-300px;top:0;height:100%;width:280px;z-index:150;transition:left .3s ease}
@@ -234,6 +200,9 @@ h1,h2,h3,h4{line-height:1.2}
                 </a>
                 <a class="sidebar-link @(ctrl == "PracticeSession" ? "active" : "")" asp-controller="PracticeSession" asp-action="Index">
                     <span class="nav-icon">⏱</span> Practice Sessions
+                </a>
+                <a class="sidebar-link @(ctrl == "Ai" ? "active" : "")" asp-controller="Ai" asp-action="Index">
+                    <span class="nav-icon">🤖</span> AI Assistant
                 </a>
             </nav>
 

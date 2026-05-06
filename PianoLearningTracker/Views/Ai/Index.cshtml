@@ -1,0 +1,92 @@
+@{
+    ViewData["Title"] = "AI Assistant";
+}
+
+<ul class="breadcrumb-list">
+    <li><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+    <li>AI Assistant</li>
+</ul>
+
+<div class="detail-card" style="max-width: 900px;">
+    <h2>Razgovor s AI asistentom</h2>
+    <p class="panel-desc mt-3">
+        Postavi pitanje vezano uz podučavanje klavira, vježbanje ili planiranje lekcija.
+        Svaki upit i odgovor se automatski zapisuju u log datoteku projekta.
+    </p>
+
+    <div class="detail-section">
+        <label for="prompt" class="detail-label">Tvoje pitanje</label>
+        <textarea id="prompt" rows="4" style="width:100%;padding:.85rem 1rem;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface-soft);font-family:inherit;resize:vertical;"
+                  placeholder="Npr. Predloži plan vježbanja za početnika koji uči C-dur ljestvicu..."></textarea>
+
+        <div class="mt-3" style="display:flex;gap:.6rem;align-items:center;">
+            <button id="askBtn" class="btn btn-primary">Pošalji</button>
+            <a href="/Ai/LogInfo" target="_blank" class="btn btn-outline-primary btn-sm">Info o logu</a>
+            <span id="status" style="color:var(--text-soft);font-size:.88rem;"></span>
+        </div>
+    </div>
+
+    <div id="responseBox" class="detail-section" style="display:none;">
+        <div class="detail-section-title">Odgovor</div>
+        <div id="response" class="panel-card" style="white-space:pre-wrap;line-height:1.55;"></div>
+        <div id="meta" class="panel-meta mt-3"></div>
+    </div>
+
+    <div id="errorBox" class="detail-section" style="display:none;">
+        <div class="detail-section-title" style="color:#dc2626;">Greška</div>
+        <div id="errorMsg" class="panel-card" style="background:#fee2e2;border-color:#fecaca;color:#991b1b;"></div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    const askBtn = document.getElementById('askBtn');
+    const promptEl = document.getElementById('prompt');
+    const statusEl = document.getElementById('status');
+    const responseBox = document.getElementById('responseBox');
+    const responseEl = document.getElementById('response');
+    const metaEl = document.getElementById('meta');
+    const errorBox = document.getElementById('errorBox');
+    const errorMsg = document.getElementById('errorMsg');
+
+    askBtn.addEventListener('click', async () => {
+        const prompt = promptEl.value.trim();
+        if (!prompt) {
+            statusEl.textContent = 'Unesi pitanje prije slanja.';
+            return;
+        }
+
+        askBtn.disabled = true;
+        statusEl.textContent = 'Šaljem...';
+        responseBox.style.display = 'none';
+        errorBox.style.display = 'none';
+
+        try {
+            const res = await fetch('/Ai/Ask', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ Prompt: prompt })
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                errorMsg.textContent = data.error || 'Nepoznata greška.';
+                errorBox.style.display = 'block';
+                statusEl.textContent = '';
+                return;
+            }
+
+            responseEl.textContent = data.reply;
+            metaEl.textContent = `Model: ${data.model} · Ulazni tokeni: ${data.inputTokens} · Izlazni tokeni: ${data.outputTokens}`;
+            responseBox.style.display = 'block';
+            statusEl.textContent = 'Zapisano u log.';
+        } catch (ex) {
+            errorMsg.textContent = ex.message;
+            errorBox.style.display = 'block';
+            statusEl.textContent = '';
+        } finally {
+            askBtn.disabled = false;
+        }
+    });
+</script>
+}

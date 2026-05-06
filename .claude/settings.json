@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell.exe -ExecutionPolicy Bypass -Command \"$content = [Console]::In.ReadToEnd(); Add-Content -Path '.github/hooks/agent_log.txt' -Value $content\""
+            "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\adrij\\source\\repos\\piano-learning-tracker\\.github\\hooks\\hook-log.ps1\""
           }
         ]
       }
@@ -15,7 +15,27 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell.exe -ExecutionPolicy Bypass -Command \"$content = [Console]::In.ReadToEnd(); Add-Content -Path '.github/hooks/agent_log.txt' -Value $content\""
+            "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\adrij\\source\\repos\\piano-learning-tracker\\.github\\hooks\\hook-log.ps1\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\adrij\\source\\repos\\piano-learning-tracker\\.github\\hooks\\hook-log.ps1\""
+          }
+        ]
+      }
+    ],
+    "ResponseGenerated": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\adrij\\source\\repos\\piano-learning-tracker\\.github\\hooks\\hook-log.ps1\""
           }
         ]
       }
