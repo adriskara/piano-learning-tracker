@@ -1,85 +1,124 @@
 @model PianoLearningTracker.Models.Student
 
 @{
-    ViewData["Title"] = "Student details";
+    ViewData["Title"] = $"{Model.FirstName} {Model.LastName}";
 }
 
 <ul class="breadcrumb-list">
+    <li><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
     <li><a asp-controller="Student" asp-action="Index">Students</a></li>
     <li>@Model.FirstName @Model.LastName</li>
 </ul>
 
 <div class="detail-panel">
-    <section class="detail-card">
-        <h2>@Model.FirstName @Model.LastName</h2>
-        <p class="detail-label">Grade</p>
-        <p class="detail-value">@Model.Grade</p>
 
-        <ul class="detail-list">
-            <li>
-                <span class="detail-label">Email</span>
-                <span class="detail-value">@Model.Email</span>
-            </li>
-            <li>
-                <span class="detail-label">Phone</span>
-                <span class="detail-value">@Model.PhoneNumber</span>
-            </li>
-            <li>
-                <span class="detail-label">Date of birth</span>
-                <span class="detail-value">@Model.DateOfBirth:MMMM d, yyyy</span>
-            </li>
-            <li>
-                <span class="detail-label">Enrollment date</span>
-                <span class="detail-value">@Model.EnrollmentDate:MMMM d, yyyy</span>
-            </li>
-            <li>
-                <span class="detail-label">Notes</span>
-                <span class="detail-value">@Model.Notes</span>
-            </li>
-        </ul>
-    </section>
+    <!-- Left: Profile + Pieces -->
+    <div>
+        <section class="detail-card">
+            <h2 style="margin-bottom:0.25rem;">@Model.FirstName @Model.LastName</h2>
+            <p style="color:var(--text-soft);margin:0 0 1.25rem;">Grade @Model.Grade · Enrolled @Model.EnrollmentDate.ToString("MMMM yyyy")</p>
 
-    <section class="detail-card">
-        <h2>Progress overview</h2>
-        <ul class="detail-list">
-            <li>
-                <span class="detail-label">Lessons</span>
-                <span class="detail-value">@Model.Lessons.Count</span>
-            </li>
-            <li>
-                <span class="detail-label">Practice sessions</span>
-                <span class="detail-value">@Model.PracticeSessions.Count</span>
-            </li>
-            <li>
-                <span class="detail-label">Assigned pieces</span>
-                <span class="detail-value">@Model.StudentPieces.Count</span>
-            </li>
-        </ul>
+            <ul class="detail-list">
+                <li><span class="detail-label">Email</span><span class="detail-value">@Model.Email</span></li>
+                <li><span class="detail-label">Phone</span><span class="detail-value">@Model.PhoneNumber</span></li>
+                <li><span class="detail-label">Date of birth</span><span class="detail-value">@Model.DateOfBirth.ToString("MMMM d, yyyy")</span></li>
+                <li><span class="detail-label">Notes</span><span class="detail-value">@Model.Notes</span></li>
+            </ul>
+
+            @if (Model.StudentPieces.Any())
+            {
+                <div class="detail-section">
+                    <p class="detail-section-title">🎼 Piece progress</p>
+                    @foreach (var sp in Model.StudentPieces)
+                    {
+                        <div class="piece-row">
+                            <div class="piece-row-header">
+                                <span class="piece-row-title">@sp.Piece.Title</span>
+                                @if (sp.IsCompleted)
+                                {
+                                    <span class="achievement-badge">🏆 Completed</span>
+                                }
+                            </div>
+                            <div class="progress-block">
+                                <div class="progress-label">
+                                    <span>Progress</span>
+                                    <strong>@sp.ProgressRating / 10</strong>
+                                </div>
+                                <div class="progress-track">
+                                    <div class="progress-fill @(sp.IsCompleted ? "done" : sp.ProgressRating >= 8 ? "gold" : "")"
+                                         style="width: @(sp.ProgressRating * 10)%;"></div>
+                                </div>
+                            </div>
+                            <p class="piece-row-note">@sp.Notes</p>
+                        </div>
+                    }
+                </div>
+            }
+        </section>
+    </div>
+
+    <!-- Right: Stats + Timeline -->
+    <div style="display:flex;flex-direction:column;gap:1.2rem;">
+
+        <section class="detail-card">
+            <h2>📊 Performance summary</h2>
+            <ul class="detail-list">
+                <li>
+                    <span class="detail-label">Total lessons</span>
+                    <span class="detail-value">@Model.Lessons.Count</span>
+                </li>
+                <li>
+                    <span class="detail-label">Practice sessions</span>
+                    <span class="detail-value">@Model.PracticeSessions.Count</span>
+                </li>
+                <li>
+                    <span class="detail-label">Total practice time</span>
+                    <span class="detail-value">@Model.PracticeSessions.Sum(ps => ps.DurationMinutes) min</span>
+                </li>
+                <li>
+                    <span class="detail-label">Pieces assigned</span>
+                    <span class="detail-value">@Model.StudentPieces.Count</span>
+                </li>
+                <li>
+                    <span class="detail-label">Pieces completed</span>
+                    <span class="detail-value">@Model.StudentPieces.Count(sp => sp.IsCompleted)</span>
+                </li>
+                @if (Model.PracticeSessions.Any())
+                {
+                    <li>
+                        <span class="detail-label">Avg quality rating</span>
+                        <span class="detail-value">
+                            @(Model.PracticeSessions.Average(ps => ps.QualityRating).ToString("0.0")) / 5
+                        </span>
+                    </li>
+                }
+            </ul>
+        </section>
 
         @if (Model.Lessons.Any())
         {
-            <h3 class="mt-4">Lessons</h3>
-            <ul class="detail-list">
-                @foreach (var lesson in Model.Lessons)
-                {
-                    <li>
-                        <strong>@lesson.ScheduledDate:MMM d</strong> – <a asp-controller="Lesson" asp-action="Details" asp-route-id="@lesson.Id">Lesson #@lesson.Id</a>
-                    </li>
-                }
-            </ul>
+            <section class="detail-card">
+                <h2>📅 Lesson timeline</h2>
+                <ul class="timeline">
+                    @foreach (var lesson in Model.Lessons.OrderBy(l => l.ScheduledDate))
+                    {
+                        <li class="timeline-item">
+                            <div class="timeline-dot @(lesson.Status == PianoLearningTracker.Models.LessonStatus.Completed ? "done" : "")"></div>
+                            <div class="timeline-date">@lesson.ScheduledDate.ToString("MMM d, yyyy · HH:mm")</div>
+                            <div class="timeline-title">
+                                Lesson #@lesson.Id — @lesson.Status
+                            </div>
+                            @if (!string.IsNullOrEmpty(lesson.Notes))
+                            {
+                                <p class="timeline-note">@lesson.Notes</p>
+                            }
+                            <a style="font-size:0.82rem;color:var(--accent);"
+                               asp-controller="Lesson" asp-action="Details" asp-route-id="@lesson.Id">View lesson →</a>
+                        </li>
+                    }
+                </ul>
+            </section>
         }
 
-        @if (Model.PracticeSessions.Any())
-        {
-            <h3 class="mt-4">Practice sessions</h3>
-            <ul class="detail-list">
-                @foreach (var session in Model.PracticeSessions)
-                {
-                    <li>
-                        <strong>@session.Date:MMM d</strong> – <a asp-controller="PracticeSession" asp-action="Details" asp-route-id="@session.Id">Session #@session.Id</a>
-                    </li>
-                }
-            </ul>
-        }
-    </section>
+    </div>
 </div>

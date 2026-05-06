@@ -1,4 +1,4 @@
-﻿@model PianoLearningTracker.Models.HomeIndexViewModel
+@model PianoLearningTracker.Models.HomeIndexViewModel
 
 @{
     ViewData["Title"] = "Dashboard";
@@ -6,62 +6,70 @@
 
 <section class="dashboard-top">
     <div class="dashboard-intro">
-        <span class="eyebrow">Control Center</span>
-        <h1>Studio pulse &amp; progress dashboard</h1>
-        <p>Monitor mock student progress, upcoming lessons, and the latest practice activity from the Lab 1 data repository.</p>
+        <span class="eyebrow">🎹 Studio Overview</span>
+        <h2 style="margin:0 0 0.5rem; font-size:1.6rem; font-weight:800; letter-spacing:-0.03em;">
+            Welcome to Piano Learning Tracker
+        </h2>
+        <p style="color:var(--text-muted); margin:0;">
+            Monitor student progress, upcoming lessons, and practice activity from the mock data repository.
+        </p>
     </div>
     <div class="dashboard-metrics">
         <article class="metric-card metric-primary">
             <h3>Students</h3>
             <p class="metric-value">@Model.StudentCount</p>
-            <p class="metric-desc">Active learners in the mock dataset.</p>
+            <p class="metric-desc">Active learners</p>
         </article>
         <article class="metric-card metric-secondary">
             <h3>Teachers</h3>
             <p class="metric-value">@Model.TeacherCount</p>
-            <p class="metric-desc">Instructors available for lessons.</p>
+            <p class="metric-desc">Instructors</p>
         </article>
         <article class="metric-card metric-accent">
             <h3>Pieces</h3>
             <p class="metric-value">@Model.PieceCount</p>
-            <p class="metric-desc">Repertoire items currently assigned.</p>
+            <p class="metric-desc">Repertoire items</p>
         </article>
         <article class="metric-card metric-info">
             <h3>Lessons</h3>
             <p class="metric-value">@Model.LessonCount</p>
-            <p class="metric-desc">Total lesson records in the repository.</p>
+            <p class="metric-desc">Total records</p>
         </article>
         <article class="metric-card metric-warning">
-            <h3>Practice sessions</h3>
+            <h3>Practice</h3>
             <p class="metric-value">@Model.PracticeSessionCount</p>
-            <p class="metric-desc">Recorded practice entries.</p>
+            <p class="metric-desc">Sessions logged</p>
         </article>
         <article class="metric-card metric-tertiary">
             <h3>Upcoming</h3>
             <p class="metric-value">@Model.ScheduledLessonCount</p>
-            <p class="metric-desc">Lessons still scheduled to happen.</p>
+            <p class="metric-desc">Scheduled lessons</p>
         </article>
     </div>
 </section>
 
 <section class="dashboard-grid">
+
+    <!-- Next Lesson -->
     <article class="dashboard-panel">
         <div class="panel-header">
             <div>
-                <h2>Next scheduled lesson</h2>
-                <p class="panel-subtitle">A quick preview of the next lesson in the queue.</p>
+                <h2>📅 Next lesson</h2>
+                <p class="panel-subtitle">Upcoming scheduled session</p>
             </div>
-            <a class="btn btn-sm btn-outline-primary" asp-controller="Lesson" asp-action="Index">View all lessons</a>
+            <a class="btn btn-sm btn-outline-primary" asp-controller="Lesson" asp-action="Index">All lessons</a>
         </div>
-
         @if (Model.NextLesson is not null)
         {
             <div class="panel-card">
-                <p class="panel-label">Lesson #@Model.NextLesson.Id | @Model.NextLesson.ScheduledDate:dddd, MMM d</p>
-                <h3>@Model.NextLesson.Student.FirstName @Model.NextLesson.Student.LastName</h3>
+                <p class="panel-label">Lesson #@Model.NextLesson.Id · @Model.NextLesson.ScheduledDate.ToString("dddd, MMM d")</p>
+                <strong style="font-size:1rem;">@Model.NextLesson.Student.FirstName @Model.NextLesson.Student.LastName</strong>
                 <p class="panel-meta">Teacher: @Model.NextLesson.Teacher.FirstName @Model.NextLesson.Teacher.LastName</p>
-                <p class="panel-meta">Duration: @Model.NextLesson.DurationMinutes min • Status: @Model.NextLesson.Status</p>
-                <p class="panel-note">Homework: @Model.NextLesson.HomeworkAssigned</p>
+                <p class="panel-meta">Duration: @Model.NextLesson.DurationMinutes min</p>
+                @if (!string.IsNullOrEmpty(Model.NextLesson.HomeworkAssigned))
+                {
+                    <p class="panel-note">🏠 @Model.NextLesson.HomeworkAssigned</p>
+                }
                 <div class="panel-actions">
                     <a class="btn btn-primary btn-sm" asp-controller="Lesson" asp-action="Details" asp-route-id="@Model.NextLesson.Id">Open details</a>
                 </div>
@@ -69,29 +77,101 @@
         }
         else
         {
-            <div class="panel-card panel-empty">
-                <p>No future lesson is scheduled right now.</p>
-            </div>
+            <div class="panel-empty">No upcoming lessons scheduled.</div>
         }
     </article>
 
+    <!-- Practice Streaks -->
     <article class="dashboard-panel">
         <div class="panel-header">
             <div>
-                <h2>Latest practice session</h2>
-                <p class="panel-subtitle">Most recent study session captured from the mock data.</p>
+                <h2>🔥 Practice streaks</h2>
+                <p class="panel-subtitle">Sessions per student</p>
             </div>
-            <a class="btn btn-sm btn-outline-primary" asp-controller="PracticeSession" asp-action="Index">View all sessions</a>
+            <a class="btn btn-sm btn-outline-primary" asp-controller="PracticeSession" asp-action="Index">All sessions</a>
         </div>
+        @if (Model.PracticeStreaks.Any())
+        {
+            <div class="streak-list">
+                @foreach (var streak in Model.PracticeStreaks)
+                {
+                    <div>
+                        <div class="streak-row">
+                            <span class="streak-name">@streak.StudentName</span>
+                            <span class="streak-count">@streak.SessionCount session@(streak.SessionCount == 1 ? "" : "s")</span>
+                        </div>
+                        <div class="progress-track" style="margin-top:0.4rem;">
+                            @{
+                                var maxSessions = Model.PracticeStreaks.Max(s => s.SessionCount);
+                                var pct = maxSessions > 0 ? streak.SessionCount * 100 / maxSessions : 0;
+                            }
+                            <div class="progress-fill" style="width:@pct%;"></div>
+                        </div>
+                        <p style="font-size:0.78rem;color:var(--text-soft);margin:0.25rem 0 0;">@streak.TotalMinutes min total</p>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="panel-empty">No practice sessions recorded yet.</div>
+        }
+    </article>
 
+    <!-- Recent Achievements -->
+    <article class="dashboard-panel">
+        <div class="panel-header">
+            <div>
+                <h2>🏆 Achievements</h2>
+                <p class="panel-subtitle">Completed pieces</p>
+            </div>
+        </div>
+        @if (Model.RecentAchievements.Any())
+        {
+            @foreach (var a in Model.RecentAchievements)
+            {
+                <div class="achievement-row">
+                    <span class="achievement-icon">🎖</span>
+                    <div>
+                        <div class="achievement-title">@a.Piece.Title</div>
+                        <div class="achievement-meta">
+                            @a.Student.FirstName @a.Student.LastName
+                            @if (a.CompletionDate.HasValue)
+                            {
+                                <span> · Completed @a.CompletionDate.Value.ToString("MMM yyyy")</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="panel-empty">No completed pieces yet — keep practising!</div>
+        }
+    </article>
+
+    <!-- Latest Practice -->
+    <article class="dashboard-panel">
+        <div class="panel-header">
+            <div>
+                <h2>⏱ Latest practice</h2>
+                <p class="panel-subtitle">Most recent session</p>
+            </div>
+        </div>
         @if (Model.LatestPracticeSession is not null)
         {
             <div class="panel-card">
-                <p class="panel-label">Session #@Model.LatestPracticeSession.Id | @Model.LatestPracticeSession.Date:MMM d, yyyy</p>
-                <h3>@Model.LatestPracticeSession.Student.FirstName @Model.LatestPracticeSession.Student.LastName</h3>
-                <p class="panel-meta">Piece: @Model.LatestPracticeSession.Piece.Title</p>
-                <p class="panel-meta">Duration: @Model.LatestPracticeSession.DurationMinutes min • Rating: @Model.LatestPracticeSession.QualityRating/5</p>
-                <p class="panel-note">Goals: @Model.LatestPracticeSession.Goals</p>
+                <p class="panel-label">@Model.LatestPracticeSession.Date.ToString("MMM d, yyyy")</p>
+                <strong>@Model.LatestPracticeSession.Student.FirstName @Model.LatestPracticeSession.Student.LastName</strong>
+                <p class="panel-meta">🎼 @Model.LatestPracticeSession.Piece.Title</p>
+                <p class="panel-meta">@Model.LatestPracticeSession.DurationMinutes min ·
+                    @for (var i = 1; i <= 5; i++)
+                    {
+                        <span>@(i <= Model.LatestPracticeSession.QualityRating ? "★" : "☆")</span>
+                    }
+                </p>
+                <p class="panel-note">@Model.LatestPracticeSession.Goals</p>
                 <div class="panel-actions">
                     <a class="btn btn-primary btn-sm" asp-controller="PracticeSession" asp-action="Details" asp-route-id="@Model.LatestPracticeSession.Id">Open details</a>
                 </div>
@@ -99,23 +179,23 @@
         }
         else
         {
-            <div class="panel-card panel-empty">
-                <p>No practice sessions have been recorded yet.</p>
-            </div>
+            <div class="panel-empty">No practice sessions recorded yet.</div>
         }
     </article>
 
-    <article class="dashboard-panel dashboard-cta">
+    <!-- Navigate -->
+    <article class="dashboard-panel dashboard-cta" style="grid-column: span 2;">
         <div class="panel-header">
-            <h2>Navigate the studio</h2>
+            <h2>🗺 Navigate the studio</h2>
         </div>
         <div class="dashboard-links">
-            <a class="nav-chip" asp-controller="Student" asp-action="Index">Students</a>
-            <a class="nav-chip" asp-controller="Teacher" asp-action="Index">Teachers</a>
-            <a class="nav-chip" asp-controller="Piece" asp-action="Index">Pieces</a>
-            <a class="nav-chip" asp-controller="Lesson" asp-action="Index">Lessons</a>
-            <a class="nav-chip" asp-controller="PracticeSession" asp-action="Index">Practice Sessions</a>
+            <a class="nav-chip" asp-controller="Student" asp-action="Index">🎓 Students</a>
+            <a class="nav-chip" asp-controller="Teacher" asp-action="Index">🎵 Teachers</a>
+            <a class="nav-chip" asp-controller="Piece" asp-action="Index">🎼 Pieces</a>
+            <a class="nav-chip" asp-controller="Lesson" asp-action="Index">📅 Lessons</a>
+            <a class="nav-chip" asp-controller="PracticeSession" asp-action="Index">⏱ Practice Sessions</a>
         </div>
-        <p class="panel-desc">The dashboard presents a central custom home page with access to all entity views and a summary of the Lab 1 mock repository.</p>
+        <p class="panel-desc">All data is sourced from the static mock repository built from Lab 1 models.</p>
     </article>
+
 </section>

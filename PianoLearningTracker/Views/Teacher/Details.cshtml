@@ -1,58 +1,113 @@
 @model PianoLearningTracker.Models.Teacher
 
 @{
-    ViewData["Title"] = "Teacher details";
+    ViewData["Title"] = $"{Model.FirstName} {Model.LastName}";
+    var teacherStudents = Model.Lessons
+        .Select(l => l.Student)
+        .DistinctBy(s => s.Id)
+        .ToList();
 }
 
 <ul class="breadcrumb-list">
+    <li><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
     <li><a asp-controller="Teacher" asp-action="Index">Teachers</a></li>
     <li>@Model.FirstName @Model.LastName</li>
 </ul>
 
 <div class="detail-panel">
-    <section class="detail-card">
-        <h2>@Model.FirstName @Model.LastName</h2>
-        <p class="detail-label">Specialization</p>
-        <p class="detail-value">@Model.Specialization</p>
-        <p class="detail-label">Experience</p>
-        <p class="detail-value">@Model.YearsOfExperience years</p>
 
-        <ul class="detail-list">
-            <li>
-                <span class="detail-label">Email</span>
-                <span class="detail-value">@Model.Email</span>
-            </li>
-            <li>
-                <span class="detail-label">Phone</span>
-                <span class="detail-value">@Model.PhoneNumber</span>
-            </li>
-            <li>
-                <span class="detail-label">Hire date</span>
-                <span class="detail-value">@Model.HireDate:MMMM d, yyyy</span>
-            </li>
-            <li>
-                <span class="detail-label">Biography</span>
-                <span class="detail-value">@Model.Biography</span>
-            </li>
-        </ul>
-    </section>
+    <!-- Left: Profile + Lesson schedule -->
+    <div>
+        <section class="detail-card">
+            <h2 style="margin-bottom:0.25rem;">@Model.FirstName @Model.LastName</h2>
+            <p style="color:var(--text-soft);margin:0 0 1.25rem;">
+                🎵 @Model.Specialization · @Model.YearsOfExperience years experience
+            </p>
 
-    <section class="detail-card">
-        <h2>Lesson schedule</h2>
-        @if (Model.Lessons.Any())
-        {
             <ul class="detail-list">
-                @foreach (var lesson in Model.Lessons.OrderBy(l => l.ScheduledDate))
-                {
-                    <li>
-                        <strong>@lesson.ScheduledDate:MMM d</strong> – <a asp-controller="Lesson" asp-action="Details" asp-route-id="@lesson.Id">Lesson #@lesson.Id</a> with @lesson.Student.FirstName @lesson.Student.LastName
-                    </li>
-                }
+                <li><span class="detail-label">Email</span><span class="detail-value">@Model.Email</span></li>
+                <li><span class="detail-label">Phone</span><span class="detail-value">@Model.PhoneNumber</span></li>
+                <li><span class="detail-label">Hire date</span><span class="detail-value">@Model.HireDate.ToString("MMMM d, yyyy")</span></li>
+                <li><span class="detail-label">Biography</span><span class="detail-value">@Model.Biography</span></li>
             </ul>
-        }
-        else
+
+            @if (Model.Lessons.Any())
+            {
+                <div class="detail-section">
+                    <p class="detail-section-title">📅 Lesson schedule</p>
+                    <ul class="timeline">
+                        @foreach (var lesson in Model.Lessons.OrderBy(l => l.ScheduledDate))
+                        {
+                            <li class="timeline-item">
+                                <div class="timeline-dot @(lesson.Status == PianoLearningTracker.Models.LessonStatus.Completed ? "done" : "")"></div>
+                                <div class="timeline-date">@lesson.ScheduledDate.ToString("MMM d, yyyy · HH:mm")</div>
+                                <div class="timeline-title">
+                                    @lesson.Student.FirstName @lesson.Student.LastName
+                                    <span style="font-weight:400;color:var(--text-soft);"> — @lesson.Status, @lesson.DurationMinutes min</span>
+                                </div>
+                                <a style="font-size:0.82rem;color:var(--accent);"
+                                   asp-controller="Lesson" asp-action="Details" asp-route-id="@lesson.Id">View lesson →</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        </section>
+    </div>
+
+    <!-- Right: Stats + Student activity -->
+    <div style="display:flex;flex-direction:column;gap:1.2rem;">
+
+        <section class="detail-card">
+            <h2>📊 Teaching summary</h2>
+            <ul class="detail-list">
+                <li><span class="detail-label">Total lessons</span><span class="detail-value">@Model.Lessons.Count</span></li>
+                <li>
+                    <span class="detail-label">Completed lessons</span>
+                    <span class="detail-value">@Model.Lessons.Count(l => l.Status == PianoLearningTracker.Models.LessonStatus.Completed)</span>
+                </li>
+                <li>
+                    <span class="detail-label">Scheduled lessons</span>
+                    <span class="detail-value">@Model.Lessons.Count(l => l.Status == PianoLearningTracker.Models.LessonStatus.Scheduled)</span>
+                </li>
+                <li><span class="detail-label">Students taught</span><span class="detail-value">@teacherStudents.Count</span></li>
+            </ul>
+        </section>
+
+        @if (teacherStudents.Any())
         {
-            <p class="detail-value">No lessons are currently assigned.</p>
+            <section class="detail-card">
+                <h2>🎓 Student activity</h2>
+                <p style="font-size:0.85rem;color:var(--text-soft);margin:0 0 1rem;">Recent practice from assigned students</p>
+                @foreach (var student in teacherStudents)
+                {
+                    <div class="activity-row">
+                        <div class="activity-avatar">
+                            @student.FirstName[0]@student.LastName[0]
+                        </div>
+                        <div>
+                            <div class="activity-name">
+                                <a asp-controller="Student" asp-action="Details" asp-route-id="@student.Id">
+                                    @student.FirstName @student.LastName
+                                </a>
+                            </div>
+                            @if (student.PracticeSessions.Any())
+                            {
+                                var last = student.PracticeSessions.OrderByDescending(ps => ps.Date).First();
+                                <div class="activity-meta">
+                                    Last practice: @last.Date.ToString("MMM d") · @last.DurationMinutes min ·
+                                    @last.Piece.Title
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="activity-meta" style="color:#94a3b8;">No practice sessions recorded</div>
+                            }
+                        </div>
+                    </div>
+                }
+            </section>
         }
-    </section>
+
+    </div>
 </div>
