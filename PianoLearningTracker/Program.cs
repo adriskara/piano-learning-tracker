@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using PianoLearningTracker.DAL;
 using PianoLearningTracker.Models;
 using PianoLearningTracker.Repositories;
 using PianoLearningTracker.Services;
@@ -5,7 +7,11 @@ using PianoLearningTracker.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<IMockRepository, MockRepository>();
+builder.Services.AddScoped<IMockRepository, EfRepository>();
+
+builder.Services.AddDbContext<PianoLearningTrackerDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("PianoLearningTrackerDbContext")));
 
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<IAiLoggerService, AiLoggerService>();

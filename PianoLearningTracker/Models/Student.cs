@@ -1,25 +1,28 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace PianoLearningTracker.Models
 {
     // Predstavlja učenika koji pohađa nastavu klavira
     public class Student
     {
         // jedinstveni identifikator učenika
+        [Key]
         public int Id { get; set; }
 
         // ime učenika
-        public string FirstName { get; set; }
+        public string FirstName { get; set; } = null!;
 
         // prezime učenika
-        public string LastName { get; set; }
+        public string LastName { get; set; } = null!;
 
         // datum rođenja — koristi se za izračun dobi
         public DateTime DateOfBirth { get; set; }
 
         // email adresa za kontakt
-        public string Email { get; set; }
+        public string Email { get; set; } = null!;
 
         // broj telefona za kontakt
-        public string PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; } = null!;
 
         // datum upisa u školu/tečaj
         public DateTime EnrollmentDate { get; set; }
@@ -28,22 +31,15 @@ namespace PianoLearningTracker.Models
         public int Grade { get; set; }
 
         // slobodne bilješke o učeniku
-        public string Notes { get; set; }
+        public string? Notes { get; set; }
 
         // 1-N: jedan Student ima više Lessons
-        public List<Lesson> Lessons { get; set; }
+        public virtual ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
 
         // 1-N: jedan Student ima više PracticeSessions
-        public List<PracticeSession> PracticeSessions { get; set; }
+        public virtual ICollection<PracticeSession> PracticeSessions { get; set; } = new List<PracticeSession>();
 
         // N-N: Student ↔ Piece (bridge tablica StudentPiece)
-        public List<StudentPiece> StudentPieces { get; set; }
-
-        public Student()
-        {
-            Lessons = new List<Lesson>();
-            PracticeSessions = new List<PracticeSession>();
-            StudentPieces = new List<StudentPiece>();
-        }
+        public virtual ICollection<StudentPiece> StudentPieces { get; set; } = new List<StudentPiece>();
     }
 }

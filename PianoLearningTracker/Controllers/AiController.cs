@@ -3,6 +3,7 @@ using PianoLearningTracker.Services;
 
 namespace PianoLearningTracker.Controllers
 {
+    [Route("asistent")]
     public class AiController : Controller
     {
         private readonly IAnthropicService _anthropic;
@@ -14,9 +15,13 @@ namespace PianoLearningTracker.Controllers
             _aiLogger = aiLogger;
         }
 
+        // URL: /asistent
+        [Route("")]
         public IActionResult Index() => View();
 
+        // URL: /asistent/pitaj
         [HttpPost]
+        [Route("pitaj")]
         public async Task<IActionResult> Ask([FromBody] AskRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.Prompt))
@@ -41,14 +46,16 @@ namespace PianoLearningTracker.Controllers
             }
         }
 
+        // URL: /asistent/zapisi
+        [Route("zapisi")]
         public async Task<IActionResult> Logs(string? sessionId)
         {
             var logs = await _aiLogger.GetLogsAsync(sessionId);
             return Json(logs);
         }
 
-        // Vraća osnovne informacije o logu (putanja, veličina, broj zapisa)
-        // Korisno za brzu provjeru iz preglednika: /Ai/LogInfo
+        // URL: /asistent/info
+        [Route("info")]
         public async Task<IActionResult> LogInfo()
         {
             var logs = await _aiLogger.GetLogsAsync();

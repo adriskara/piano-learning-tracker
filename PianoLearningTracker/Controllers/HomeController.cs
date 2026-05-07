@@ -5,6 +5,7 @@ using System.Diagnostics;
 
 namespace PianoLearningTracker.Controllers
 {
+    [Route("pocetna")]
     public class HomeController : Controller
     {
         private readonly IMockRepository _mockRepository;
@@ -14,6 +15,9 @@ namespace PianoLearningTracker.Controllers
             _mockRepository = mockRepository;
         }
 
+        // URL: /  ILI  /pocetna
+        [Route("")]
+        [Route("/")]
         public IActionResult Index()
         {
             var allStudents = _mockRepository.GetAllStudents();
@@ -61,6 +65,8 @@ namespace PianoLearningTracker.Controllers
             return View(viewModel);
         }
 
+        // URL: /pocetna/privatnost
+        [Route("privatnost")]
         public IActionResult Privacy()
         {
             return View();

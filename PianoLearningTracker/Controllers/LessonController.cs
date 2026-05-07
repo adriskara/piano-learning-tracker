@@ -3,6 +3,7 @@ using PianoLearningTracker.Repositories;
 
 namespace PianoLearningTracker.Controllers
 {
+    [Route("satovi")]
     public class LessonController : Controller
     {
         private readonly IMockRepository _repository;
@@ -12,11 +13,16 @@ namespace PianoLearningTracker.Controllers
             _repository = repository;
         }
 
+        // URL: /satovi
+        [Route("")]
         public IActionResult Index()
         {
             return View(_repository.GetAllLessons());
         }
 
+        // Constraint :int osigurava da id mora biti cijeli broj (ne /satovi/detalji/abc)
+        // URL: /satovi/detalji/1
+        [Route("detalji/{id:int}")]
         public IActionResult Details(int id)
         {
             var lesson = _repository.GetLessonById(id);

@@ -1,22 +1,25 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace PianoLearningTracker.Models
 {
     // Predstavlja glazbenu skladbu koja se uči na satu ili vježba
     public class Piece
     {
         // jedinstveni identifikator skladbe
+        [Key]
         public int Id { get; set; }
 
         // naziv skladbe (npr. "Für Elise")
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
 
         // ime skladatelja (npr. "Ludwig van Beethoven")
-        public string Composer { get; set; }
+        public string Composer { get; set; } = null!;
 
         // težina skladbe (enum: Beginner → Expert)
         public DifficultyLevel Difficulty { get; set; }
 
         // glazbeni žanr (npr. "Klasika", "Etida", "Sonata")
-        public string Genre { get; set; }
+        public string? Genre { get; set; }
 
         // trajanje izvođenja u minutama
         public int DurationMinutes { get; set; }
@@ -25,22 +28,15 @@ namespace PianoLearningTracker.Models
         public int YearComposed { get; set; }
 
         // kratki opis ili napomene o skladbi
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         // N-N: Piece ↔ Student (bridge tablica StudentPiece)
-        public List<StudentPiece> StudentPieces { get; set; }
+        public virtual ICollection<StudentPiece> StudentPieces { get; set; } = new List<StudentPiece>();
 
         // N-N: Piece ↔ Lesson (bridge tablica LessonPiece)
-        public List<LessonPiece> LessonPieces { get; set; }
+        public virtual ICollection<LessonPiece> LessonPieces { get; set; } = new List<LessonPiece>();
 
         // 1-N: jedna Piece ima više PracticeSessions
-        public List<PracticeSession> PracticeSessions { get; set; }
-
-        public Piece()
-        {
-            StudentPieces = new List<StudentPiece>();
-            LessonPieces = new List<LessonPiece>();
-            PracticeSessions = new List<PracticeSession>();
-        }
+        public virtual ICollection<PracticeSession> PracticeSessions { get; set; } = new List<PracticeSession>();
     }
 }
