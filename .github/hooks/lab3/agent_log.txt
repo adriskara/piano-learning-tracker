@@ -620,3 +620,81 @@
 [DONE]      2026-05-07 18:12:42  Read  (1ms)
 [TOOL]      2026-05-07 18:13:12  Write
 [DONE]      2026-05-07 18:13:59  Write  (12ms)
+[PROMPT]    2026-05-07 18:21:01  [unknown]  za┼íto mi ne prikazuje updateane fileove remote na githubu : PS C:\Users\adrij\source\repos\piano-learning-tracker> git ...
+[PROMPT]    2026-05-08 14:11:39  [unknown]  mo┼że
+[TOOL]      2026-05-08 14:11:58  Read
+[DONE]      2026-05-08 14:12:00  Read  (6ms)
+[TOOL]      2026-05-08 14:13:06  Read
+[DONE]      2026-05-08 14:13:07  Read  (3ms)
+[TOOL]      2026-05-08 14:13:18  Edit
+[DONE]      2026-05-08 14:13:26  Edit  (28ms)
+[TOOL]      2026-05-08 14:14:30  Edit
+[DONE]      2026-05-08 14:14:38  Edit  (70ms)
+[PROMPT]    2026-05-08 14:20:34  [unknown]  kad otvorim aplikaciju ne primjenjuje se css
+[TOOL]      2026-05-08 14:21:05  Read
+[TOOL]      2026-05-08 14:21:05  Read
+[DONE]      2026-05-08 14:21:06  Read  (5ms)
+[DONE]      2026-05-08 14:21:06  Read  (2ms)
+[TOOL]      2026-05-08 14:21:40  Edit
+[DONE]      2026-05-08 14:23:02  Edit  (26ms)
+[PROMPT]    2026-05-08 14:24:22  [unknown]  i dalje se ne primjenjuje css na stranici
+[TOOL]      2026-05-08 14:24:44  Read
+[DONE]      2026-05-08 14:24:45  Read  (3ms)
+[TOOL]      2026-05-08 14:24:51  Edit
+[DONE]      2026-05-08 14:25:09  Edit  (19ms)
+[PROMPT]    2026-05-08 14:27:19  [unknown]  URL je http://localhost:5000/css/site.cs, status je 200
+[PROMPT]    2026-05-08 14:29:48  [unknown]  i dalje isto
+[TOOL]      2026-05-08 14:30:38  Edit
+[DONE]      2026-05-08 14:31:08  Edit  (25ms)
+[TOOL]      2026-05-08 14:31:12  Bash   80
+[DONE]      2026-05-08 14:31:16  Bash  (2957ms)
+[PROMPT]    2026-05-08 14:34:54  [unknown]  URL je http://localhost:5000/css/site.css . I dalje se ne primjenjuje
+[TOOL]      2026-05-08 14:36:07  Read
+[DONE]      2026-05-08 14:36:08  Read  (3ms)
+[PROMPT]    2026-05-08 14:38:41  [unknown]  kad se otvori tab Response prazno je. Da, <link rel="stylesheet" href="/css/site.css">
+[TOOL]      2026-05-08 14:39:56  Read
+[DONE]      2026-05-08 14:39:57  Read  (3ms)
+[TOOL]      2026-05-08 14:40:04  Edit
+[DONE]      2026-05-08 14:40:56  Edit  (26ms)
+[PROMPT]    2026-05-08 14:42:57  [unknown]  ne, i dalje ne radi
+[TOOL]      2026-05-08 14:43:44  Bash   80
+[DONE]      2026-05-08 14:43:45  Bash  (308ms)
+[TOOL]      2026-05-08 14:43:54  Read
+[DONE]      2026-05-08 14:43:55  Read  (3ms)
+[TOOL]      2026-05-08 14:44:03  Edit
+[DONE]      2026-05-08 14:44:14  Edit  (28ms)
+[PROMPT]    2026-05-08 14:48:17  [unknown]  ne, samo se status promjenio 404
+[TOOL]      2026-05-08 14:48:57  PowerShell   80
+[TOOL]      2026-05-08 14:49:39  PowerShell   80
+[DONE]      2026-05-08 14:50:17  PowerShell  (16613ms)
+[TOOL]      2026-05-08 14:50:30  Edit
+[DONE]      2026-05-08 14:50:39  Edit  (22ms)
+[PROMPT]    2026-05-08 14:53:32  [unknown]  crveni obrub nije vidljiv, Response tab je i dalje prazan. Treba li i dalje biti oznacen Disable cache?
+[TOOL]      2026-05-08 14:54:18  Bash   80
+[DONE]      2026-05-08 14:54:20  Bash  (298ms)
+[TOOL]      2026-05-08 14:54:25  Bash   80
+[DONE]      2026-05-08 14:54:27  Bash  (374ms)
+[TOOL]      2026-05-08 14:54:50  Read
+[DONE]      2026-05-08 14:54:51  Read  (2ms)
+[TOOL]      2026-05-08 14:55:05  Edit
+[TOOL]      2026-05-08 14:58:53  Read
+[DONE]      2026-05-08 14:58:54  Read  (3ms)
+[TOOL]      2026-05-08 14:59:08  Edit
+[DONE]      2026-05-08 15:02:10  Edit  (33ms)
+[TOOL]      2026-05-08 15:02:15  PowerShell   80
+[PROMPT]    2026-05-08 15:04:43  [unknown]  zaustavila sam, mo┼że┼í li ostalo sam
+[TOOL]      2026-05-08 15:04:49  PowerShell   80
+[DONE]      2026-05-08 15:04:58  PowerShell  (5345ms)
+[TOOL]      2026-05-08 15:05:03  Bash   80
+[DONE]      2026-05-08 15:05:04  Bash  (315ms)
+[TOOL]      2026-05-08 15:05:10  Edit
+[DONE]      2026-05-08 15:05:16  Edit  (21ms)
+[PROMPT]    2026-05-08 15:15:01  [unknown]  Raadiii!
+[PROMPT]    2026-05-08 15:15:15  [unknown]  hvala
+[PROMPT]    2026-05-08 17:06:49  [unknown]  ─Źemu slo┼że ove migracijske skripte koje imam u projektu i po ─Źemu se razlikuju?
+[TOOL]      2026-05-08 17:06:55  Glob   80
+[DONE]      2026-05-08 17:06:56  Glob  (185ms)
+[TOOL]      2026-05-08 17:07:02  Read
+[TOOL]      2026-05-08 17:07:02  Read
+[DONE]      2026-05-08 17:07:03  Read  (5ms)
+[DONE]      2026-05-08 17:07:03  Read  (2ms)
