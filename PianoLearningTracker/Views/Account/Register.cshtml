@@ -1,0 +1,126 @@
+@model PianoLearningTracker.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Novi korisnik";
+    var roles = ViewBag.Roles as List<string> ?? new List<string>();
+    var teachers = ViewBag.Teachers as List<PianoLearningTracker.Models.Teacher> ?? new();
+}
+
+<div class="auth-card" style="max-width:500px;">
+    <div class="auth-icon">👤</div>
+    <h2 class="auth-title">Kreiraj korisnika</h2>
+
+    <form asp-action="Register" method="post" id="registerForm">
+        <div asp-validation-summary="ModelOnly" class="auth-error"></div>
+
+        <div class="form-group">
+            <label asp-for="Email">Email</label>
+            <input asp-for="Email" class="form-control" placeholder="korisnik@email.com" />
+            <span asp-validation-for="Email" class="field-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Password">Lozinka</label>
+            <input asp-for="Password" class="form-control" placeholder="Min. 6 znakova" />
+            <span asp-validation-for="Password" class="field-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ConfirmPassword">Potvrdi lozinku</label>
+            <input asp-for="ConfirmPassword" class="form-control" placeholder="Ponovi lozinku" />
+            <span asp-validation-for="ConfirmPassword" class="field-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Role">Uloga</label>
+            <select asp-for="Role" class="form-control" id="roleSelect">
+                <option value="">-- Odaberi ulogu --</option>
+                @foreach (var role in roles)
+                {
+                    <option value="@role">@role</option>
+                }
+            </select>
+            <span asp-validation-for="Role" class="field-error"></span>
+        </div>
+
+        <!-- Zajednička polja: Teacher i Student -->
+        <div id="nameFields" style="display:none;">
+            <div class="form-group">
+                <label asp-for="FirstName">Ime</label>
+                <input asp-for="FirstName" class="form-control" placeholder="Ime" />
+                <span asp-validation-for="FirstName" class="field-error"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName">Prezime</label>
+                <input asp-for="LastName" class="form-control" placeholder="Prezime" />
+                <span asp-validation-for="LastName" class="field-error"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber">Telefon</label>
+                <input asp-for="PhoneNumber" class="form-control" placeholder="09x-xxx-xxxx" />
+            </div>
+        </div>
+
+        <!-- Teacher polja -->
+        <div id="teacherFields" style="display:none;">
+            <div class="form-group">
+                <label asp-for="Specialization">Specijalizacija</label>
+                <input asp-for="Specialization" class="form-control" placeholder="npr. Klasična glazba" />
+            </div>
+            <div class="form-group">
+                <label asp-for="YearsOfExperience">Godine iskustva</label>
+                <input asp-for="YearsOfExperience" type="number" min="0" max="60" class="form-control" />
+            </div>
+        </div>
+
+        <!-- Student polja -->
+        <div id="studentFields" style="display:none;">
+            @await Html.PartialAsync("_DateTimePicker", new PianoLearningTracker.Models.DateTimePickerModel
+            {
+                FieldId = "DateOfBirth",
+                FieldName = "DateOfBirth",
+                DisplayName = "Datum rođenja",
+                Value = Model.DateOfBirth,
+                IncludeTime = false,
+                Required = false
+            })
+            <div class="form-group">
+                <label asp-for="Grade">Razred (1–6)</label>
+                <input asp-for="Grade" type="number" min="1" max="6" class="form-control" />
+                <span asp-validation-for="Grade" class="field-error"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TeacherId">Primarni profesor</label>
+                <select asp-for="TeacherId" class="form-control">
+                    <option value="">-- Bez profesora --</option>
+                    @foreach (var t in teachers)
+                    {
+                        <option value="@t.Id">@t.FirstName @t.LastName</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary auth-submit">Kreiraj korisnika</button>
+        <a asp-action="UserList" class="btn btn-secondary" style="width:100%;text-align:center;margin-top:0.5rem;">Odustani</a>
+    </form>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        const roleSelect = document.getElementById('roleSelect');
+        const nameFields = document.getElementById('nameFields');
+        const teacherFields = document.getElementById('teacherFields');
+        const studentFields = document.getElementById('studentFields');
+
+        function updateFields() {
+            const role = roleSelect.value;
+            nameFields.style.display = (role === 'Teacher' || role === 'Student') ? '' : 'none';
+            teacherFields.style.display = role === 'Teacher' ? '' : 'none';
+            studentFields.style.display = role === 'Student' ? '' : 'none';
+        }
+
+        roleSelect.addEventListener('change', updateFields);
+        updateFields(); // inicijalni prikaz (npr. pri validation erroru)
+    </script>
+}

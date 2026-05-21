@@ -1,24 +1,48 @@
 @model IEnumerable<PianoLearningTracker.Models.Student>
 
 @{
-    ViewData["Title"] = "Students";
+    ViewData["Title"] = "Učenici";
 }
 
 <ul class="breadcrumb-list">
-    <li>Dashboard</li>
-    <li>Students</li>
+    <li><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+    <li>Učenici</li>
 </ul>
 
-<div class="entity-grid">
-    @foreach (var student in Model)
+<div class="page-toolbar">
+    <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" class="search-input" placeholder="Pretraži učenike..." autocomplete="off" />
+    </div>
+    @if (User.IsInRole("Administrator"))
     {
-        <article class="entity-card">
-            <h2 class="entity-card-title">@student.FirstName @student.LastName</h2>
-            <p class="entity-card-meta">Grade @student.Grade • Enrolled @student.EnrollmentDate:yyyy</p>
-            <p class="entity-card-meta">Email: @student.Email</p>
-            <div class="entity-card-actions">
-                <a class="btn btn-primary btn-sm" asp-action="Details" asp-route-id="@student.Id">View details</a>
-            </div>
-        </article>
+        <a class="btn btn-primary" asp-action="Create">+ Novi učenik</a>
     }
 </div>
+
+<div id="students-container">
+    @await Html.PartialAsync("_StudentList", Model)
+</div>
+
+@section Scripts {
+    <script>
+        // AJAX pretraga — debounce 300ms
+        var searchTimer;
+        document.getElementById('search-input').addEventListener('input', function () {
+            clearTimeout(searchTimer);
+            var q = this.value;
+            searchTimer = setTimeout(function () {
+                fetch('/ucenici/pretraga?q=' + encodeURIComponent(q), {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(function (r) { return r.text(); })
+                .then(function (html) {
+                    document.getElementById('students-container').innerHTML = html;
+                    animateCards();
+                });
+            }, 300);
+        });
+
+        animateCards();
+    </script>
+}

@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PianoLearningTracker.Models;
 
 namespace PianoLearningTracker.DAL
 {
-    public class PianoLearningTrackerDbContext : DbContext
+    public class PianoLearningTrackerDbContext : IdentityDbContext<ApplicationUser>
     {
         public PianoLearningTrackerDbContext(DbContextOptions<PianoLearningTrackerDbContext> options)
             : base(options)
@@ -29,6 +31,13 @@ namespace PianoLearningTracker.DAL
             modelBuilder.Entity<StudentPiece>()
                 .HasKey(sp => new { sp.StudentId, sp.PieceId });
 
+            // Student.TeacherId → Teacher (bez kaskadnog brisanja da bi se izbjegao ciklus)
+            modelBuilder.Entity<Student>()
+                .HasOne(s => s.Teacher)
+                .WithMany(t => t.Students)
+                .HasForeignKey(s => s.TeacherId)
+                .OnDelete(DeleteBehavior.SetNull);
+
             // Seed podaci — nastavnici
             modelBuilder.Entity<Teacher>().HasData(
                 new Teacher { Id = 1, FirstName = "Marija", LastName = "Horvat", Email = "marija.horvat@glazbena.hr", PhoneNumber = "091-111-2233", Specialization = "Klasična glazba", YearsOfExperience = 12, HireDate = new DateTime(2015, 9, 1), Biography = "Diplomirala na Muzičkoj akademiji u Zagrebu, specijalist za Bacha i Chopina." },
@@ -43,11 +52,11 @@ namespace PianoLearningTracker.DAL
                 new Piece { Id = 3, Title = "Minuet in G Major", Composer = "Johann Sebastian Bach", Difficulty = DifficultyLevel.Beginner, Genre = "Barok", DurationMinutes = 2, YearComposed = 1725, Description = "Idealna skladba za početnike, jasna melodijska linija i jednostavan ritam." }
             );
 
-            // Seed podaci — učenici
+            // Seed podaci — učenici (TeacherId = primarni profesor)
             modelBuilder.Entity<Student>().HasData(
-                new Student { Id = 1, FirstName = "Luka", LastName = "Babić", DateOfBirth = new DateTime(2012, 4, 15), Email = "luka.babic@email.com", PhoneNumber = "098-123-4567", EnrollmentDate = new DateTime(2022, 9, 1), Grade = 3, Notes = "Brzo napreduje, posebno zainteresiran za klasiku." },
-                new Student { Id = 2, FirstName = "Petra", LastName = "Novak", DateOfBirth = new DateTime(2010, 11, 3), Email = "petra.novak@email.com", PhoneNumber = "099-234-5678", EnrollmentDate = new DateTime(2020, 9, 1), Grade = 5, Notes = "Odlična tehnika, radi na izražajnosti i dinamici." },
-                new Student { Id = 3, FirstName = "Tomislav", LastName = "Jurić", DateOfBirth = new DateTime(2015, 7, 22), Email = "tomislav.juric@email.com", PhoneNumber = "091-345-6789", EnrollmentDate = new DateTime(2024, 9, 1), Grade = 1, Notes = "Početnik, još usvaja osnove notnog čitanja." }
+                new Student { Id = 1, FirstName = "Luka", LastName = "Babić", DateOfBirth = new DateTime(2012, 4, 15), Email = "luka.babic@email.com", PhoneNumber = "098-123-4567", EnrollmentDate = new DateTime(2022, 9, 1), Grade = 3, Notes = "Brzo napreduje, posebno zainteresiran za klasiku.", TeacherId = 1 },
+                new Student { Id = 2, FirstName = "Petra", LastName = "Novak", DateOfBirth = new DateTime(2010, 11, 3), Email = "petra.novak@email.com", PhoneNumber = "099-234-5678", EnrollmentDate = new DateTime(2020, 9, 1), Grade = 5, Notes = "Odlična tehnika, radi na izražajnosti i dinamici.", TeacherId = 1 },
+                new Student { Id = 3, FirstName = "Tomislav", LastName = "Jurić", DateOfBirth = new DateTime(2015, 7, 22), Email = "tomislav.juric@email.com", PhoneNumber = "091-345-6789", EnrollmentDate = new DateTime(2024, 9, 1), Grade = 1, Notes = "Početnik, još usvaja osnove notnog čitanja.", TeacherId = 3 }
             );
 
             // Seed podaci — sati
@@ -78,6 +87,13 @@ namespace PianoLearningTracker.DAL
                 new PracticeSession { Id = 1, Date = new DateTime(2025, 3, 11, 17, 0, 0), DurationMinutes = 20, Notes = "Fokus na lijevoj ruci, taktovi 1-10.", QualityRating = 4, Goals = "Svladati lijevu ruku taktova 1-20.", StudentId = 1, PieceId = 1 },
                 new PracticeSession { Id = 2, Date = new DateTime(2025, 3, 13, 18, 30, 0), DurationMinutes = 30, Notes = "Radila cijelu skladbu sporim tempom.", QualityRating = 5, Goals = "Postići kontinuitet bez zaustavljanja.", StudentId = 2, PieceId = 2 },
                 new PracticeSession { Id = 3, Date = new DateTime(2025, 3, 15, 16, 0, 0), DurationMinutes = 15, Notes = "Vježbao ljestvice i prvih 8 taktova Minueta.", QualityRating = 3, Goals = "Zapamtiti noty prvih 8 taktova napamet.", StudentId = 3, PieceId = 3 }
+            );
+
+            // Seed podaci — uloge
+            modelBuilder.Entity<IdentityRole>().HasData(
+                new IdentityRole { Id = "role-admin", Name = "Administrator", NormalizedName = "ADMINISTRATOR", ConcurrencyStamp = "f4b865db-2f4b-4a58-848f-034748ac80f5" },
+                new IdentityRole { Id = "role-teacher", Name = "Teacher", NormalizedName = "TEACHER", ConcurrencyStamp = "6c9c1a97-1317-493a-95e3-f9a63f41ea80" },
+                new IdentityRole { Id = "role-student", Name = "Student", NormalizedName = "STUDENT", ConcurrencyStamp = "2185bcdc-f3ae-4fe4-9bdb-ed36ba3d2fcc" }
             );
         }
     }

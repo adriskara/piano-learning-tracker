@@ -1,104 +1,132 @@
 @model PianoLearningTracker.Models.HomeIndexViewModel
-
 @{
     ViewData["Title"] = "Dashboard";
+    var isAdmin = Model.UserRole == "Administrator";
+    var isTeacher = Model.UserRole == "Teacher";
+    var isStudent = Model.UserRole == "Student";
 }
 
 <section class="dashboard-top">
     <div class="dashboard-intro">
-        <span class="eyebrow">🎹 Studio Overview</span>
+        <span class="eyebrow">
+            @if (isAdmin) { <text>🔧 Administrator</text> }
+            else if (isTeacher) { <text>🎵 Profesor</text> }
+            else { <text>🎓 Učenik</text> }
+        </span>
         <h2 style="margin:0 0 0.5rem; font-size:1.6rem; font-weight:800; letter-spacing:-0.03em;">
-            Welcome to Piano Learning Tracker
+            @if (isAdmin) { <text>Pregled sustava</text> }
+            else if (isTeacher) { <text>Moji učenici i satovi</text> }
+            else { <text>Moji satovi i vježbe</text> }
         </h2>
         <p style="color:var(--text-muted); margin:0;">
-            Monitor student progress, upcoming lessons, and practice activity from the mock data repository.
+            @if (isAdmin) { <text>Ukupni pregled svih podataka u sustavu.</text> }
+            else if (isTeacher) { <text>Prikazuju se samo vaši učenici i satovi.</text> }
+            else { <text>Prikazuju se samo vaši osobni podaci.</text> }
         </p>
     </div>
+
     <div class="dashboard-metrics">
-        <article class="metric-card metric-primary">
-            <h3>Students</h3>
-            <p class="metric-value">@Model.StudentCount</p>
-            <p class="metric-desc">Active learners</p>
-        </article>
-        <article class="metric-card metric-secondary">
-            <h3>Teachers</h3>
-            <p class="metric-value">@Model.TeacherCount</p>
-            <p class="metric-desc">Instructors</p>
-        </article>
+        @if (isAdmin || isTeacher)
+        {
+            <article class="metric-card metric-primary">
+                <h3>Učenici</h3>
+                <p class="metric-value">@Model.StudentCount</p>
+                <p class="metric-desc">@(isTeacher ? "Moji učenici" : "Aktivnih")</p>
+            </article>
+        }
+        @if (isAdmin)
+        {
+            <article class="metric-card metric-secondary">
+                <h3>Profesori</h3>
+                <p class="metric-value">@Model.TeacherCount</p>
+                <p class="metric-desc">Nastavnog osoblja</p>
+            </article>
+        }
         <article class="metric-card metric-accent">
-            <h3>Pieces</h3>
+            <h3>Skladbe</h3>
             <p class="metric-value">@Model.PieceCount</p>
-            <p class="metric-desc">Repertoire items</p>
+            <p class="metric-desc">@(isStudent ? "U repertoaru" : "Dostupnih")</p>
         </article>
         <article class="metric-card metric-info">
-            <h3>Lessons</h3>
+            <h3>Satovi</h3>
             <p class="metric-value">@Model.LessonCount</p>
-            <p class="metric-desc">Total records</p>
+            <p class="metric-desc">@(isStudent || isTeacher ? "Mojih sati" : "Ukupno")</p>
         </article>
         <article class="metric-card metric-warning">
-            <h3>Practice</h3>
+            <h3>Vježbe</h3>
             <p class="metric-value">@Model.PracticeSessionCount</p>
-            <p class="metric-desc">Sessions logged</p>
+            <p class="metric-desc">@(isStudent ? "Mojih sesija" : "Evidentirano")</p>
         </article>
         <article class="metric-card metric-tertiary">
-            <h3>Upcoming</h3>
+            <h3>Nadolazeći</h3>
             <p class="metric-value">@Model.ScheduledLessonCount</p>
-            <p class="metric-desc">Scheduled lessons</p>
+            <p class="metric-desc">Zakazanih sati</p>
         </article>
+        @if (Model.CompletedPieceCount > 0 || isStudent)
+        {
+            <article class="metric-card metric-green">
+                <h3>Završeno</h3>
+                <p class="metric-value">@Model.CompletedPieceCount</p>
+                <p class="metric-desc">Skladbi savladano</p>
+            </article>
+        }
     </div>
 </section>
 
 <section class="dashboard-grid">
 
-    <!-- Next Lesson -->
+    <!-- Sljedeći sat -->
     <article class="dashboard-panel">
         <div class="panel-header">
             <div>
-                <h2>📅 Next lesson</h2>
-                <p class="panel-subtitle">Upcoming scheduled session</p>
+                <h2>📅 Sljedeći sat</h2>
+                <p class="panel-subtitle">Nadolazeći zakazani termin</p>
             </div>
-            <a class="btn btn-sm btn-outline-primary" asp-controller="Lesson" asp-action="Index">All lessons</a>
+            <a class="btn btn-sm btn-outline-primary" asp-controller="Lesson" asp-action="Index">Svi satovi</a>
         </div>
         @if (Model.NextLesson is not null)
         {
             <div class="panel-card">
-                <p class="panel-label">Lesson #@Model.NextLesson.Id · @Model.NextLesson.ScheduledDate.ToString("dddd, MMM d")</p>
+                <p class="panel-label">Sat #@Model.NextLesson.Id · @Model.NextLesson.ScheduledDate.ToString("dddd, d. MMM")</p>
                 <strong style="font-size:1rem;">@Model.NextLesson.Student.FirstName @Model.NextLesson.Student.LastName</strong>
-                <p class="panel-meta">Teacher: @Model.NextLesson.Teacher.FirstName @Model.NextLesson.Teacher.LastName</p>
-                <p class="panel-meta">Duration: @Model.NextLesson.DurationMinutes min</p>
+                @if (!isStudent)
+                {
+                    <p class="panel-meta">Profesor: @Model.NextLesson.Teacher.FirstName @Model.NextLesson.Teacher.LastName</p>
+                }
+                <p class="panel-meta">Trajanje: @Model.NextLesson.DurationMinutes min</p>
                 @if (!string.IsNullOrEmpty(Model.NextLesson.HomeworkAssigned))
                 {
                     <p class="panel-note">🏠 @Model.NextLesson.HomeworkAssigned</p>
                 }
                 <div class="panel-actions">
-                    <a class="btn btn-primary btn-sm" asp-controller="Lesson" asp-action="Details" asp-route-id="@Model.NextLesson.Id">Open details</a>
+                    <a class="btn btn-primary btn-sm" asp-controller="Lesson" asp-action="Details" asp-route-id="@Model.NextLesson.Id">Otvori detalje</a>
                 </div>
             </div>
         }
         else
         {
-            <div class="panel-empty">No upcoming lessons scheduled.</div>
+            <div class="panel-empty">Nema zakazanih sati.</div>
         }
     </article>
 
-    <!-- Practice Streaks -->
-    <article class="dashboard-panel">
-        <div class="panel-header">
-            <div>
-                <h2>🔥 Practice streaks</h2>
-                <p class="panel-subtitle">Sessions per student</p>
+    <!-- Vježbanje: streaks (Admin/Teacher) ili najnovija vježba (Student) -->
+    @if (!isStudent && Model.PracticeStreaks.Any())
+    {
+        <article class="dashboard-panel">
+            <div class="panel-header">
+                <div>
+                    <h2>🔥 Vježbanje učenika</h2>
+                    <p class="panel-subtitle">Sesije po učeniku</p>
+                </div>
+                <a class="btn btn-sm btn-outline-primary" asp-controller="PracticeSession" asp-action="Index">Sve vježbe</a>
             </div>
-            <a class="btn btn-sm btn-outline-primary" asp-controller="PracticeSession" asp-action="Index">All sessions</a>
-        </div>
-        @if (Model.PracticeStreaks.Any())
-        {
             <div class="streak-list">
                 @foreach (var streak in Model.PracticeStreaks)
                 {
                     <div>
                         <div class="streak-row">
                             <span class="streak-name">@streak.StudentName</span>
-                            <span class="streak-count">@streak.SessionCount session@(streak.SessionCount == 1 ? "" : "s")</span>
+                            <span class="streak-count">@streak.SessionCount sesija</span>
                         </div>
                         <div class="progress-track" style="margin-top:0.4rem;">
                             @{
@@ -107,23 +135,48 @@
                             }
                             <div class="progress-fill" style="width:@pct%;"></div>
                         </div>
-                        <p style="font-size:0.78rem;color:var(--text-soft);margin:0.25rem 0 0;">@streak.TotalMinutes min total</p>
+                        <p style="font-size:0.78rem;color:var(--text-soft);margin:0.25rem 0 0;">@streak.TotalMinutes min ukupno</p>
                     </div>
                 }
             </div>
-        }
-        else
-        {
-            <div class="panel-empty">No practice sessions recorded yet.</div>
-        }
-    </article>
+        </article>
+    }
 
-    <!-- Recent Achievements -->
+    @if (isStudent)
+    {
+        <!-- Student: najnovija vježba -->
+        <article class="dashboard-panel">
+            <div class="panel-header">
+                <div>
+                    <h2>⏱ Zadnja vježba</h2>
+                    <p class="panel-subtitle">Moja najnovija sesija</p>
+                </div>
+                <a class="btn btn-sm btn-outline-primary" asp-controller="PracticeSession" asp-action="Index">Sve moje vježbe</a>
+            </div>
+            @if (Model.LatestPracticeSession is not null)
+            {
+                <div class="panel-card">
+                    <p class="panel-label">@Model.LatestPracticeSession.Date.ToString("d. MMM yyyy")</p>
+                    <p class="panel-meta">🎼 @Model.LatestPracticeSession.Piece.Title</p>
+                    <p class="panel-meta">@Model.LatestPracticeSession.DurationMinutes min ·
+                        @for (var i = 1; i <= 5; i++) { <span>@(i <= Model.LatestPracticeSession.QualityRating ? "★" : "☆")</span> }
+                    </p>
+                    <p class="panel-note">@Model.LatestPracticeSession.Goals</p>
+                </div>
+            }
+            else
+            {
+                <div class="panel-empty">Nema evidentiranih vježbi.</div>
+            }
+        </article>
+    }
+
+    <!-- Dostignuća -->
     <article class="dashboard-panel">
         <div class="panel-header">
             <div>
-                <h2>🏆 Achievements</h2>
-                <p class="panel-subtitle">Completed pieces</p>
+                <h2>🏆 Dostignuća</h2>
+                <p class="panel-subtitle">Završene skladbe</p>
             </div>
         </div>
         @if (Model.RecentAchievements.Any())
@@ -135,11 +188,8 @@
                     <div>
                         <div class="achievement-title">@a.Piece.Title</div>
                         <div class="achievement-meta">
-                            @a.Student.FirstName @a.Student.LastName
-                            @if (a.CompletionDate.HasValue)
-                            {
-                                <span> · Completed @a.CompletionDate.Value.ToString("MMM yyyy")</span>
-                            }
+                            @if (!isStudent) { <text>@a.Student.FirstName @a.Student.LastName · </text> }
+                            @if (a.CompletionDate.HasValue) { <span>Završeno @a.CompletionDate.Value.ToString("MMM yyyy")</span> }
                         </div>
                     </div>
                 </div>
@@ -147,55 +197,57 @@
         }
         else
         {
-            <div class="panel-empty">No completed pieces yet — keep practising!</div>
+            <div class="panel-empty">Još nema završenih skladbi.</div>
         }
     </article>
 
-    <!-- Latest Practice -->
-    <article class="dashboard-panel">
-        <div class="panel-header">
-            <div>
-                <h2>⏱ Latest practice</h2>
-                <p class="panel-subtitle">Most recent session</p>
-            </div>
-        </div>
-        @if (Model.LatestPracticeSession is not null)
-        {
-            <div class="panel-card">
-                <p class="panel-label">@Model.LatestPracticeSession.Date.ToString("MMM d, yyyy")</p>
-                <strong>@Model.LatestPracticeSession.Student.FirstName @Model.LatestPracticeSession.Student.LastName</strong>
-                <p class="panel-meta">🎼 @Model.LatestPracticeSession.Piece.Title</p>
-                <p class="panel-meta">@Model.LatestPracticeSession.DurationMinutes min ·
-                    @for (var i = 1; i <= 5; i++)
-                    {
-                        <span>@(i <= Model.LatestPracticeSession.QualityRating ? "★" : "☆")</span>
-                    }
-                </p>
-                <p class="panel-note">@Model.LatestPracticeSession.Goals</p>
-                <div class="panel-actions">
-                    <a class="btn btn-primary btn-sm" asp-controller="PracticeSession" asp-action="Details" asp-route-id="@Model.LatestPracticeSession.Id">Open details</a>
+    @if (!isStudent)
+    {
+        <!-- Admin/Teacher: najnovija vježba -->
+        <article class="dashboard-panel">
+            <div class="panel-header">
+                <div>
+                    <h2>⏱ Zadnja vježba</h2>
+                    <p class="panel-subtitle">Najnovija evidentirana sesija</p>
                 </div>
             </div>
-        }
-        else
-        {
-            <div class="panel-empty">No practice sessions recorded yet.</div>
-        }
-    </article>
+            @if (Model.LatestPracticeSession is not null)
+            {
+                <div class="panel-card">
+                    <p class="panel-label">@Model.LatestPracticeSession.Date.ToString("d. MMM yyyy")</p>
+                    <strong>@Model.LatestPracticeSession.Student.FirstName @Model.LatestPracticeSession.Student.LastName</strong>
+                    <p class="panel-meta">🎼 @Model.LatestPracticeSession.Piece.Title</p>
+                    <p class="panel-meta">@Model.LatestPracticeSession.DurationMinutes min ·
+                        @for (var i = 1; i <= 5; i++) { <span>@(i <= Model.LatestPracticeSession.QualityRating ? "★" : "☆")</span> }
+                    </p>
+                </div>
+            }
+            else
+            {
+                <div class="panel-empty">Nema evidentiranih vježbi.</div>
+            }
+        </article>
+    }
 
-    <!-- Navigate -->
+    <!-- Navigacija po sekcijama -->
     <article class="dashboard-panel dashboard-cta" style="grid-column: span 2;">
         <div class="panel-header">
-            <h2>🗺 Navigate the studio</h2>
+            <h2>🗺 Navigacija</h2>
         </div>
         <div class="dashboard-links">
-            <a class="nav-chip" asp-controller="Student" asp-action="Index">🎓 Students</a>
-            <a class="nav-chip" asp-controller="Teacher" asp-action="Index">🎵 Teachers</a>
-            <a class="nav-chip" asp-controller="Piece" asp-action="Index">🎼 Pieces</a>
-            <a class="nav-chip" asp-controller="Lesson" asp-action="Index">📅 Lessons</a>
-            <a class="nav-chip" asp-controller="PracticeSession" asp-action="Index">⏱ Practice Sessions</a>
+            @if (isAdmin || isTeacher)
+            {
+                <a class="nav-chip" asp-controller="Student" asp-action="Index">🎓 Učenici</a>
+            }
+            @if (isAdmin)
+            {
+                <a class="nav-chip" asp-controller="Teacher" asp-action="Index">🎵 Profesori</a>
+            }
+            <a class="nav-chip" asp-controller="Piece" asp-action="Index">🎼 Skladbe</a>
+            <a class="nav-chip" asp-controller="Lesson" asp-action="Index">📅 Satovi</a>
+            <a class="nav-chip" asp-controller="PracticeSession" asp-action="Index">⏱ Vježbanje</a>
+            <a class="nav-chip" asp-controller="Ai" asp-action="Index">🤖 AI Asistent</a>
         </div>
-        <p class="panel-desc">All data is sourced from the static mock repository built from Lab 1 models.</p>
     </article>
 
 </section>

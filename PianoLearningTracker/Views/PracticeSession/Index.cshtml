@@ -1,35 +1,48 @@
 @model IEnumerable<PianoLearningTracker.Models.PracticeSession>
 
 @{
-    ViewData["Title"] = "Practice Sessions";
+    ViewData["Title"] = "Sesije vježbanja";
 }
 
 <ul class="breadcrumb-list">
     <li><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
-    <li>Practice Sessions</li>
+    <li>Sesije vježbanja</li>
 </ul>
 
-<div class="entity-grid">
-    @foreach (var session in Model)
+<div class="page-toolbar">
+    <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" class="search-input" placeholder="Pretraži sesije vježbanja..." autocomplete="off" />
+    </div>
+    @if (User.IsInRole("Administrator") || User.IsInRole("Student"))
     {
-        <article class="entity-card">
-            <h2 class="entity-card-title">⏱ Session #@session.Id</h2>
-            <p class="entity-card-meta">🗓 @session.Date.ToString("dddd, MMM d yyyy")</p>
-            <p class="entity-card-meta">🎓 @session.Student.FirstName @session.Student.LastName</p>
-            <p class="entity-card-meta">🎼 @session.Piece.Title</p>
-            <p class="entity-card-meta">⏱ @session.DurationMinutes min</p>
-            <div style="margin:0.6rem 0;">
-                <span style="font-size:0.8rem;color:var(--text-soft);display:block;margin-bottom:0.25rem;">Quality</span>
-                <span class="quality-stars">
-                    @for (var i = 1; i <= 5; i++)
-                    {
-                        <span class="@(i <= session.QualityRating ? "star-on" : "star-off")">★</span>
-                    }
-                </span>
-            </div>
-            <div class="entity-card-actions">
-                <a class="btn btn-primary btn-sm" asp-action="Details" asp-route-id="@session.Id">View details</a>
-            </div>
-        </article>
+        <a class="btn btn-primary" asp-action="Create">+ Nova sesija</a>
     }
 </div>
+
+<div id="sessions-container">
+    @await Html.PartialAsync("_PracticeSessionList", Model)
+</div>
+
+@section Scripts {
+    <script>
+        // AJAX pretraga sesija vježbanja
+        var searchTimer;
+        document.getElementById('search-input').addEventListener('input', function () {
+            clearTimeout(searchTimer);
+            var q = this.value;
+            searchTimer = setTimeout(function () {
+                fetch('/vjezbe/pretraga?q=' + encodeURIComponent(q), {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(function (r) { return r.text(); })
+                .then(function (html) {
+                    document.getElementById('sessions-container').innerHTML = html;
+                    animateCards();
+                });
+            }, 300);
+        });
+
+        animateCards();
+    </script>
+}

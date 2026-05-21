@@ -1,0 +1,179 @@
+@model PianoLearningTracker.Models.AutocompleteDropdownModel
+@{
+    // Sanitiziramo ID-ove za sigurnu upotrebu u HTML i JS
+    var uid = Model.DisplayFieldId.Replace(".", "_").Replace("[", "_").Replace("]", "_");
+    var hiddenUid = Model.FieldId.Replace(".", "_").Replace("[", "_").Replace("]", "_");
+}
+
+<div class="form-group">
+    <label for="@uid" class="form-label">
+        @Model.DisplayName
+        @if (Model.Required)
+        {
+            <span class="required-star" aria-hidden="true">*</span>
+        }
+    </label>
+    <div class="autocomplete-wrapper" id="@(uid)_wrapper">
+        <input type="text"
+               id="@uid"
+               class="form-control autocomplete-input"
+               value="@Model.SelectedText"
+               autocomplete="off"
+               placeholder="Pretražite @Model.DisplayName.ToLower()..." />
+        @* Skriveni input koji nosi pravi ID za submit forme *@
+        <input type="hidden"
+               id="@hiddenUid"
+               name="@Model.FieldName"
+               value="@Model.SelectedId" />
+        <div id="@(uid)_dropdown" class="autocomplete-dropdown" style="display:none;" role="listbox"></div>
+    </div>
+    @* Validacijska poruka — jQuery Unobtrusive Validation pronalazi span putem data-valmsg-for *@
+    <span class="text-danger field-error"
+          data-valmsg-for="@Model.FieldName"
+          data-valmsg-replace="true"></span>
+</div>
+
+<script>
+    (function () {
+        var searchInput = document.getElementById('@uid');
+        var hiddenInput = document.getElementById('@hiddenUid');
+        var dropdown = document.getElementById('@(uid)_dropdown');
+        var endpoint = '@Model.Endpoint';
+        var debounceTimer;
+
+        if (!searchInput || !hiddenInput || !dropdown) return;
+
+        // Dohvati prijedloge s AJAX pozivom — debounce 250ms da ne zatrpamo server
+        function fetchSuggestions(q) {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function () {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', endpoint + '?q=' + encodeURIComponent(q));
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        try {
+                            renderDropdown(JSON.parse(xhr.responseText));
+                        } catch (e) { hideDropdown(); }
+                    }
+                };
+                xhr.send();
+            }, 250);
+        }
+
+        // Iscrtaj dropdown s prijedlozima
+        function renderDropdown(items) {
+            dropdown.innerHTML = '';
+            if (!items || items.length === 0) {
+                dropdown.innerHTML = '<div class="autocomplete-empty">Nema rezultata</div>';
+                dropdown.style.display = 'block';
+                return;
+            }
+            items.forEach(function (item) {
+                var el = document.createElement('div');
+                el.className = 'autocomplete-item';
+                el.setAttribute('role', 'option');
+                el.textContent = item.text;
+                // Animacija ulaska
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(-4px)';
+                dropdown.appendChild(el);
+                requestAnimationFrame(function () {
+                    el.style.transition = 'opacity 150ms ease, transform 150ms ease';
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                });
+                el.addEventListener('mousedown', function (e) {
+                    e.preventDefault(); // Spriječi blur event na searchInput
+                    selectItem(item.id, item.text);
+                });
+            });
+            dropdown.style.display = 'block';
+        }
+
+        // Pronalazi validacijski span za ovo polje
+        var validationSpan = document.querySelector('[data-valmsg-for="@Model.FieldName"]');
+
+        // Prikaži validacijsku grešku na spanu
+        function showError(msg) {
+            if (!validationSpan) return;
+            validationSpan.textContent = msg;
+            validationSpan.classList.remove('field-validation-valid');
+            validationSpan.classList.add('field-validation-error');
+        }
+
+        // Ukloni validacijsku grešku
+        function clearError() {
+            if (!validationSpan) return;
+            validationSpan.textContent = '';
+            validationSpan.classList.remove('field-validation-error');
+            validationSpan.classList.add('field-validation-valid');
+        }
+
+        // Odabir stavke iz dropdowna
+        function selectItem(id, text) {
+            hiddenInput.value = id;
+            searchInput.value = text;
+            hideDropdown();
+            clearError();
+        }
+
+        function hideDropdown() {
+            dropdown.style.display = 'none';
+            dropdown.innerHTML = '';
+        }
+
+        // Na unos teksta — dohvati prijedloge
+        searchInput.addEventListener('input', function () {
+            var q = this.value.trim();
+            if (q.length === 0) {
+                hiddenInput.value = '';
+                hideDropdown();
+                return;
+            }
+            fetchSuggestions(q);
+        });
+
+        // Na fokus — prikaži prijedloge ako ima teksta
+        searchInput.addEventListener('focus', function () {
+            if (this.value.trim().length > 0)
+                fetchSuggestions(this.value.trim());
+        });
+
+        // Na gubitak fokusa — sakrij dropdown i validiraj (s kašnjenjem za mousedown na stavci)
+        searchInput.addEventListener('blur', function () {
+            setTimeout(function () {
+                hideDropdown();
+                // Okini client-side validaciju: ako nema odabranog ID-a, prikaži grešku
+                @if (Model.Required)
+                {
+                    <text>
+                    if (!hiddenInput.value) {
+                        showError('Odaberite @Model.DisplayName.ToLower()');
+                    }
+                    </text>
+                }
+            }, 200);
+        });
+
+        // Navigacija tipkovnicom (gore/dolje/enter)
+        searchInput.addEventListener('keydown', function (e) {
+            var items = dropdown.querySelectorAll('.autocomplete-item');
+            var active = dropdown.querySelector('.autocomplete-item.active');
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                var next = active ? active.nextElementSibling : items[0];
+                if (next) { active && active.classList.remove('active'); next.classList.add('active'); }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                var prev = active ? active.previousElementSibling : items[items.length - 1];
+                if (prev) { active && active.classList.remove('active'); prev.classList.add('active'); }
+            } else if (e.key === 'Enter' && active) {
+                e.preventDefault();
+                active.dispatchEvent(new MouseEvent('mousedown'));
+            } else if (e.key === 'Escape') {
+                hideDropdown();
+            }
+        });
+    })();
+</script>

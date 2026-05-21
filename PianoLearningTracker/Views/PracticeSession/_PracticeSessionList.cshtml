@@ -1,0 +1,45 @@
+@model IEnumerable<PianoLearningTracker.Models.PracticeSession>
+
+@if (!Model.Any())
+{
+    <div class="empty-state">
+        <p>Nema pronađenih sesija vježbanja.</p>
+    </div>
+}
+else
+{
+    <div class="entity-grid">
+        @foreach (var session in Model)
+        {
+            <article class="entity-card card-enter">
+                <h2 class="entity-card-title">⏱ Sesija #@session.Id</h2>
+                <p class="entity-card-meta">🗓 @session.Date.ToString("dd.MM.yyyy")</p>
+                <p class="entity-card-meta">🎓 @session.Student.FirstName @session.Student.LastName</p>
+                <p class="entity-card-meta">🎼 @session.Piece.Title</p>
+                <p class="entity-card-meta">⏱ @session.DurationMinutes min</p>
+                <div style="margin:0.4rem 0 0.6rem;">
+                    <span class="quality-stars">
+                        @for (var i = 1; i <= 5; i++)
+                        {
+                            <span class="@(i <= session.QualityRating ? "star-on" : "star-off")">★</span>
+                        }
+                    </span>
+                </div>
+                <div class="entity-card-actions">
+                    <a class="btn btn-primary btn-sm" asp-action="Details" asp-route-id="@session.Id">Detalji</a>
+                    @if (User.IsInRole("Administrator") || User.IsInRole("Student"))
+                    {
+                        <a class="btn btn-secondary btn-sm" asp-action="Edit" asp-route-id="@session.Id">Uredi</a>
+                        <form asp-action="Delete" asp-route-id="@session.Id" method="post" class="inline-form delete-form">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Jeste li sigurni da želite obrisati sesiju #@session.Id?')">
+                                Obriši
+                            </button>
+                        </form>
+                    }
+                </div>
+            </article>
+        }
+    </div>
+}

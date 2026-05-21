@@ -33,6 +33,10 @@ namespace PianoLearningTracker.Models
         // slobodne bilješke o učeniku
         public string? Notes { get; set; }
 
+        // FK na primarnog profesora
+        public int? TeacherId { get; set; }
+        public virtual Teacher? Teacher { get; set; }
+
         // 1-N: jedan Student ima više Lessons
         public virtual ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
 

@@ -1,0 +1,46 @@
+@model IEnumerable<PianoLearningTracker.Models.ApplicationUser>
+@{
+    ViewData["Title"] = "Korisnici";
+    var userRoles = ViewBag.UserRoles as Dictionary<string, IList<string>> ?? new();
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert-success">@TempData["Success"]</div>
+}
+
+<div class="page-actions">
+    <a asp-action="Register" class="btn btn-primary">+ Novi korisnik</a>
+</div>
+
+<div class="card-grid">
+    @foreach (var user in Model)
+    {
+        var roles = userRoles.TryGetValue(user.Id, out var r) ? r : new List<string>();
+        <div class="card">
+            <div class="card-header">
+                <span class="card-icon">👤</span>
+                <span class="card-title">@user.Email</span>
+            </div>
+            <div class="card-body">
+                <div class="detail-row">
+                    <span class="detail-label">Uloge</span>
+                    <span class="detail-value">
+                        @if (roles.Any())
+                        {
+                            @string.Join(", ", roles)
+                        }
+                        else
+                        {
+                            <em>Nema uloge</em>
+                        }
+                    </span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Email potvrđen</span>
+                    <span class="detail-value">@(user.EmailConfirmed ? "Da" : "Ne")</span>
+                </div>
+            </div>
+        </div>
+    }
+</div>

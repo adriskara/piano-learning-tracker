@@ -1,24 +1,48 @@
 @model IEnumerable<PianoLearningTracker.Models.Piece>
 
 @{
-    ViewData["Title"] = "Pieces";
+    ViewData["Title"] = "Skladbe";
 }
 
 <ul class="breadcrumb-list">
-    <li>Dashboard</li>
-    <li>Pieces</li>
+    <li><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+    <li>Skladbe</li>
 </ul>
 
-<div class="entity-grid">
-    @foreach (var piece in Model)
+<div class="page-toolbar">
+    <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" class="search-input" placeholder="Pretraži skladbe ili skladatelje..." autocomplete="off" />
+    </div>
+    @if (User.IsInRole("Administrator"))
     {
-        <article class="entity-card">
-            <h2 class="entity-card-title">@piece.Title</h2>
-            <p class="entity-card-meta">Composer: @piece.Composer</p>
-            <p class="entity-card-meta">Difficulty: @piece.Difficulty • Genre: @piece.Genre</p>
-            <div class="entity-card-actions">
-                <a class="btn btn-primary btn-sm" asp-action="Details" asp-route-id="@piece.Id">View details</a>
-            </div>
-        </article>
+        <a class="btn btn-primary" asp-action="Create">+ Nova skladba</a>
     }
 </div>
+
+<div id="pieces-container">
+    @await Html.PartialAsync("_PieceList", Model)
+</div>
+
+@section Scripts {
+    <script>
+        // AJAX pretraga skladbi
+        var searchTimer;
+        document.getElementById('search-input').addEventListener('input', function () {
+            clearTimeout(searchTimer);
+            var q = this.value;
+            searchTimer = setTimeout(function () {
+                fetch('/skladbe/pretraga?q=' + encodeURIComponent(q), {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(function (r) { return r.text(); })
+                .then(function (html) {
+                    document.getElementById('pieces-container').innerHTML = html;
+                    animateCards();
+                });
+            }, 300);
+        });
+
+        animateCards();
+    </script>
+}

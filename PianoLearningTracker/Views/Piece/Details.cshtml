@@ -1,74 +1,112 @@
 @model PianoLearningTracker.Models.Piece
 
 @{
-    ViewData["Title"] = "Piece details";
+    ViewData["Title"] = Model.Title;
 }
 
 <ul class="breadcrumb-list">
-    <li><a asp-controller="Piece" asp-action="Index">Pieces</a></li>
+    <li><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+    <li><a asp-controller="Piece" asp-action="Index">Skladbe</a></li>
     <li>@Model.Title</li>
 </ul>
 
-<div class="detail-panel">
-    <section class="detail-card">
-        <h2>@Model.Title</h2>
-        <p class="detail-label">Composer</p>
-        <p class="detail-value">@Model.Composer</p>
-        <p class="detail-label">Difficulty</p>
-        <p class="detail-value">@Model.Difficulty</p>
-        <p class="detail-label">Genre</p>
-        <p class="detail-value">@Model.Genre</p>
-        <p class="detail-label">Duration</p>
-        <p class="detail-value">@Model.DurationMinutes min</p>
-        <p class="detail-label">Year composed</p>
-        <p class="detail-value">@Model.YearComposed</p>
-        <p class="detail-label">Description</p>
-        <p class="detail-value">@Model.Description</p>
-    </section>
+@if (User.IsInRole("Administrator"))
+{
+    <div class="page-actions">
+        <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@Model.Id">✏️ Uredi</a>
+        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="inline-form"
+              onsubmit="return confirm('Jeste li sigurni da želite obrisati skladbu @Model.Title?')">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-danger">🗑 Obriši</button>
+        </form>
+    </div>
+}
 
-    <section class="detail-card">
-        <h2>Assignments</h2>
+<div class="detail-panel">
+
+    <div>
+        <section class="detail-card">
+            <h2 style="margin-bottom:0.25rem;">@Model.Title</h2>
+            <p style="color:var(--text-soft);margin:0 0 1.25rem;">
+                🎼 @Model.Composer · @Model.Difficulty
+            </p>
+
+            <ul class="detail-list">
+                <li><span class="detail-label">Žanr</span><span class="detail-value">@Model.Genre</span></li>
+                <li><span class="detail-label">Trajanje</span><span class="detail-value">@Model.DurationMinutes min</span></li>
+                <li><span class="detail-label">Godina</span><span class="detail-value">@Model.YearComposed</span></li>
+                @if (!string.IsNullOrEmpty(Model.Description))
+                {
+                    <li><span class="detail-label">Opis</span><span class="detail-value">@Model.Description</span></li>
+                }
+            </ul>
+
+            @if (Model.PracticeSessions.Any())
+            {
+                <div class="detail-section">
+                    <p class="detail-section-title">📅 Sesije vježbanja</p>
+                    <ul class="timeline">
+                        @foreach (var session in Model.PracticeSessions.OrderByDescending(s => s.Date).Take(5))
+                        {
+                            <li class="timeline-item">
+                                <div class="timeline-dot @(session.QualityRating >= 4 ? "done" : "")"></div>
+                                <div class="timeline-date">@session.Date.ToString("MMM d, yyyy")</div>
+                                <div class="timeline-title">
+                                    @session.Student.FirstName @session.Student.LastName
+                                    <span style="font-weight:400;color:var(--text-soft);"> — @session.DurationMinutes min</span>
+                                </div>
+                                <a style="font-size:0.82rem;color:var(--accent);"
+                                   asp-controller="PracticeSession" asp-action="Details" asp-route-id="@session.Id">Pogledaj →</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        </section>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1.2rem;">
+
+        <section class="detail-card">
+            <h2>📊 Statistika</h2>
+            <ul class="detail-list">
+                <li><span class="detail-label">Ukupno sesija</span><span class="detail-value">@Model.PracticeSessions.Count</span></li>
+                <li><span class="detail-label">Ukupno minuta</span><span class="detail-value">@Model.PracticeSessions.Sum(s => s.DurationMinutes)</span></li>
+                @if (Model.PracticeSessions.Any())
+                {
+                    <li>
+                        <span class="detail-label">Prosječna ocjena</span>
+                        <span class="detail-value">@Model.PracticeSessions.Average(s => s.QualityRating).ToString("F1") / 5</span>
+                    </li>
+                }
+            </ul>
+        </section>
+
         @if (Model.StudentPieces.Any())
         {
-            <ul class="detail-list">
-                @foreach (var assignment in Model.StudentPieces)
+            <section class="detail-card">
+                <h2>🎓 Učenici koji uče skladbu</h2>
+                @foreach (var sp in Model.StudentPieces)
                 {
-                    <li>
-                        <strong>@assignment.Student.FirstName @assignment.Student.LastName</strong>
-                        @if (assignment.IsCompleted)
-                        {
-                            <span class="badge bg-success badge-pill ms-2">Completed</span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-warning text-dark badge-pill ms-2">In progress</span>
-                        }
-                        <div class="detail-label">Progress: @assignment.ProgressRating/10</div>
-                    </li>
+                    <div class="activity-row">
+                        <div class="activity-avatar">
+                            @sp.Student.FirstName[0]@sp.Student.LastName[0]
+                        </div>
+                        <div>
+                            <div class="activity-name">
+                                <a asp-controller="Student" asp-action="Details" asp-route-id="@sp.Student.Id">
+                                    @sp.Student.FirstName @sp.Student.LastName
+                                </a>
+                            </div>
+                            <div class="activity-meta">
+                                Napredak: @sp.ProgressRating/10 ·
+                                @(sp.IsCompleted ? "Završeno" : "U tijeku")
+                            </div>
+                        </div>
+                    </div>
                 }
-            </ul>
-        }
-        else
-        {
-            <p class="detail-value">No student assignments yet.</p>
+            </section>
         }
 
-        <h3 class="mt-4">Practice sessions</h3>
-        @if (Model.PracticeSessions.Any())
-        {
-            <ul class="detail-list">
-                @foreach (var session in Model.PracticeSessions)
-                {
-                    <li>
-                        <strong>@session.Date:MMM d</strong> – <a asp-controller="PracticeSession" asp-action="Details" asp-route-id="@session.Id">Session #@session.Id</a>
-                        <div class="detail-label">Student: @session.Student.FirstName @session.Student.LastName</div>
-                    </li>
-                }
-            </ul>
-        }
-        else
-        {
-            <p class="detail-value">No practice sessions logged for this piece yet.</p>
-        }
-    </section>
+    </div>
 </div>

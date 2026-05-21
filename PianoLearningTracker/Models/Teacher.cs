@@ -35,5 +35,8 @@ namespace PianoLearningTracker.Models
 
         // 1-N: jedan Teacher ima više Lessons
         public virtual ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
+
+        // 1-N: jedan Teacher ima više Students (primarni profesor)
+        public virtual ICollection<Student> Students { get; set; } = new List<Student>();
     }
 }

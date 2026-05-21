@@ -1,0 +1,36 @@
+@model IEnumerable<PianoLearningTracker.Models.Piece>
+
+@if (!Model.Any())
+{
+    <div class="empty-state">
+        <p>Nema pronađenih skladbi.</p>
+    </div>
+}
+else
+{
+    <div class="entity-grid">
+        @foreach (var piece in Model)
+        {
+            <article class="entity-card card-enter">
+                <h2 class="entity-card-title">@piece.Title</h2>
+                <p class="entity-card-meta">@piece.Composer</p>
+                <p class="entity-card-meta">@piece.Difficulty • @piece.Genre</p>
+                <p class="entity-card-meta">@piece.DurationMinutes min • @piece.YearComposed</p>
+                <div class="entity-card-actions">
+                    <a class="btn btn-primary btn-sm" asp-action="Details" asp-route-id="@piece.Id">Detalji</a>
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <a class="btn btn-secondary btn-sm" asp-action="Edit" asp-route-id="@piece.Id">Uredi</a>
+                        <form asp-action="Delete" asp-route-id="@piece.Id" method="post" class="inline-form delete-form">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Jeste li sigurni da želite obrisati skladbu @piece.Title?')">
+                                Obriši
+                            </button>
+                        </form>
+                    }
+                </div>
+            </article>
+        }
+    </div>
+}

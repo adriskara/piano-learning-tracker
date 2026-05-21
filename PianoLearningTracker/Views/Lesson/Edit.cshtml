@@ -1,0 +1,95 @@
+@model PianoLearningTracker.Models.LessonFormModel
+
+@{
+    ViewData["Title"] = "Uredi sat";
+    var id = ViewContext.RouteData.Values["id"];
+}
+
+<ul class="breadcrumb-list">
+    <li><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+    <li><a asp-controller="Lesson" asp-action="Index">Satovi</a></li>
+    <li><a asp-action="Details" asp-route-id="@id">Sat #@id</a></li>
+    <li>Uredi</li>
+</ul>
+
+<div class="form-card">
+    <form asp-action="Edit" asp-route-id="@id" method="post" novalidate>
+        @Html.AntiForgeryToken()
+
+        <div class="form-grid-2">
+            @await Html.PartialAsync("_Autocomplete", new PianoLearningTracker.Models.AutocompleteDropdownModel
+            {
+                FieldId = "StudentId",
+                FieldName = "StudentId",
+                DisplayFieldId = "StudentId_display",
+                DisplayName = "Učenik",
+                Endpoint = Url.Action("Autocomplete", "Student"),
+                SelectedId = Model.StudentId > 0 ? Model.StudentId : null,
+                SelectedText = Model.StudentName,
+                Required = true
+            })
+            @if (!User.IsInRole("Teacher"))
+            {
+                @await Html.PartialAsync("_Autocomplete", new PianoLearningTracker.Models.AutocompleteDropdownModel
+                {
+                    FieldId = "TeacherId",
+                    FieldName = "TeacherId",
+                    DisplayFieldId = "TeacherId_display",
+                    DisplayName = "Profesor",
+                    Endpoint = Url.Action("Autocomplete", "Teacher"),
+                    SelectedId = Model.TeacherId > 0 ? Model.TeacherId : null,
+                    SelectedText = Model.TeacherName,
+                    Required = true
+                })
+            }
+            else
+            {
+                <input type="hidden" name="TeacherId" value="@Model.TeacherId" />
+            }
+        </div>
+
+        <div class="form-grid-2">
+            @await Html.PartialAsync("_DateTimePicker", new PianoLearningTracker.Models.DateTimePickerModel
+            {
+                FieldId = "ScheduledDate",
+                FieldName = "ScheduledDate",
+                DisplayName = "Datum i vrijeme",
+                Value = Model.ScheduledDate == default ? null : Model.ScheduledDate,
+                IncludeTime = true,
+                Required = true
+            })
+            <div class="form-group">
+                <label asp-for="DurationMinutes" class="form-label"></label>
+                <input asp-for="DurationMinutes" class="form-control" type="number" min="15" max="180" />
+                <span asp-validation-for="DurationMinutes" class="text-danger field-error"></span>
+            </div>
+        </div>
+
+        <div class="form-grid-2">
+            <div class="form-group">
+                <label asp-for="Status" class="form-label"></label>
+                <select asp-for="Status" class="form-control"
+                        asp-items="Html.GetEnumSelectList<PianoLearningTracker.Models.LessonStatus>()">
+                </select>
+                <span asp-validation-for="Status" class="text-danger field-error"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="HomeworkAssigned" class="form-label"></label>
+            <textarea asp-for="HomeworkAssigned" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="HomeworkAssigned" class="text-danger field-error"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Notes" class="form-label"></label>
+            <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Notes" class="text-danger field-error"></span>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Spremi promjene</button>
+            <a asp-action="Details" asp-route-id="@id" class="btn btn-secondary">Odustani</a>
+        </div>
+    </form>
+</div>

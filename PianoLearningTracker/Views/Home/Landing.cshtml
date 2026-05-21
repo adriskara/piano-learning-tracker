@@ -1,0 +1,60 @@
+@model PianoLearningTracker.Models.LandingViewModel
+@{
+    ViewData["Title"] = "Piano Learning Tracker";
+    Layout = "~/Views/Shared/_LandingLayout.cshtml";
+}
+
+<div class="landing-page">
+    <header class="landing-hero">
+        <div class="landing-brand">
+            <div class="landing-mark">♪</div>
+            <h1 class="landing-title">Piano Learning Tracker</h1>
+            <p class="landing-subtitle">
+                Digitalni sustav za praćenje napretka učenika klavira —<br>
+                satovi, vježbanje i repertoar na jednom mjestu.
+            </p>
+            <a asp-controller="Account" asp-action="Login" class="btn-landing-cta">Prijavi se →</a>
+        </div>
+    </header>
+
+    <section class="landing-stats">
+        <div class="landing-stat">
+            <span class="ls-icon">🎓</span>
+            <span class="ls-value">@Model.StudentCount</span>
+            <span class="ls-label">Učenika</span>
+        </div>
+        <div class="landing-stat">
+            <span class="ls-icon">🎵</span>
+            <span class="ls-value">@Model.TeacherCount</span>
+            <span class="ls-label">Profesora</span>
+        </div>
+        <div class="landing-stat">
+            <span class="ls-icon">📅</span>
+            <span class="ls-value">@Model.LessonCount</span>
+            <span class="ls-label">Sati u evidenciji</span>
+        </div>
+        <div class="landing-stat">
+            <span class="ls-icon">🎼</span>
+            <span class="ls-value">@Model.PieceCount</span>
+            <span class="ls-label">Skladbi u repertoaru</span>
+        </div>
+    </section>
+
+    <section class="landing-features">
+        <div class="lf-card">
+            <span class="lf-icon">📊</span>
+            <h3>Praćenje napretka</h3>
+            <p>Svaki profesor vidi napredak svojih učenika — ocjene, vježbe i odrađene sate.</p>
+        </div>
+        <div class="lf-card">
+            <span class="lf-icon">🎹</span>
+            <h3>Repertoar</h3>
+            <p>Skladbe dostupne svim korisnicima — od početnih do naprednih razina.</p>
+        </div>
+        <div class="lf-card">
+            <span class="lf-icon">🤖</span>
+            <h3>AI asistent</h3>
+            <p>Ugrađeni AI asistent za savjete o tehnici sviranja i odabiru repertoara.</p>
+        </div>
+    </section>
+</div>

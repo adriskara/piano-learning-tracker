@@ -1,0 +1,51 @@
+@model IEnumerable<PianoLearningTracker.Models.Lesson>
+
+@if (!Model.Any())
+{
+    <div class="empty-state">
+        <p>Nema pronađenih satova.</p>
+    </div>
+}
+else
+{
+    <div class="entity-grid">
+        @foreach (var lesson in Model)
+        {
+            <article class="entity-card card-enter">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+                    <h2 class="entity-card-title" style="margin:0;">📅 Sat #@lesson.Id</h2>
+                    @switch (lesson.Status)
+                    {
+                        case PianoLearningTracker.Models.LessonStatus.Completed:
+                            <span class="status-badge completed">✓ Završen</span>
+                            break;
+                        case PianoLearningTracker.Models.LessonStatus.Scheduled:
+                            <span class="status-badge scheduled">⏳ Zakazan</span>
+                            break;
+                        default:
+                            <span class="status-badge cancelled">✕ Otkazan</span>
+                            break;
+                    }
+                </div>
+                <p class="entity-card-meta">🗓 @lesson.ScheduledDate.ToString("dd.MM.yyyy · HH:mm")</p>
+                <p class="entity-card-meta">🎓 @lesson.Student.FirstName @lesson.Student.LastName</p>
+                <p class="entity-card-meta">🎵 @lesson.Teacher.FirstName @lesson.Teacher.LastName</p>
+                <p class="entity-card-meta">⏱ @lesson.DurationMinutes min</p>
+                <div class="entity-card-actions">
+                    <a class="btn btn-primary btn-sm" asp-action="Details" asp-route-id="@lesson.Id">Detalji</a>
+                    @if (User.IsInRole("Administrator") || User.IsInRole("Teacher"))
+                    {
+                        <a class="btn btn-secondary btn-sm" asp-action="Edit" asp-route-id="@lesson.Id">Uredi</a>
+                        <form asp-action="Delete" asp-route-id="@lesson.Id" method="post" class="inline-form delete-form">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Jeste li sigurni da želite obrisati sat #@lesson.Id?')">
+                                Obriši
+                            </button>
+                        </form>
+                    }
+                </div>
+            </article>
+        }
+    </div>
+}

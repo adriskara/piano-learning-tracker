@@ -1,0 +1,107 @@
+@model PianoLearningTracker.Models.DateTimePickerModel
+@{
+    // Generiramo siguran uid bez specijalnih znakova za HTML id atribute
+    var uid = Model.FieldId.Replace(".", "_").Replace("[", "_").Replace("]", "_");
+    var dateFormatServer = Model.IncludeTime ? "Y-m-d H:i:S" : "Y-m-d";
+    var hrAltFmt = Model.IncludeTime ? "d.m.Y H:i" : "d.m.Y";
+    var enAltFmt = Model.IncludeTime ? "m/d/Y h:i K" : "m/d/Y";
+    var isoValue = Model.Value.HasValue
+        ? Model.Value.Value.ToString(Model.IncludeTime ? "yyyy-MM-dd HH:mm:ss" : "yyyy-MM-dd")
+        : string.Empty;
+}
+
+<div class="form-group">
+    <label for="@(uid)" class="form-label">
+        @Model.DisplayName
+        @if (Model.Required)
+        {
+            <span class="required-star" aria-hidden="true">*</span>
+        }
+    </label>
+    <div class="datepicker-wrap">
+        <span class="datepicker-icon" aria-hidden="true">📅</span>
+        @* Osnovna input s name atributom — flatpickr je skriva i kreira altInput za prikaz *@
+        <input type="text"
+               id="@uid"
+               name="@Model.FieldName"
+               class="form-control"
+               value="@isoValue"
+               autocomplete="off" />
+    </div>
+    <span class="text-danger field-error"
+          data-valmsg-for="@Model.FieldName"
+          data-valmsg-replace="true"></span>
+</div>
+
+<script>
+    // Stavi init u red čekanja — flatpickr se učitava na dnu stranice, NAKON ovog bloka.
+    // _fpQueue se prazni iz _Layout.cshtml čim flatpickr postane dostupan.
+    window._fpQueue = window._fpQueue || [];
+    window._fpQueue.push(function () {
+        var el = document.getElementById('@uid');
+        if (!el) return;
+
+        // Odabir locale-a i formata za prikaz ovisno o postavkama preglednika (hr ili en)
+        var lang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+        var useCroatian = lang.startsWith('hr');
+        var hrAltFmt = '@hrAltFmt';
+        var enAltFmt = '@enAltFmt';
+
+        // Validacijski span za ovo polje
+        var valSpan = document.querySelector('[data-valmsg-for="@Model.FieldName"]');
+
+        // altInput=true: flatpickr kreira vidljivi input za korisnika,
+        // a osnovni input ostaje skriven i šalje serverski format (ISO)
+        var fp = flatpickr(el, {
+            enableTime: @(Model.IncludeTime ? "true" : "false"),
+            dateFormat: '@dateFormatServer',
+            altInput: true,
+            altFormat: useCroatian ? hrAltFmt : enAltFmt,
+            time_24hr: useCroatian,
+            locale: useCroatian ? 'hr' : 'default',
+            defaultDate: el.value || null,
+            allowInput: true,
+            disableMobile: true,
+            onChange: function (selectedDates) {
+                if (selectedDates.length > 0 && valSpan) {
+                    valSpan.textContent = '';
+                    valSpan.classList.remove('field-validation-error');
+                    valSpan.classList.add('field-validation-valid');
+                }
+            },
+            onClose: function (selectedDates) {
+                @if (Model.Required)
+                {
+                    <text>
+                    if (selectedDates.length === 0 && valSpan) {
+                        valSpan.textContent = 'Datum je obavezan';
+                        valSpan.classList.remove('field-validation-valid');
+                        valSpan.classList.add('field-validation-error');
+                    }
+                    </text>
+                }
+            }
+        });
+
+        if (fp.altInput) {
+            @if (Model.IncludeTime)
+            {
+                <text>fp.altInput.placeholder = useCroatian ? 'dd.mm.gggg hh:mm' : 'mm/dd/yyyy hh:mm';</text>
+            }
+            else
+            {
+                <text>fp.altInput.placeholder = useCroatian ? 'dd.mm.gggg' : 'mm/dd/yyyy';</text>
+            }
+            fp.altInput.classList.add('form-control');
+        }
+
+        // Klik na ikonu 📅 otvara calendar picker
+        var wrap = el.closest('.datepicker-wrap');
+        var icon = wrap && wrap.querySelector('.datepicker-icon');
+        if (icon) {
+            icon.style.pointerEvents = 'auto';
+            icon.style.cursor = 'pointer';
+            icon.addEventListener('click', function () { fp.open(); });
+        }
+    });
+</script>

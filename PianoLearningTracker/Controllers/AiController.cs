@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PianoLearningTracker.Services;
 
 namespace PianoLearningTracker.Controllers
 {
+    [Authorize]
     [Route("asistent")]
     public class AiController : Controller
     {

@@ -7,7 +7,10 @@
     <link rel="stylesheet" href="/css/site.css" />
 </head>
 <body>
-    @{ var ctrl = ViewContext.RouteData.Values["controller"]?.ToString(); }
+    @using Microsoft.AspNetCore.Identity
+@inject SignInManager<PianoLearningTracker.Models.ApplicationUser> SignInManager
+@inject UserManager<PianoLearningTracker.Models.ApplicationUser> UserManager
+@{ var ctrl = ViewContext.RouteData.Values["controller"]?.ToString(); }
 
     <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
 
@@ -32,28 +35,60 @@
             </div>
 
             <nav class="sidebar-nav">
-                <a class="sidebar-link @(ctrl == "Home" ? "active" : "")" asp-controller="Home" asp-action="Index">
-                    <span class="nav-icon">🎹</span> Dashboard
-                </a>
-                <a class="sidebar-link @(ctrl == "Student" ? "active" : "")" asp-controller="Student" asp-action="Index">
-                    <span class="nav-icon">🎓</span> Students
-                </a>
-                <a class="sidebar-link @(ctrl == "Teacher" ? "active" : "")" asp-controller="Teacher" asp-action="Index">
-                    <span class="nav-icon">🎵</span> Teachers
-                </a>
-                <a class="sidebar-link @(ctrl == "Piece" ? "active" : "")" asp-controller="Piece" asp-action="Index">
-                    <span class="nav-icon">🎼</span> Pieces
-                </a>
-                <a class="sidebar-link @(ctrl == "Lesson" ? "active" : "")" asp-controller="Lesson" asp-action="Index">
-                    <span class="nav-icon">📅</span> Lessons
-                </a>
-                <a class="sidebar-link @(ctrl == "PracticeSession" ? "active" : "")" asp-controller="PracticeSession" asp-action="Index">
-                    <span class="nav-icon">⏱</span> Practice Sessions
-                </a>
-                <a class="sidebar-link @(ctrl == "Ai" ? "active" : "")" asp-controller="Ai" asp-action="Index">
-                    <span class="nav-icon">🤖</span> AI Assistant
-                </a>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <a class="sidebar-link @(ctrl == "Home" ? "active" : "")" asp-controller="Home" asp-action="Index">
+                        <span class="nav-icon">🎹</span> Dashboard
+                    </a>
+                    @if (User.IsInRole("Administrator") || User.IsInRole("Teacher"))
+                    {
+                        <a class="sidebar-link @(ctrl == "Student" ? "active" : "")" asp-controller="Student" asp-action="Index">
+                            <span class="nav-icon">🎓</span> Učenici
+                        </a>
+                    }
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <a class="sidebar-link @(ctrl == "Teacher" ? "active" : "")" asp-controller="Teacher" asp-action="Index">
+                            <span class="nav-icon">🎵</span> Profesori
+                        </a>
+                    }
+                    <a class="sidebar-link @(ctrl == "Piece" ? "active" : "")" asp-controller="Piece" asp-action="Index">
+                        <span class="nav-icon">🎼</span> Skladbe
+                    </a>
+                    <a class="sidebar-link @(ctrl == "Lesson" ? "active" : "")" asp-controller="Lesson" asp-action="Index">
+                        <span class="nav-icon">📅</span> Satovi
+                    </a>
+                    <a class="sidebar-link @(ctrl == "PracticeSession" ? "active" : "")" asp-controller="PracticeSession" asp-action="Index">
+                        <span class="nav-icon">⏱</span> Vježbanje
+                    </a>
+                    <a class="sidebar-link @(ctrl == "Ai" ? "active" : "")" asp-controller="Ai" asp-action="Index">
+                        <span class="nav-icon">🤖</span> AI Asistent
+                    </a>
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <a class="sidebar-link @(ctrl == "Account" ? "active" : "")" asp-controller="Account" asp-action="UserList">
+                            <span class="nav-icon">👥</span> Korisnici
+                        </a>
+                    }
+                }
             </nav>
+
+            <div class="sidebar-auth">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <div class="auth-user">
+                        <span class="nav-icon">👤</span>
+                        <span class="auth-email">@UserManager.GetUserName(User)</span>
+                    </div>
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="logout-form">
+                        <button type="submit" class="btn-logout">Odjava</button>
+                    </form>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login" class="btn-login">Prijava</a>
+                }
+            </div>
 
             <div class="sidebar-note">Piano Learning Tracker · Read-only mock data</div>
         </aside>
@@ -64,6 +99,14 @@
             </header>
 
             <main role="main" class="pb-3">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert-toast alert-toast-success" id="toast-success">@TempData["Success"]</div>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert-toast alert-toast-error" id="toast-error">@TempData["Error"]</div>
+                }
                 @RenderBody()
             </main>
 
@@ -74,11 +117,71 @@
         </div>
     </div>
 
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/hr.js"></script>
     <script>
+        // Izvrši sve flatpickr inicijalizacije koje su bile stavljene u red čekanja
+        // dok flatpickr još nije bio učitan (inline skripte iz _DateTimePicker partijala)
+        (window._fpQueue || []).forEach(function (fn) { fn(); });
+        delete window._fpQueue;
+    </script>
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // ── Hamburger menu ──────────────────────────────────────────────────────
         const hamburger = document.getElementById('hamburger');
         const sidebar = document.getElementById('sidebar');
         hamburger?.addEventListener('click', e => { e.stopPropagation(); sidebar.classList.toggle('open'); });
         document.addEventListener('click', e => { if (sidebar.classList.contains('open') && !sidebar.contains(e.target)) sidebar.classList.remove('open'); });
+
+        // ── Toast auto-dismiss ──────────────────────────────────────────────────
+        // TempData toasti se animiraju pri ulasku i automatski nestaju nakon 4s.
+        // Kombinira CSS keyframe animaciju (ulaz) s JS setTimeout + animationend (izlaz).
+        document.querySelectorAll('.alert-toast').forEach(function (toast) {
+            // Ulazna animacija — CSS klasa koja triggerira @@keyframes toast-enter
+            toast.classList.add('toast-enter');
+
+            // Nakon 4 sekunde pokreni izlaznu animaciju
+            setTimeout(function () {
+                toast.classList.add('toast-exit');
+                // Ukloni element iz DOM-a tek kad animacija završi (animationend event)
+                toast.addEventListener('animationend', function () {
+                    toast.remove();
+                }, { once: true });
+            }, 4000);
+        });
+
+        // ── Stagger card entrance ───────────────────────────────────────────────
+        // Globalna funkcija — koristi se na svim Index stranicama i nakon AJAX pretrage.
+        // Kartice se pojavljuju sekvencijalno (svaka 60ms nakon prethodne) koristeći
+        // setTimeout closure s indeksom za staggering efekt.
+        window.animateCards = function () {
+            document.querySelectorAll('.card-enter').forEach(function (card, i) {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(16px)';
+                setTimeout(function () {
+                    card.style.transition = 'opacity 300ms ease, transform 300ms ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, i * 60);
+            });
+        };
+
+        // ── Smooth scroll to first validation error ─────────────────────────────
+        // Kad server-side validacija vrati formu s greškama, stranica se automatski
+        // skrolluje do prve greške. requestAnimationFrame garantira da je layout
+        // izračunat prije nego se pozove scrollIntoView.
+        (function () {
+            var firstError = document.querySelector(
+                '.field-validation-error:not(:empty), span[data-valmsg-for].field-validation-error'
+            );
+            if (firstError) {
+                requestAnimationFrame(function () {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                });
+            }
+        })();
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

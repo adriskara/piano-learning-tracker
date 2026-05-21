@@ -22,7 +22,9 @@ namespace PianoLearningTracker.Repositories
             InitializeMockData();
         }
 
+        // --- Read ---
         public IReadOnlyList<Student> GetAllStudents() => _students;
+        public IReadOnlyList<Student> GetStudentsByTeacherId(int teacherId) => _students.Where(s => s.TeacherId == teacherId).ToList();
         public Student? GetStudentById(int id) => _students.FirstOrDefault(s => s.Id == id);
 
         public IReadOnlyList<Teacher> GetAllTeachers() => _teachers;
@@ -32,10 +34,88 @@ namespace PianoLearningTracker.Repositories
         public Piece? GetPieceById(int id) => _pieces.FirstOrDefault(p => p.Id == id);
 
         public IReadOnlyList<Lesson> GetAllLessons() => _lessons;
+        public IReadOnlyList<Lesson> GetLessonsByTeacherId(int teacherId) => _lessons.Where(l => l.TeacherId == teacherId).ToList();
+        public IReadOnlyList<Lesson> GetLessonsByStudentId(int studentId) => _lessons.Where(l => l.StudentId == studentId).ToList();
         public Lesson? GetLessonById(int id) => _lessons.FirstOrDefault(l => l.Id == id);
 
         public IReadOnlyList<PracticeSession> GetAllPracticeSessions() => _practiceSessions;
+        public IReadOnlyList<PracticeSession> GetPracticeSessionsByStudentId(int studentId) => _practiceSessions.Where(ps => ps.StudentId == studentId).ToList();
+        public IReadOnlyList<PracticeSession> GetPracticeSessionsByTeacherId(int teacherId) => _practiceSessions.Where(ps => ps.Student?.TeacherId == teacherId).ToList();
         public PracticeSession? GetPracticeSessionById(int id) => _practiceSessions.FirstOrDefault(ps => ps.Id == id);
+
+        // --- Search ---
+        public IReadOnlyList<Student> SearchStudents(string query, int? teacherId = null) =>
+            _students.Where(s => (teacherId == null || s.TeacherId == teacherId) &&
+                                 (string.IsNullOrEmpty(query) ||
+                                  (s.FirstName + " " + s.LastName).Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                                  s.Email.Contains(query, StringComparison.OrdinalIgnoreCase))).ToList();
+
+        public IReadOnlyList<Teacher> SearchTeachers(string query) =>
+            _teachers.Where(t => string.IsNullOrEmpty(query) ||
+                                 (t.FirstName + " " + t.LastName).Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                                 t.Email.Contains(query, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        public IReadOnlyList<Piece> SearchPieces(string query) =>
+            _pieces.Where(p => string.IsNullOrEmpty(query) ||
+                               p.Title.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                               p.Composer.Contains(query, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        public IReadOnlyList<Lesson> SearchLessons(string query, int? teacherId = null, int? studentId = null) =>
+            _lessons.Where(l => (teacherId == null || l.TeacherId == teacherId) &&
+                                (studentId == null || l.StudentId == studentId) &&
+                                (string.IsNullOrEmpty(query) ||
+                                 (l.Student != null && (l.Student.FirstName + " " + l.Student.LastName).Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+                                 (l.Teacher != null && (l.Teacher.FirstName + " " + l.Teacher.LastName).Contains(query, StringComparison.OrdinalIgnoreCase)))).ToList();
+
+        public IReadOnlyList<PracticeSession> SearchPracticeSessions(string query, int? studentId = null, int? teacherId = null) =>
+            _practiceSessions.Where(ps => (studentId == null || ps.StudentId == studentId) &&
+                                         (teacherId == null || ps.Student?.TeacherId == teacherId) &&
+                                         (string.IsNullOrEmpty(query) ||
+                                          (ps.Student != null && (ps.Student.FirstName + " " + ps.Student.LastName).Contains(query, StringComparison.OrdinalIgnoreCase)) ||
+                                          (ps.Piece != null && ps.Piece.Title.Contains(query, StringComparison.OrdinalIgnoreCase)))).ToList();
+
+        // --- Autocomplete ---
+        public IReadOnlyList<AutocompleteItem> AutocompleteTeachers(string query) =>
+            _teachers.Where(t => string.IsNullOrEmpty(query) ||
+                                 (t.FirstName + " " + t.LastName).Contains(query, StringComparison.OrdinalIgnoreCase))
+                     .Take(10).Select(t => new AutocompleteItem(t.Id, t.FirstName + " " + t.LastName)).ToList();
+
+        public IReadOnlyList<AutocompleteItem> AutocompleteStudents(string query, int? teacherId = null) =>
+            _students.Where(s => (teacherId == null || s.TeacherId == teacherId) &&
+                                 (string.IsNullOrEmpty(query) ||
+                                  (s.FirstName + " " + s.LastName).Contains(query, StringComparison.OrdinalIgnoreCase)))
+                     .Take(10).Select(s => new AutocompleteItem(s.Id, s.FirstName + " " + s.LastName)).ToList();
+
+        public IReadOnlyList<AutocompleteItem> AutocompletePieces(string query) =>
+            _pieces.Where(p => string.IsNullOrEmpty(query) ||
+                               p.Title.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                               p.Composer.Contains(query, StringComparison.OrdinalIgnoreCase))
+                   .Take(10).Select(p => new AutocompleteItem(p.Id, p.Title + " — " + p.Composer)).ToList();
+
+        // --- Student CRUD ---
+        public void AddStudent(Student student) { student.Id = _students.Count > 0 ? _students.Max(s => s.Id) + 1 : 1; _students.Add(student); }
+        public void UpdateStudent(Student student) { var i = _students.FindIndex(s => s.Id == student.Id); if (i >= 0) _students[i] = student; }
+        public void DeleteStudent(int id) => _students.RemoveAll(s => s.Id == id);
+
+        // --- Teacher CRUD ---
+        public void AddTeacher(Teacher teacher) { teacher.Id = _teachers.Count > 0 ? _teachers.Max(t => t.Id) + 1 : 1; _teachers.Add(teacher); }
+        public void UpdateTeacher(Teacher teacher) { var i = _teachers.FindIndex(t => t.Id == teacher.Id); if (i >= 0) _teachers[i] = teacher; }
+        public void DeleteTeacher(int id) => _teachers.RemoveAll(t => t.Id == id);
+
+        // --- Piece CRUD ---
+        public void AddPiece(Piece piece) { piece.Id = _pieces.Count > 0 ? _pieces.Max(p => p.Id) + 1 : 1; _pieces.Add(piece); }
+        public void UpdatePiece(Piece piece) { var i = _pieces.FindIndex(p => p.Id == piece.Id); if (i >= 0) _pieces[i] = piece; }
+        public void DeletePiece(int id) => _pieces.RemoveAll(p => p.Id == id);
+
+        // --- Lesson CRUD ---
+        public void AddLesson(Lesson lesson) { lesson.Id = _lessons.Count > 0 ? _lessons.Max(l => l.Id) + 1 : 1; _lessons.Add(lesson); }
+        public void UpdateLesson(Lesson lesson) { var i = _lessons.FindIndex(l => l.Id == lesson.Id); if (i >= 0) _lessons[i] = lesson; }
+        public void DeleteLesson(int id) => _lessons.RemoveAll(l => l.Id == id);
+
+        // --- PracticeSession CRUD ---
+        public void AddPracticeSession(PracticeSession session) { session.Id = _practiceSessions.Count > 0 ? _practiceSessions.Max(p => p.Id) + 1 : 1; _practiceSessions.Add(session); }
+        public void UpdatePracticeSession(PracticeSession session) { var i = _practiceSessions.FindIndex(p => p.Id == session.Id); if (i >= 0) _practiceSessions[i] = session; }
+        public void DeletePracticeSession(int id) => _practiceSessions.RemoveAll(p => p.Id == id);
 
         private void InitializeMockData()
         {

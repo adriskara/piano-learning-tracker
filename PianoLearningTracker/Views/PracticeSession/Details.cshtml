@@ -1,40 +1,98 @@
 @model PianoLearningTracker.Models.PracticeSession
 
 @{
-    ViewData["Title"] = "Practice session details";
+    ViewData["Title"] = $"Sesija #{Model.Id}";
 }
 
 <ul class="breadcrumb-list">
-    <li><a asp-controller="PracticeSession" asp-action="Index">Practice Sessions</a></li>
-    <li>Session #@Model.Id</li>
+    <li><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+    <li><a asp-controller="PracticeSession" asp-action="Index">Sesije vježbanja</a></li>
+    <li>Sesija #@Model.Id</li>
 </ul>
 
-<div class="detail-panel">
-    <section class="detail-card">
-        <h2>Session #@Model.Id</h2>
-        <p class="detail-label">Date</p>
-        <p class="detail-value">@Model.Date:dddd, MMM d yyyy HH:mm</p>
-        <p class="detail-label">Duration</p>
-        <p class="detail-value">@Model.DurationMinutes minutes</p>
-        <p class="detail-label">Quality rating</p>
-        <p class="detail-value">@Model.QualityRating / 5</p>
-        <p class="detail-label">Goals</p>
-        <p class="detail-value">@Model.Goals</p>
-        <p class="detail-label">Notes</p>
-        <p class="detail-value">@Model.Notes</p>
-    </section>
+@if (User.IsInRole("Administrator") || User.IsInRole("Student"))
+{
+    <div class="page-actions">
+        <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@Model.Id">✏️ Uredi</a>
+        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="inline-form"
+              onsubmit="return confirm('Jeste li sigurni da želite obrisati sesiju #@Model.Id?')">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-danger">🗑 Obriši</button>
+        </form>
+    </div>
+}
 
-    <section class="detail-card">
-        <h2>Context</h2>
-        <ul class="detail-list">
-            <li>
-                <span class="detail-label">Student</span>
-                <span class="detail-value">@Model.Student.FirstName @Model.Student.LastName</span>
-            </li>
-            <li>
-                <span class="detail-label">Piece</span>
-                <span class="detail-value">@Model.Piece.Title</span>
-            </li>
-        </ul>
-    </section>
+<div class="detail-panel">
+
+    <div>
+        <section class="detail-card">
+            <h2 style="margin-bottom:0.25rem;">Sesija #@Model.Id</h2>
+            <p style="color:var(--text-soft);margin:0 0 1.25rem;">
+                🎼 @Model.Piece.Title · @Model.Date.ToString("dd.MM.yyyy")
+            </p>
+
+            <ul class="detail-list">
+                <li><span class="detail-label">Datum</span><span class="detail-value">@Model.Date.ToString("dd.MM.yyyy")</span></li>
+                <li><span class="detail-label">Trajanje</span><span class="detail-value">@Model.DurationMinutes min</span></li>
+                <li>
+                    <span class="detail-label">Ocjena</span>
+                    <span class="detail-value">
+                        @for (var i = 1; i <= 5; i++)
+                        {
+                            <span class="@(i <= Model.QualityRating ? "star-on" : "star-off")">★</span>
+                        }
+                        (@Model.QualityRating/5)
+                    </span>
+                </li>
+                <li>
+                    <span class="detail-label">Učenik</span>
+                    <span class="detail-value">
+                        <a asp-controller="Student" asp-action="Details" asp-route-id="@Model.Student.Id">
+                            @Model.Student.FirstName @Model.Student.LastName
+                        </a>
+                    </span>
+                </li>
+                <li>
+                    <span class="detail-label">Skladba</span>
+                    <span class="detail-value">
+                        <a asp-controller="Piece" asp-action="Details" asp-route-id="@Model.Piece.Id">
+                            @Model.Piece.Title
+                        </a>
+                    </span>
+                </li>
+                @if (!string.IsNullOrEmpty(Model.Goals))
+                {
+                    <li><span class="detail-label">Ciljevi</span><span class="detail-value">@Model.Goals</span></li>
+                }
+                @if (!string.IsNullOrEmpty(Model.Notes))
+                {
+                    <li><span class="detail-label">Bilješke</span><span class="detail-value">@Model.Notes</span></li>
+                }
+            </ul>
+        </section>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1.2rem;">
+
+        <section class="detail-card">
+            <h2>📊 Detalji sesije</h2>
+            <ul class="detail-list">
+                <li><span class="detail-label">Trajanje</span><span class="detail-value">@Model.DurationMinutes min</span></li>
+                <li>
+                    <span class="detail-label">Ocjena kvalitete</span>
+                    <span class="detail-value">
+                        @for (var i = 1; i <= 5; i++)
+                        {
+                            <span class="@(i <= Model.QualityRating ? "star-on" : "star-off")">★</span>
+                        }
+                    </span>
+                </li>
+                <li>
+                    <span class="detail-label">Težina skladbe</span>
+                    <span class="detail-value">@Model.Piece.Difficulty</span>
+                </li>
+            </ul>
+        </section>
+
+    </div>
 </div>

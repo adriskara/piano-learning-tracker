@@ -1,0 +1,73 @@
+@model PianoLearningTracker.Models.TeacherFormModel
+
+@{
+    ViewData["Title"] = "Novi profesor";
+}
+
+<ul class="breadcrumb-list">
+    <li><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+    <li><a asp-controller="Teacher" asp-action="Index">Profesori</a></li>
+    <li>Novi profesor</li>
+</ul>
+
+<div class="form-card">
+    <form asp-action="Create" method="post" novalidate>
+        @Html.AntiForgeryToken()
+
+        <div class="form-grid-2">
+            <div class="form-group">
+                <label asp-for="FirstName" class="form-label"></label>
+                <input asp-for="FirstName" class="form-control" placeholder="npr. Marija" />
+                <span asp-validation-for="FirstName" class="text-danger field-error"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="form-label"></label>
+                <input asp-for="LastName" class="form-control" placeholder="npr. Horvat" />
+                <span asp-validation-for="LastName" class="text-danger field-error"></span>
+            </div>
+        </div>
+
+        <div class="form-grid-2">
+            <div class="form-group">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" type="email" placeholder="email@glazbena.hr" />
+                <span asp-validation-for="Email" class="text-danger field-error"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="form-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" placeholder="091-111-2233" />
+                <span asp-validation-for="PhoneNumber" class="text-danger field-error"></span>
+            </div>
+        </div>
+
+        <div class="form-grid-2">
+            <div class="form-group">
+                <label asp-for="Specialization" class="form-label"></label>
+                <input asp-for="Specialization" class="form-control" placeholder="npr. Klasična glazba" />
+                <span asp-validation-for="Specialization" class="text-danger field-error"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="YearsOfExperience" class="form-label"></label>
+                <input asp-for="YearsOfExperience" class="form-control" type="number" min="0" max="50" />
+                <span asp-validation-for="YearsOfExperience" class="text-danger field-error"></span>
+            </div>
+        </div>
+
+        @* Datumska kontrola za datum zaposlenja — partial view s flatpickr pluginom *@
+        <partial name="_DateTimePicker" model='new PianoLearningTracker.Models.DateTimePickerModel {
+            FieldId = "HireDate", FieldName = "HireDate",
+            DisplayName = "Datum zaposlenja", Value = Model.HireDate,
+            IncludeTime = false, Required = true }' />
+
+        <div class="form-group">
+            <label asp-for="Biography" class="form-label"></label>
+            <textarea asp-for="Biography" class="form-control" rows="4" placeholder="Kratka biografija profesora..."></textarea>
+            <span asp-validation-for="Biography" class="text-danger field-error"></span>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Spremi profesora</button>
+            <a asp-action="Index" class="btn btn-secondary">Odustani</a>
+        </div>
+    </form>
+</div>

@@ -1,58 +1,102 @@
 @model PianoLearningTracker.Models.Lesson
 
 @{
-    ViewData["Title"] = "Lesson details";
+    ViewData["Title"] = $"Sat #{Model.Id}";
 }
 
 <ul class="breadcrumb-list">
-    <li><a asp-controller="Lesson" asp-action="Index">Lessons</a></li>
-    <li>Lesson #@Model.Id</li>
+    <li><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+    <li><a asp-controller="Lesson" asp-action="Index">Satovi</a></li>
+    <li>Sat #@Model.Id</li>
 </ul>
 
+@if (User.IsInRole("Administrator") || User.IsInRole("Teacher"))
+{
+    <div class="page-actions">
+        <a class="btn btn-secondary" asp-action="Edit" asp-route-id="@Model.Id">✏️ Uredi</a>
+        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="inline-form"
+              onsubmit="return confirm('Jeste li sigurni da želite obrisati sat #@Model.Id?')">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-danger">🗑 Obriši</button>
+        </form>
+    </div>
+}
+
 <div class="detail-panel">
-    <section class="detail-card">
-        <h2>Lesson #@Model.Id</h2>
-        <p class="detail-label">Scheduled</p>
-        <p class="detail-value">@Model.ScheduledDate:dddd, MMM d yyyy HH:mm</p>
-        <p class="detail-label">Duration</p>
-        <p class="detail-value">@Model.DurationMinutes minutes</p>
-        <p class="detail-label">Status</p>
-        <p class="detail-value">@Model.Status</p>
-        <p class="detail-label">Homework</p>
-        <p class="detail-value">@Model.HomeworkAssigned</p>
-        <p class="detail-label">Notes</p>
-        <p class="detail-value">@Model.Notes</p>
-    </section>
 
-    <section class="detail-card">
-        <h2>Participants</h2>
-        <ul class="detail-list">
-            <li>
-                <span class="detail-label">Student</span>
-                <span class="detail-value">@Model.Student.FirstName @Model.Student.LastName</span>
-            </li>
-            <li>
-                <span class="detail-label">Teacher</span>
-                <span class="detail-value">@Model.Teacher.FirstName @Model.Teacher.LastName</span>
-            </li>
-        </ul>
-
-        <h3 class="mt-4">Pieces in this lesson</h3>
-        @if (Model.LessonPieces.Any())
-        {
-            <ul class="detail-list">
-                @foreach (var lessonPiece in Model.LessonPieces)
+    <div>
+        <section class="detail-card">
+            <h2 style="margin-bottom:0.25rem;">Sat #@Model.Id</h2>
+            <p style="color:var(--text-soft);margin:0 0 1.25rem;">
+                @switch (Model.Status)
                 {
-                    <li>
-                        <strong>@lessonPiece.Piece.Title</strong>
-                        <div class="detail-label">@lessonPiece.Notes</div>
-                    </li>
+                    case PianoLearningTracker.Models.LessonStatus.Completed:
+                        <span class="status-badge completed">✓ Završen</span>
+                        break;
+                    case PianoLearningTracker.Models.LessonStatus.Scheduled:
+                        <span class="status-badge scheduled">⏳ Zakazan</span>
+                        break;
+                    default:
+                        <span class="status-badge cancelled">✕ Otkazan</span>
+                        break;
+                }
+            </p>
+
+            <ul class="detail-list">
+                <li><span class="detail-label">Datum</span><span class="detail-value">@Model.ScheduledDate.ToString("dd.MM.yyyy · HH:mm")</span></li>
+                <li><span class="detail-label">Trajanje</span><span class="detail-value">@Model.DurationMinutes min</span></li>
+                <li>
+                    <span class="detail-label">Učenik</span>
+                    <span class="detail-value">
+                        <a asp-controller="Student" asp-action="Details" asp-route-id="@Model.Student.Id">
+                            @Model.Student.FirstName @Model.Student.LastName
+                        </a>
+                    </span>
+                </li>
+                <li>
+                    <span class="detail-label">Profesor</span>
+                    <span class="detail-value">
+                        <a asp-controller="Teacher" asp-action="Details" asp-route-id="@Model.Teacher.Id">
+                            @Model.Teacher.FirstName @Model.Teacher.LastName
+                        </a>
+                    </span>
+                </li>
+                @if (!string.IsNullOrEmpty(Model.HomeworkAssigned))
+                {
+                    <li><span class="detail-label">Domaća zadaća</span><span class="detail-value">@Model.HomeworkAssigned</span></li>
+                }
+                @if (!string.IsNullOrEmpty(Model.Notes))
+                {
+                    <li><span class="detail-label">Bilješke</span><span class="detail-value">@Model.Notes</span></li>
                 }
             </ul>
-        }
-        else
+        </section>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1.2rem;">
+
+        @if (Model.LessonPieces.Any())
         {
-            <p class="detail-value">No pieces are linked to this lesson yet.</p>
+            <section class="detail-card">
+                <h2>🎼 Skladbe na satu</h2>
+                <ul class="detail-list">
+                    @foreach (var lp in Model.LessonPieces)
+                    {
+                        <li>
+                            <span class="detail-label">
+                                <a asp-controller="Piece" asp-action="Details" asp-route-id="@lp.Piece.Id">
+                                    @lp.Piece.Title
+                                </a>
+                            </span>
+                            @if (!string.IsNullOrEmpty(lp.Notes))
+                            {
+                                <span class="detail-value" style="font-size:0.85rem;color:var(--text-soft);">@lp.Notes</span>
+                            }
+                        </li>
+                    }
+                </ul>
+            </section>
         }
-    </section>
+
+    </div>
 </div>
