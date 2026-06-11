@@ -29,6 +29,14 @@
 
         <button type="submit" class="btn btn-primary auth-submit">Prijavi se</button>
     </form>
+
+    <hr />
+
+    <form asp-action="ExternalLogin" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+        <button type="submit" name="provider" value="Google" class="btn btn-outline-danger w-100">
+            Prijavi se s Google računom
+        </button>
+    </form>
 </div>
 
 @section Scripts {

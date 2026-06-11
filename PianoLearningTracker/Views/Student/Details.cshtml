@@ -27,8 +27,17 @@
     <!-- Left: Profile + Pieces -->
     <div>
         <section class="detail-card">
-            <h2 style="margin-bottom:0.25rem;">@Model.FirstName @Model.LastName</h2>
-            <p style="color:var(--text-soft);margin:0 0 1.25rem;">Grade @Model.Grade · Enrolled @Model.EnrollmentDate.ToString("MMMM yyyy")</p>
+            <div class="d-flex align-items-center gap-3 mb-3">
+                @if (!string.IsNullOrEmpty(Model.ProfileImagePath))
+                {
+                    <img src="@Model.ProfileImagePath" alt="Profilna slika"
+                         style="width:80px; height:80px; object-fit:cover; border-radius:50%; border:2px solid var(--border);" />
+                }
+                <div>
+                    <h2 style="margin-bottom:0.25rem;">@Model.FirstName @Model.LastName</h2>
+                    <p style="color:var(--text-soft);margin:0;">Grade @Model.Grade · Enrolled @Model.EnrollmentDate.ToString("MMMM yyyy")</p>
+                </div>
+            </div>
 
             <ul class="detail-list">
                 <li><span class="detail-label">Email</span><span class="detail-value">@Model.Email</span></li>

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using PianoLearningTracker.DAL;
 using PianoLearningTracker.Models;
 using PianoLearningTracker.Repositories;
 
@@ -13,11 +14,13 @@ namespace PianoLearningTracker.Controllers
     {
         private readonly IMockRepository _repository;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly PianoLearningTrackerDbContext _dbContext;
 
-        public StudentController(IMockRepository repository, UserManager<ApplicationUser> userManager)
+        public StudentController(IMockRepository repository, UserManager<ApplicationUser> userManager, PianoLearningTrackerDbContext dbContext)
         {
             _repository = repository;
             _userManager = userManager;
+            _dbContext = dbContext;
         }
 
         // URL: /ucenici
@@ -126,7 +129,8 @@ namespace PianoLearningTracker.Controllers
                 TeacherId = student.TeacherId,
                 TeacherName = student.Teacher != null
                     ? $"{student.Teacher.FirstName} {student.Teacher.LastName}"
-                    : null
+                    : null,
+                ProfileImagePath = student.ProfileImagePath
             });
         }
 
@@ -193,6 +197,52 @@ namespace PianoLearningTracker.Controllers
         public IActionResult Autocomplete(string q = "")
         {
             return Json(_repository.AutocompleteStudents(q));
+        }
+
+        // Upload profilne slike učenika
+        // URL: /ucenici/profilna-slika/1
+        [Route("profilna-slika/{id:int}")]
+        [HttpPost]
+        [Authorize(Roles = "Administrator")]
+        public IActionResult UploadProfileImage(int id, IFormFile file)
+        {
+            var student = _dbContext.Students.FirstOrDefault(s => s.Id == id);
+            if (student == null)
+                return NotFound();
+
+            if (file == null || file.Length == 0)
+                return BadRequest("Datoteka je prazna.");
+
+            var allowedTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/webp" };
+            if (!allowedTypes.Contains(file.ContentType))
+                return BadRequest("Dopušteni su samo formati: JPG, PNG, GIF, WebP.");
+
+            var uploadsPath = Path.Combine(
+                Directory.GetCurrentDirectory(), "wwwroot", "uploads", "students");
+            Directory.CreateDirectory(uploadsPath);
+
+            // Obriši staru sliku ako postoji
+            if (!string.IsNullOrEmpty(student.ProfileImagePath))
+            {
+                var oldPath = Path.Combine(
+                    Directory.GetCurrentDirectory(), "wwwroot",
+                    student.ProfileImagePath.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+                if (System.IO.File.Exists(oldPath))
+                    System.IO.File.Delete(oldPath);
+            }
+
+            var safeFileName = $"student_{id}_{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            var filePath = Path.Combine(uploadsPath, safeFileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
+            student.ProfileImagePath = "/uploads/students/" + safeFileName;
+            _dbContext.SaveChanges();
+
+            return Json(new { success = true, path = student.ProfileImagePath });
         }
 
         // Pomoćna metoda — dohvaća učenike ovisno o ulozi prijavljenog korisnika

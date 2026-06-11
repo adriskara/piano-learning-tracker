@@ -18,7 +18,7 @@ This sub-agent is responsible for defining and shaping the user experience for t
 - Preserve accessibility: legible font sizes, adequate contrast, and keyboard-friendly links.
 
 ## Components and patterns
-- Implement a main navigation area that is more polished than a standard navbar, such as a sidebar or side panel with a custom highlight.
+- Implement a main navigation area that is more polished than a standard navbar, such as a sidebar or side panel with a custom highlight. Sidebar links must be role-aware: show different navigation items for Administrator, Teacher, and Student roles using ASP.NET Core Identity claims.
 - Add breadcrumbs or a contextual header on detail pages so users understand where they are.
 - Use list pages that group similar entities into card grids or stylized tables with hover states.
 - Use detail pages with an info summary panel and contextual subsections.
@@ -26,9 +26,9 @@ This sub-agent is responsible for defining and shaping the user experience for t
 - Provide a custom home page or landing dashboard that reflects the piano progress theme with summary blocks, progress rings, or overview cards.
 
 ## Content guidance
-- Build the interface around the existing mock repository data model and static datasets.
+- Build the interface around the EF Core data model and real database entities.
 - Create Index/list pages for each entity and corresponding Details pages.
-- Do not create Create/Edit forms; only implement read-only views.
+- Create Create and Edit forms where appropriate. Authentication-related views (login, register) should follow the app's ASP.NET Core Identity flow.
 - Ensure navigation is complete: menu links, list-to-details links, and breadcrumbs where appropriate.
 - Use descriptive headings and labels aligned with a piano learning tracker theme.
 

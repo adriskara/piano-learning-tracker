@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PianoLearningTracker.DAL;
 using PianoLearningTracker.Models;
 using PianoLearningTracker.Repositories;
 
@@ -12,10 +13,12 @@ namespace PianoLearningTracker.Controllers
     public class PieceController : Controller
     {
         private readonly IMockRepository _repository;
+        private readonly PianoLearningTrackerDbContext _dbContext;
 
-        public PieceController(IMockRepository repository)
+        public PieceController(IMockRepository repository, PianoLearningTrackerDbContext dbContext)
         {
             _repository = repository;
+            _dbContext = dbContext;
         }
 
         // URL: /skladbe  ILI  /repertoar
@@ -161,6 +164,84 @@ namespace PianoLearningTracker.Controllers
         public IActionResult Autocomplete(string q = "")
         {
             return Json(_repository.AutocompletePieces(q));
+        }
+
+        // Dropzone upload datoteke uz skladbu
+        // URL: /skladbe/upload/1
+        [Route("upload/{pieceId:int}")]
+        [HttpPost]
+        [Authorize(Roles = "Administrator")]
+        public IActionResult UploadAttachment(int pieceId, IFormFile file)
+        {
+            var piece = _repository.GetPieceById(pieceId);
+            if (piece == null)
+                return NotFound();
+
+            if (file == null || file.Length == 0)
+                return BadRequest("Datoteka je prazna.");
+
+            var uploadsPath = Path.Combine(
+                Directory.GetCurrentDirectory(), "wwwroot", "uploads", "pieces", pieceId.ToString());
+            Directory.CreateDirectory(uploadsPath);
+
+            var safeFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            var filePath = Path.Combine(uploadsPath, safeFileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
+            var attachment = new PieceAttachment
+            {
+                PieceId = pieceId,
+                FileName = file.FileName,
+                FilePath = "/uploads/pieces/" + pieceId + "/" + safeFileName,
+                ContentType = file.ContentType,
+                FileSize = file.Length,
+                CreatedAt = DateTime.UtcNow
+            };
+            _dbContext.PieceAttachments.Add(attachment);
+            _dbContext.SaveChanges();
+
+            return Json(new { success = true });
+        }
+
+        // AJAX dohvat popisa datoteka — vraća partial view
+        // URL: /skladbe/datoteke/1
+        [Route("datoteke/{pieceId:int}")]
+        [AllowAnonymous]
+        public IActionResult GetAttachments(int pieceId)
+        {
+            var attachments = _dbContext.PieceAttachments
+                .Where(a => a.PieceId == pieceId)
+                .OrderByDescending(a => a.CreatedAt)
+                .ToList();
+            return PartialView("_AttachmentList", attachments);
+        }
+
+        // AJAX brisanje datoteke
+        // URL: /skladbe/obrisi-datoteku/1
+        [Route("obrisi-datoteku/{id:int}")]
+        [HttpPost]
+        [Authorize(Roles = "Administrator")]
+        public IActionResult DeleteAttachment(int id)
+        {
+            var attachment = _dbContext.PieceAttachments.FirstOrDefault(a => a.Id == id);
+            if (attachment == null)
+                return NotFound();
+
+            var physicalPath = Path.Combine(
+                Directory.GetCurrentDirectory(), "wwwroot",
+                attachment.FilePath.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+
+            if (System.IO.File.Exists(physicalPath))
+                System.IO.File.Delete(physicalPath);
+
+            _dbContext.PieceAttachments.Remove(attachment);
+            _dbContext.SaveChanges();
+
+            return Json(new { success = true });
         }
     }
 }

@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Uredi skladbu";
     var id = ViewContext.RouteData.Values["id"];
+    var pieceId = id?.ToString();
 }
 
 <ul class="breadcrumb-list">
@@ -69,3 +70,60 @@
         </div>
     </form>
 </div>
+
+@if (User.IsInRole("Administrator"))
+{
+    <div class="form-card mt-4">
+        <h5 class="mb-3">Priložene datoteke (note, audio...)</h5>
+
+        <form id="pieceDz"
+              asp-controller="Piece"
+              asp-action="UploadAttachment"
+              asp-route-pieceId="@pieceId"
+              enctype="multipart/form-data"
+              class="dropzone">
+        </form>
+
+        <div id="attachmentList" class="mt-3"></div>
+    </div>
+}
+
+@section Scripts {
+    <link rel="stylesheet" href="~/lib/dropzone/dropzone.css" />
+    <script src="~/lib/dropzone/dropzone.min.js"></script>
+    <script>
+        Dropzone.autoDiscover = false;
+
+        var myDz = new Dropzone("#pieceDz", {
+            paramName: "file",
+            maxFilesize: 20,
+            success: function (file, response) {
+                loadAttachments();
+                this.removeFile(file);
+            },
+            error: function (file, message) {
+                alert("Greška pri uploadu: " + message);
+                this.removeFile(file);
+            }
+        });
+
+        $(function () {
+            loadAttachments();
+        });
+
+        function loadAttachments() {
+            $("#attachmentList").load("@Url.Action("GetAttachments", "Piece", new { pieceId = pieceId })");
+        }
+
+        var deleteBaseUrl = "@Url.Action("DeleteAttachment", "Piece", new { id = 0 })".replace("/0", "");
+
+        function deleteAttachment(id) {
+            if (!confirm("Obrisati datoteku?")) return;
+            $.ajax({
+                url: deleteBaseUrl + "/" + id,
+                method: "POST",
+                success: function () { loadAttachments(); }
+            });
+        }
+    </script>
+}

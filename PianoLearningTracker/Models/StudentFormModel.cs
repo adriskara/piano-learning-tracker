@@ -42,5 +42,8 @@ namespace PianoLearningTracker.Models
         [Display(Name = "Profesor")]
         public int? TeacherId { get; set; }
         public string? TeacherName { get; set; }
+
+        [Display(Name = "Profilna slika")]
+        public string? ProfileImagePath { get; set; }
     }
 }

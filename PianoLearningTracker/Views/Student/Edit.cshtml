@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Uredi učenika";
     var id = ViewContext.RouteData.Values["id"];
+    var studentId = id?.ToString();
 }
 
 <ul class="breadcrumb-list">
@@ -81,3 +82,57 @@
         </div>
     </form>
 </div>
+
+@if (User.IsInRole("Administrator"))
+{
+    <div class="form-card mt-4">
+        <h5 class="mb-3">Profilna slika</h5>
+
+        <div class="d-flex align-items-start gap-3">
+            <div>
+                <img id="profilePreview"
+                     src="@(string.IsNullOrEmpty(Model.ProfileImagePath) ? "/img/default-avatar.png" : Model.ProfileImagePath)"
+                     alt="Profilna slika"
+                     style="width:120px; height:120px; object-fit:cover; border-radius:8px; border:1px solid #ddd;" />
+            </div>
+            <div>
+                <form id="profileImageForm" enctype="multipart/form-data">
+                    <input type="file" id="profileImageInput" name="file"
+                           accept="image/jpeg,image/png,image/gif,image/webp"
+                           class="form-control mb-2" style="max-width:300px;" />
+                    <button type="submit" class="btn btn-primary btn-sm">Postavi sliku</button>
+                </form>
+                <small class="text-muted d-block mt-1">Dopušteni formati: JPG, PNG, GIF, WebP (max 5 MB)</small>
+                <div id="uploadMessage" class="mt-2"></div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        $("#profileImageForm").on("submit", function (e) {
+            e.preventDefault();
+            var fileInput = document.getElementById("profileImageInput");
+            if (!fileInput.files.length) return;
+
+            var formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            $.ajax({
+                url: "@Url.Action("UploadProfileImage", "Student", new { id = id })",
+                method: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (resp) {
+                    $("#profilePreview").attr("src", resp.path + "?t=" + new Date().getTime());
+                    $("#uploadMessage").html('<span class="text-success">Slika uspješno postavljena.</span>');
+                },
+                error: function (xhr) {
+                    $("#uploadMessage").html('<span class="text-danger">Greška: ' + xhr.responseText + '</span>');
+                }
+            });
+        });
+    </script>
+}

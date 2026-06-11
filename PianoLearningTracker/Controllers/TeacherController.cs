@@ -5,7 +5,6 @@ using PianoLearningTracker.Repositories;
 
 namespace PianoLearningTracker.Controllers
 {
-    [Authorize]
     // Dvije rute na controller razini — obje otvaraju isti controller
     [Route("nastavnici")]
     [Route("profesori")]
@@ -20,6 +19,7 @@ namespace PianoLearningTracker.Controllers
 
         // URL: /nastavnici  ILI  /profesori
         [Route("")]
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return View(_repository.GetAllTeachers());
@@ -28,6 +28,7 @@ namespace PianoLearningTracker.Controllers
         // AJAX pretraga — vraća partial view s filtriranim profesorima
         // URL: /nastavnici/pretraga?q=...
         [Route("pretraga")]
+        [AllowAnonymous]
         public IActionResult Search(string q = "")
         {
             return PartialView("_TeacherList", _repository.SearchTeachers(q));
@@ -35,6 +36,7 @@ namespace PianoLearningTracker.Controllers
 
         // URL: /nastavnici/detalji/1  ILI  /profesori/detalji/1
         [Route("detalji/{id:int}")]
+        [AllowAnonymous]
         public IActionResult Details(int id)
         {
             var teacher = _repository.GetTeacherById(id);
@@ -161,6 +163,7 @@ namespace PianoLearningTracker.Controllers
         // AJAX autocomplete endpoint za dropdown — vraća JSON niz {id, text}
         // URL: /nastavnici/autocomplete?q=...
         [Route("autocomplete")]
+        [AllowAnonymous]
         public IActionResult Autocomplete(string q = "")
         {
             return Json(_repository.AutocompleteTeachers(q));

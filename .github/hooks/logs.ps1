@@ -2,7 +2,7 @@ param(
     [string]$EventType = "Unknown"
 )
 
-$logPath = "C:\Users\adrij\source\repos\piano-learning-tracker\.github\hooks\lab4\agent_log.txt"
+$logPath = "C:\Users\adrij\source\repos\piano-learning-tracker\.github\hooks\lab5\agent_log.txt"
 $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 
 $data = [Console]::In.ReadToEnd()

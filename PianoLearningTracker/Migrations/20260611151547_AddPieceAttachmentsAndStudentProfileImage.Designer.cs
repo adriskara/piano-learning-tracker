@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PianoLearningTracker.DAL;
 
@@ -11,9 +12,11 @@ using PianoLearningTracker.DAL;
 namespace PianoLearningTracker.Migrations
 {
     [DbContext(typeof(PianoLearningTrackerDbContext))]
-    partial class PianoLearningTrackerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260611151547_AddPieceAttachmentsAndStudentProfileImage")]
+    partial class AddPieceAttachmentsAndStudentProfileImage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -210,11 +213,6 @@ namespace PianoLearningTracker.Migrations
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("OIB")
-                        .IsRequired()
-                        .HasMaxLength(11)
-                        .HasColumnType("nvarchar(11)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");

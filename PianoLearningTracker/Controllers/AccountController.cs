@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PianoLearningTracker.DAL;
 using PianoLearningTracker.Models;
+using System.Security.Claims;
 
 namespace PianoLearningTracker.Controllers
 {
@@ -78,7 +79,8 @@ namespace PianoLearningTracker.Controllers
             {
                 UserName = model.Email,
                 Email = model.Email,
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                OIB = model.OIB
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -171,6 +173,73 @@ namespace PianoLearningTracker.Controllers
 
             ViewBag.UserRoles = userRoles;
             return View(users);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ExternalLogin(string provider, string? returnUrl = null)
+        {
+            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account", new { returnUrl });
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return Challenge(properties, provider);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExternalLoginCallback(string? returnUrl = null, string? remoteError = null)
+        {
+            if (remoteError != null)
+            {
+                ModelState.AddModelError(string.Empty, $"Greška od Google: {remoteError}");
+                return RedirectToAction(nameof(Login));
+            }
+
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+                return RedirectToAction(nameof(Login));
+
+            var result = await _signInManager.ExternalLoginSignInAsync(
+                info.LoginProvider, info.ProviderKey, isPersistent: false);
+
+            if (result.Succeeded)
+                return LocalRedirect(returnUrl ?? "/");
+
+            // Korisnik ne postoji — prikaži formu za dopunu podataka (OIB)
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email) ?? string.Empty;
+            return View("ExternalLoginConfirmation",
+                new ExternalLoginConfirmationViewModel { Email = email });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ExternalLoginConfirmation(
+            ExternalLoginConfirmationViewModel model, string? returnUrl = null)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+                return RedirectToAction(nameof(Login));
+
+            var user = new ApplicationUser
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                EmailConfirmed = true,
+                OIB = model.OIB
+            };
+
+            var result = await _userManager.CreateAsync(user);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError(string.Empty, error.Description);
+                return View(model);
+            }
+
+            await _userManager.AddLoginAsync(user, info);
+            await _signInManager.SignInAsync(user, isPersistent: false);
+            return LocalRedirect(returnUrl ?? "/");
         }
 
         public IActionResult AccessDenied()

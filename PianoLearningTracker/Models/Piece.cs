@@ -38,5 +38,8 @@ namespace PianoLearningTracker.Models
 
         // 1-N: jedna Piece ima više PracticeSessions
         public virtual ICollection<PracticeSession> PracticeSessions { get; set; } = new List<PracticeSession>();
+
+        // 1-N: jedna Piece ima više Attachments (note, audio...)
+        public virtual ICollection<PieceAttachment> Attachments { get; set; } = new List<PieceAttachment>();
     }
 }

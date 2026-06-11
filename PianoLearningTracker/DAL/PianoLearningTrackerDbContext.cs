@@ -18,6 +18,7 @@ namespace PianoLearningTracker.DAL
         public DbSet<PracticeSession> PracticeSessions { get; set; }
         public DbSet<LessonPiece> LessonPieces { get; set; }
         public DbSet<StudentPiece> StudentPieces { get; set; }
+        public DbSet<PieceAttachment> PieceAttachments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

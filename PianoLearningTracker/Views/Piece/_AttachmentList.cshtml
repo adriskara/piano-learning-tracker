@@ -1,0 +1,40 @@
+@model IEnumerable<PianoLearningTracker.Models.PieceAttachment>
+
+@if (!Model.Any())
+{
+    <p class="text-muted" style="font-size:0.875rem;">Nema priloženih datoteka.</p>
+}
+else
+{
+    <table class="table table-sm mt-2">
+        <thead>
+            <tr>
+                <th>Naziv</th>
+                <th>Veličina</th>
+                <th>Datum</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in Model)
+            {
+                <tr>
+                    <td>
+                        <a href="@a.FilePath" target="_blank">@a.FileName</a>
+                    </td>
+                    <td>@(a.FileSize / 1024) KB</td>
+                    <td>@a.CreatedAt.ToString("dd.MM.yyyy. HH:mm")</td>
+                    <td>
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <button type="button" class="btn btn-danger btn-sm"
+                                    onclick="deleteAttachment(@a.Id)">
+                                Obriši
+                            </button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

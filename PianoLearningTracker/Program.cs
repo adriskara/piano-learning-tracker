@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PianoLearningTracker.DAL;
@@ -7,7 +8,11 @@ using PianoLearningTracker.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 builder.Services.AddScoped<IMockRepository, EfRepository>();
 
 builder.Services.AddDbContext<PianoLearningTrackerDbContext>(options =>
@@ -24,6 +29,14 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     })
     .AddEntityFrameworkStores<PianoLearningTrackerDbContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication()
+    .AddGoogle(options =>
+    {
+        options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
+        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
+        options.CallbackPath = "/signin-google";
+    });
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -65,6 +78,10 @@ app.MapControllerRoute(
 // Seed admin korisnika pri pokretanju
 using (var scope = app.Services.CreateScope())
 {
+    // EnsureCreated() applies HasData seeds for InMemory (test) provider; is a no-op on existing SQL Server DB
+    var dbContext = scope.ServiceProvider.GetRequiredService<PianoLearningTrackerDbContext>();
+    dbContext.Database.EnsureCreated();
+
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
     const string adminEmail = "admin@glazbena.hr";
 
@@ -83,3 +100,5 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+public partial class Program { }

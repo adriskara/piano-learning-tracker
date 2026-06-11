@@ -33,6 +33,9 @@ namespace PianoLearningTracker.Models
         // slobodne bilješke o učeniku
         public string? Notes { get; set; }
 
+        // putanja do profilne slike učenika
+        public string? ProfileImagePath { get; set; }
+
         // FK na primarnog profesora
         public int? TeacherId { get; set; }
         public virtual Teacher? Teacher { get; set; }
