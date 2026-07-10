@@ -19,3 +19,6 @@ Thumbs.db
 # AI logovi (lokalne datoteke s korištenjem — folder zadržavamo preko .gitkeep)
 **/App_Data/ai_logs/*
 !**/App_Data/ai_logs/.gitkeep
+
+# Runtime uploadane datoteke (učeničke slike/note) — ne idu u repo
+PianoLearningTracker/wwwroot/uploads/
