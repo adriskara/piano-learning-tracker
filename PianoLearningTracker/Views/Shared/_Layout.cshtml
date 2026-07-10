@@ -52,6 +52,12 @@
                             <span class="nav-icon">🎵</span> Profesori
                         </a>
                     }
+                    @if (User.IsInRole("Student"))
+                    {
+                        <a class="sidebar-link @(ctrl == "MyTeacher" ? "active" : "")" asp-controller="MyTeacher" asp-action="Index">
+                            <span class="nav-icon">🎵</span> Moj profesor
+                        </a>
+                    }
                     <a class="sidebar-link @(ctrl == "Piece" ? "active" : "")" asp-controller="Piece" asp-action="Index">
                         <span class="nav-icon">🎼</span> Skladbe
                     </a>
@@ -90,7 +96,7 @@
                 }
             </div>
 
-            <div class="sidebar-note">Piano Learning Tracker · Read-only mock data</div>
+            <div class="sidebar-note">Piano Learning Tracker · Praćenje učenja klavira</div>
         </aside>
 
         <div class="app-main">
@@ -112,7 +118,7 @@
 
             <footer class="app-footer">
                 <span>&copy; 2026 Piano Learning Tracker</span>
-                <span>Mock repository · Read-only views</span>
+                <span>EF Core · SQL Server</span>
             </footer>
         </div>
     </div>

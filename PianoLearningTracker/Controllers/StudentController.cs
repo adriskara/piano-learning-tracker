@@ -12,11 +12,11 @@ namespace PianoLearningTracker.Controllers
     [Route("ucenici")]
     public class StudentController : Controller
     {
-        private readonly IMockRepository _repository;
+        private readonly IRepository _repository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly PianoLearningTrackerDbContext _dbContext;
 
-        public StudentController(IMockRepository repository, UserManager<ApplicationUser> userManager, PianoLearningTrackerDbContext dbContext)
+        public StudentController(IRepository repository, UserManager<ApplicationUser> userManager, PianoLearningTrackerDbContext dbContext)
         {
             _repository = repository;
             _userManager = userManager;
@@ -252,10 +252,10 @@ namespace PianoLearningTracker.Controllers
             {
                 var user = await _userManager.GetUserAsync(User);
                 if (user?.TeacherId != null)
-                    return _repository.GetStudentsByTeacherId(user.TeacherId.Value);
+                    return _repository.GetStudentsForList(user.TeacherId.Value);
                 return new List<Student>();
             }
-            return _repository.GetAllStudents();
+            return _repository.GetStudentsForList();
         }
     }
 }

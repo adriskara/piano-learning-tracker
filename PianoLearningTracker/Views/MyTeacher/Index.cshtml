@@ -1,0 +1,42 @@
+@model PianoLearningTracker.Models.MyTeacherViewModel
+
+@{
+    ViewData["Title"] = "Moj profesor";
+}
+
+<ul class="breadcrumb-list">
+    <li><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+    <li>Moj profesor</li>
+</ul>
+
+@if (Model == null)
+{
+    <div class="empty-state">
+        <p>Trenutno vam nije dodijeljen profesor. Obratite se administratoru.</p>
+    </div>
+}
+else
+{
+    <div class="detail-panel">
+        <div>
+            <section class="detail-card">
+                <h2 style="margin-bottom:0.25rem;">@Model.FirstName @Model.LastName</h2>
+                <p style="color:var(--text-soft);margin:0 0 1.25rem;">
+                    🎵 @Model.Specialization · @Model.YearsOfExperience godina iskustva
+                </p>
+
+                <ul class="detail-list">
+                    <li><span class="detail-label">Email</span><span class="detail-value">@Model.Email</span></li>
+                    @if (!string.IsNullOrWhiteSpace(Model.PhoneNumber))
+                    {
+                        <li><span class="detail-label">Telefon</span><span class="detail-value">@Model.PhoneNumber</span></li>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(Model.Biography))
+                    {
+                        <li><span class="detail-label">Biografija</span><span class="detail-value">@Model.Biography</span></li>
+                    }
+                </ul>
+            </section>
+        </div>
+    </div>
+}

@@ -8,6 +8,7 @@ namespace PianoLearningTracker.Controllers.Api
 {
     [Route("api/pieces")]
     [ApiController]
+    [Authorize]
     public class PiecesApiController : ControllerBase
     {
         private readonly PianoLearningTrackerDbContext _dbContext;
@@ -18,7 +19,6 @@ namespace PianoLearningTracker.Controllers.Api
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public ActionResult<IEnumerable<PieceDTO>> Get([FromQuery] string? q = null)
         {
             var query = _dbContext.Pieces.AsQueryable();
@@ -36,7 +36,6 @@ namespace PianoLearningTracker.Controllers.Api
         }
 
         [HttpGet("{id}")]
-        [AllowAnonymous]
         public ActionResult<PieceDTO> Get(int id)
         {
             var piece = _dbContext.Pieces.FirstOrDefault(p => p.Id == id);

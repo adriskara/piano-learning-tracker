@@ -3,7 +3,10 @@ using PianoLearningTracker.Models;
 
 namespace PianoLearningTracker.Repositories
 {
-    public class MockRepository : IMockRepository
+    // NAPOMENA: Mock implementacija iz Lab2 (statički podaci u memoriji).
+    // Od Lab3 aplikacija koristi EfRepository (registriran u Program.cs).
+    // Zadržano namjerno kao referenca DI/repository obrasca — nije aktivno u upotrebi.
+    public class MockRepository : IRepository
     {
         private readonly List<Student> _students;
         private readonly List<Teacher> _teachers;
@@ -23,12 +26,20 @@ namespace PianoLearningTracker.Repositories
         }
 
         // --- Read ---
-        public IReadOnlyList<Student> GetAllStudents() => _students;
-        public IReadOnlyList<Student> GetStudentsByTeacherId(int teacherId) => _students.Where(s => s.TeacherId == teacherId).ToList();
+        public IReadOnlyList<Student> GetStudentsForList(int? teacherId = null) =>
+            _students.Where(s => teacherId == null || s.TeacherId == teacherId).ToList();
+        public IReadOnlyList<Student> GetStudentsWithProgress(int? teacherId = null) =>
+            _students.Where(s => teacherId == null || s.TeacherId == teacherId).ToList();
         public Student? GetStudentById(int id) => _students.FirstOrDefault(s => s.Id == id);
 
         public IReadOnlyList<Teacher> GetAllTeachers() => _teachers;
         public Teacher? GetTeacherById(int id) => _teachers.FirstOrDefault(t => t.Id == id);
+        public Teacher? GetStudentTeacher(int studentId)
+        {
+            var student = _students.FirstOrDefault(s => s.Id == studentId);
+            return student?.Teacher
+                ?? (student?.TeacherId != null ? _teachers.FirstOrDefault(t => t.Id == student.TeacherId) : null);
+        }
 
         public IReadOnlyList<Piece> GetAllPieces() => _pieces;
         public Piece? GetPieceById(int id) => _pieces.FirstOrDefault(p => p.Id == id);
@@ -42,6 +53,12 @@ namespace PianoLearningTracker.Repositories
         public IReadOnlyList<PracticeSession> GetPracticeSessionsByStudentId(int studentId) => _practiceSessions.Where(ps => ps.StudentId == studentId).ToList();
         public IReadOnlyList<PracticeSession> GetPracticeSessionsByTeacherId(int teacherId) => _practiceSessions.Where(ps => ps.Student?.TeacherId == teacherId).ToList();
         public PracticeSession? GetPracticeSessionById(int id) => _practiceSessions.FirstOrDefault(ps => ps.Id == id);
+
+        // --- Count ---
+        public int CountStudents() => _students.Count;
+        public int CountTeachers() => _teachers.Count;
+        public int CountPieces() => _pieces.Count;
+        public int CountLessons() => _lessons.Count;
 
         // --- Search ---
         public IReadOnlyList<Student> SearchStudents(string query, int? teacherId = null) =>

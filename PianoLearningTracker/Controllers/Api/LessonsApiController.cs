@@ -9,6 +9,7 @@ namespace PianoLearningTracker.Controllers.Api
 {
     [Route("api/lessons")]
     [ApiController]
+    [Authorize]
     public class LessonsApiController : ControllerBase
     {
         private readonly PianoLearningTrackerDbContext _dbContext;
@@ -19,7 +20,6 @@ namespace PianoLearningTracker.Controllers.Api
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public ActionResult<IEnumerable<LessonDTO>> Get([FromQuery] string? q = null)
         {
             var query = _dbContext.Lessons
@@ -42,7 +42,6 @@ namespace PianoLearningTracker.Controllers.Api
         }
 
         [HttpGet("{id}")]
-        [AllowAnonymous]
         public ActionResult<LessonDTO> Get(int id)
         {
             var lesson = _dbContext.Lessons

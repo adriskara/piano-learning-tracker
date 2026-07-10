@@ -11,6 +11,7 @@ namespace PianoLearningTracker.Models
     {
         public string UserRole { get; set; } = "Administrator";
         public string? UserDisplayName { get; set; }
+        public string UserFirstName { get; set; } = "";
 
         // Statistike (Admin: ukupno; Teacher/Student: filtrirano)
         public int StudentCount { get; set; }
@@ -25,6 +26,9 @@ namespace PianoLearningTracker.Models
         public PracticeSession? LatestPracticeSession { get; set; }
         public List<PracticeStreakItem> PracticeStreaks { get; set; } = new();
         public List<StudentPiece> RecentAchievements { get; set; } = new();
+
+        public List<Lesson> HomeworkLessons { get; set; } = new();
+        public List<Lesson> CalendarLessons { get; set; } = new();
     }
 
     public class LandingViewModel

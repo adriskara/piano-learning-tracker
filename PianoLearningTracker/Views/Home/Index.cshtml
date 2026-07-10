@@ -7,22 +7,54 @@
 }
 
 <section class="dashboard-top">
-    <div class="dashboard-intro">
-        <span class="eyebrow">
-            @if (isAdmin) { <text>🔧 Administrator</text> }
-            else if (isTeacher) { <text>🎵 Profesor</text> }
-            else { <text>🎓 Učenik</text> }
-        </span>
-        <h2 style="margin:0 0 0.5rem; font-size:1.6rem; font-weight:800; letter-spacing:-0.03em;">
-            @if (isAdmin) { <text>Pregled sustava</text> }
-            else if (isTeacher) { <text>Moji učenici i satovi</text> }
-            else { <text>Moji satovi i vježbe</text> }
+    @{
+        var nowHour = DateTime.Now.Hour;
+        var greeting = nowHour < 12 ? "Dobro jutro" : nowHour < 18 ? "Dobar dan" : "Dobra večer";
+        var greetEmoji = nowHour < 12 ? "🌤" : nowHour < 18 ? "☀️" : "🌙";
+        var displayName = !string.IsNullOrEmpty(Model.UserFirstName) ? Model.UserFirstName
+                        : (Model.UserDisplayName ?? "").Split('@')[0];
+        var nextLessonDays = Model.NextLesson != null
+            ? (Model.NextLesson.ScheduledDate.Date - DateTime.Today).Days
+            : (int?)null;
+        var lastHomework = Model.HomeworkLessons.FirstOrDefault(l => l.Status == LessonStatus.Completed);
+    }
+    <div class="dashboard-intro welcome-card">
+        <div class="welcome-top">
+            <span class="eyebrow">
+                @if (isAdmin) { <text>🔧 Administrator</text> }
+                else if (isTeacher) { <text>🎵 Profesor</text> }
+                else { <text>🎓 Učenik</text> }
+            </span>
+            <span class="welcome-date">@DateTime.Today.ToString("dddd, d. MMMM yyyy.")</span>
+        </div>
+        <h2 class="welcome-heading">
+            @greetEmoji @greeting, <span class="welcome-name">@displayName</span>!
         </h2>
-        <p style="color:var(--text-muted); margin:0;">
-            @if (isAdmin) { <text>Ukupni pregled svih podataka u sustavu.</text> }
-            else if (isTeacher) { <text>Prikazuju se samo vaši učenici i satovi.</text> }
-            else { <text>Prikazuju se samo vaši osobni podaci.</text> }
-        </p>
+        <div class="welcome-info">
+            @if (nextLessonDays.HasValue)
+            {
+                <div class="welcome-pill welcome-pill-blue">
+                    📅
+                    @if (nextLessonDays == 0) { <text>Sat je danas!</text> }
+                    else if (nextLessonDays == 1) { <text>Sat je sutra</text> }
+                    else { <text>Sljedeći sat za <strong>@nextLessonDays dana</strong></text> }
+                </div>
+            }
+            else
+            {
+                <div class="welcome-pill welcome-pill-gray">📅 Nema zakazanih sati</div>
+            }
+            @if (lastHomework != null)
+            {
+                <div class="welcome-pill welcome-pill-amber">
+                    📝 Zadaća: <em>@lastHomework.HomeworkAssigned</em>
+                </div>
+            }
+            else if (isStudent)
+            {
+                <div class="welcome-pill welcome-pill-green">✅ Nema aktivnih zadaća</div>
+            }
+        </div>
     </div>
 
     <div class="dashboard-metrics">
@@ -228,6 +260,135 @@
             }
         </article>
     }
+
+    <!-- Zadaće / domaće zadaće -->
+    <article class="dashboard-panel">
+        <div class="panel-header">
+            <div>
+                <h2>📝 Zadaće</h2>
+                <p class="panel-subtitle">Domaće zadaće iz sati</p>
+            </div>
+            <a class="btn btn-sm btn-outline-primary" asp-controller="Lesson" asp-action="Index">Svi satovi</a>
+        </div>
+        @if (Model.HomeworkLessons.Any())
+        {
+            <div class="homework-list">
+                @foreach (var lesson in Model.HomeworkLessons)
+                {
+                    var isScheduled = lesson.Status == LessonStatus.Scheduled;
+                    <div class="homework-item @(isScheduled ? "hw-upcoming" : "hw-completed")">
+                        <div class="hw-header">
+                            <span class="hw-date">@lesson.ScheduledDate.ToString("d. MMM yyyy")</span>
+                            <span class="hw-badge @(isScheduled ? "badge-scheduled" : "badge-done")">
+                                @(isScheduled ? "Nadolazeći" : "Završen")
+                            </span>
+                        </div>
+                        <p class="hw-text">@lesson.HomeworkAssigned</p>
+                        @if (!isStudent)
+                        {
+                            <p class="hw-meta">@lesson.Student.FirstName @lesson.Student.LastName</p>
+                        }
+                        <a class="hw-link" asp-controller="Lesson" asp-action="Details" asp-route-id="@lesson.Id">Detalji →</a>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="panel-empty">Nema zadanih zadaća.</div>
+        }
+    </article>
+
+    <!-- Mini kalendar sati -->
+    @{
+        var calToday = DateTime.Today;
+        var firstOfMonth = new DateTime(calToday.Year, calToday.Month, 1);
+        var daysInMonth = DateTime.DaysInMonth(calToday.Year, calToday.Month);
+        var startDow = (int)firstOfMonth.DayOfWeek;
+        var startOffset = startDow == 0 ? 6 : startDow - 1; // Monday = 0
+        var lessonsByDay = Model.CalendarLessons
+            .GroupBy(l => l.ScheduledDate.Day)
+            .ToDictionary(g => g.Key, g => g.ToList());
+        string[] monthNames = { "", "Siječanj", "Veljača", "Ožujak", "Travanj", "Svibanj", "Lipanj",
+                                  "Srpanj", "Kolovoz", "Rujan", "Listopad", "Studeni", "Prosinac" };
+        string[] dayHeaders = { "Po", "Ut", "Sr", "Če", "Pe", "Su", "Ne" };
+    }
+    <article class="dashboard-panel" style="grid-column: span 2;">
+        <div class="panel-header">
+            <div>
+                <h2>📆 Raspored sati</h2>
+                <p class="panel-subtitle">@monthNames[calToday.Month] @calToday.Year</p>
+            </div>
+            <a class="btn btn-sm btn-outline-primary" asp-controller="Lesson" asp-action="Index">Svi satovi</a>
+        </div>
+        <div class="mini-calendar">
+            <div class="cal-grid">
+                @foreach (var dh in dayHeaders)
+                {
+                    <div class="cal-day-header">@dh</div>
+                }
+                @for (int i = 0; i < startOffset; i++)
+                {
+                    <div class="cal-cell cal-empty"></div>
+                }
+                @for (int d = 1; d <= daysInMonth; d++)
+                {
+                    var hasLesson = lessonsByDay.ContainsKey(d);
+                    var isToday = d == calToday.Day;
+                    var cssClass = "cal-cell" + (isToday ? " cal-today" : "") + (hasLesson ? " cal-has-lesson" : "");
+                    if (hasLesson)
+                    {
+                        var lessons = lessonsByDay[d];
+                        var tooltip = string.Join(" | ", lessons.Select(l =>
+                            l.ScheduledDate.ToString("HH:mm") + (!isStudent ? $" – {l.Student.FirstName} {l.Student.LastName}" : "")));
+                        <div class="@cssClass" title="@tooltip">
+                            <span class="cal-day-num">@d</span>
+                            <span class="cal-dot"></span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="@cssClass"><span class="cal-day-num">@d</span></div>
+                    }
+                }
+            </div>
+            @if (lessonsByDay.Any())
+            {
+                <div class="cal-legend">
+                    @foreach (var kvp in lessonsByDay.OrderBy(k => k.Key))
+                    {
+                        @foreach (var lesson in kvp.Value)
+                        {
+                            <div class="cal-event">
+                                <span class="cal-event-dot @(lesson.Status == LessonStatus.Scheduled ? "" : "cal-event-dot-done")"></span>
+                                <span>@lesson.ScheduledDate.ToString("d. MMM, HH:mm")</span>
+                                @if (!isStudent)
+                                {
+                                    <span class="cal-event-name">@lesson.Student.FirstName @lesson.Student.LastName</span>
+                                }
+                                @if (lesson.Status == LessonStatus.Scheduled)
+                                {
+                                    <span class="hw-badge badge-scheduled" style="margin-left:auto;">zakazan</span>
+                                }
+                                else if (lesson.Status == LessonStatus.Completed)
+                                {
+                                    <span class="hw-badge badge-done" style="margin-left:auto;">završen</span>
+                                }
+                                @if (!string.IsNullOrWhiteSpace(lesson.HomeworkAssigned))
+                                {
+                                    <a class="hw-link" asp-controller="Lesson" asp-action="Details" asp-route-id="@lesson.Id" style="margin-left:0.25rem;">→</a>
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="panel-empty">Nema sati ovaj mjesec.</p>
+            }
+        </div>
+    </article>
 
     <!-- Navigacija po sekcijama -->
     <article class="dashboard-panel dashboard-cta" style="grid-column: span 2;">

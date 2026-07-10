@@ -17,7 +17,7 @@ Ti si Entity Framework Core stručnjak za Piano Learning Tracker — ASP.NET Cor
 
 - **Modeli**: `PianoLearningTracker/Models/` — klase koje predstavljaju tablice u bazi
 - **DbContext**: `PianoLearningTracker/DAL/PianoLearningTrackerDbContext.cs`
-- **Repository**: `PianoLearningTracker/Repositories/EfRepository.cs` — implementira `IMockRepository`
+- **Repository**: `PianoLearningTracker/Repositories/EfRepository.cs` — implementira `IRepository`
 - **Migracije**: `PianoLearningTracker/Migrations/`
 - **Connection string**: `PianoLearningTracker/appsettings.json` → `ConnectionStrings.PianoLearningTrackerDbContext`
 - **DI registracija**: `PianoLearningTracker/Program.cs`
@@ -84,7 +84,7 @@ dotnet ef migrations remove
 
 ## EfRepository konvencije
 
-Pri dodavanju novog entiteta, dodaj metode u `IMockRepository` sučelje i `EfRepository` implementaciju.
+Pri dodavanju novog entiteta, dodaj metode u `IRepository` sučelje i `EfRepository` implementaciju.
 
 Koristi `.Include()` za navigacijska svojstva koja su potrebna u viewu:
 ```csharp
@@ -103,7 +103,7 @@ Koristiti `.ThenInclude()` za ugniježđena navigacijska svojstva:
 
 1. Izmijeni model klasu u `Models/`
 2. Po potrebi ažuriraj `DbContext` (novi `DbSet`, konfiguracija u `OnModelCreating`)
-3. Po potrebi ažuriraj `IMockRepository` i `EfRepository`
+3. Po potrebi ažuriraj `IRepository` i `EfRepository`
 4. Generiraj migraciju: `dotnet ef migrations add NazivMigracije`
 5. Primijeni: `dotnet ef database update`
 6. Provjeri build: `dotnet build`

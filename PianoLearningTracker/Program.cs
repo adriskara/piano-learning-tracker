@@ -13,7 +13,7 @@ builder.Services.AddControllersWithViews()
     {
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
-builder.Services.AddScoped<IMockRepository, EfRepository>();
+builder.Services.AddScoped<IRepository, EfRepository>();
 
 builder.Services.AddDbContext<PianoLearningTrackerDbContext>(options =>
     options.UseSqlServer(
@@ -30,13 +30,19 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     .AddEntityFrameworkStores<PianoLearningTrackerDbContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddAuthentication()
-    .AddGoogle(options =>
-    {
-        options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
-        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
-        options.CallbackPath = "/signin-google";
-    });
+var googleClientId = builder.Configuration["Authentication:Google:ClientId"];
+var googleClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+
+if (!string.IsNullOrEmpty(googleClientId) && !string.IsNullOrEmpty(googleClientSecret))
+{
+    builder.Services.AddAuthentication()
+        .AddGoogle(options =>
+        {
+            options.ClientId = googleClientId;
+            options.ClientSecret = googleClientSecret;
+            options.CallbackPath = "/signin-google";
+        });
+}
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -78,9 +84,16 @@ app.MapControllerRoute(
 // Seed admin korisnika pri pokretanju
 using (var scope = app.Services.CreateScope())
 {
-    // EnsureCreated() applies HasData seeds for InMemory (test) provider; is a no-op on existing SQL Server DB
     var dbContext = scope.ServiceProvider.GetRequiredService<PianoLearningTrackerDbContext>();
-    dbContext.Database.EnsureCreated();
+
+    // InMemory (testovi) ne podržava migracije → EnsureCreated primijeni HasData seed.
+    // Na SQL Serveru koristimo Migrate() da se primijene migracije i vodi povijest
+    // (miješanje EnsureCreated s migracijama je poznata zamka).
+    var isInMemory = dbContext.Database.ProviderName?.Contains("InMemory") == true;
+    if (isInMemory)
+        dbContext.Database.EnsureCreated();
+    else
+        dbContext.Database.Migrate();
 
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
     const string adminEmail = "admin@glazbena.hr";

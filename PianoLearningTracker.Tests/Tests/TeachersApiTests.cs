@@ -13,9 +13,19 @@ public class TeachersApiTests
     public async Task GetAll_ReturnsOk()
     {
         using var factory = new PianoWebApplicationFactory();
-        var response = await factory.CreateClient().GetAsync("/api/teachers");
+        var response = await factory.CreateAuthenticatedClient().GetAsync("/api/teachers");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetAll_Returns401_WhenNotAuthenticated()
+    {
+        using var factory = new PianoWebApplicationFactory();
+
+        var response = await factory.CreateClient().GetAsync("/api/teachers");
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
     [Fact]
@@ -34,7 +44,7 @@ public class TeachersApiTests
         });
         db.SaveChanges();
 
-        var response = await factory.CreateClient().GetAsync("/api/teachers?q=UniqueFirstName");
+        var response = await factory.CreateAuthenticatedClient().GetAsync("/api/teachers?q=UniqueFirstName");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var teachers = await response.Content.ReadFromJsonAsync<List<TeacherDTO>>();
@@ -61,7 +71,7 @@ public class TeachersApiTests
         });
         db.SaveChanges();
 
-        var response = await factory.CreateClient().GetAsync("/api/teachers/100");
+        var response = await factory.CreateAuthenticatedClient().GetAsync("/api/teachers/100");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var dto = await response.Content.ReadFromJsonAsync<TeacherDTO>();
@@ -74,7 +84,7 @@ public class TeachersApiTests
     {
         using var factory = new PianoWebApplicationFactory();
 
-        var response = await factory.CreateClient().GetAsync("/api/teachers/99999");
+        var response = await factory.CreateAuthenticatedClient().GetAsync("/api/teachers/99999");
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }

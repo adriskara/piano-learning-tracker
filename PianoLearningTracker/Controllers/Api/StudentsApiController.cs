@@ -9,6 +9,7 @@ namespace PianoLearningTracker.Controllers.Api
 {
     [Route("api/students")]
     [ApiController]
+    [Authorize]
     public class StudentsApiController : ControllerBase
     {
         private readonly PianoLearningTrackerDbContext _dbContext;
@@ -19,7 +20,6 @@ namespace PianoLearningTracker.Controllers.Api
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public ActionResult<IEnumerable<StudentDTO>> Get([FromQuery] string? q = null)
         {
             var query = _dbContext.Students.Include(s => s.Teacher).AsQueryable();
@@ -37,7 +37,6 @@ namespace PianoLearningTracker.Controllers.Api
         }
 
         [HttpGet("{id}")]
-        [AllowAnonymous]
         public ActionResult<StudentDTO> Get(int id)
         {
             var student = _dbContext.Students

@@ -4,7 +4,7 @@ using PianoLearningTracker.Models;
 
 namespace PianoLearningTracker.Repositories
 {
-    public class EfRepository : IMockRepository
+    public class EfRepository : IRepository
     {
         private readonly PianoLearningTrackerDbContext _context;
 
@@ -15,19 +15,17 @@ namespace PianoLearningTracker.Repositories
 
         // ===================== Read =====================
 
-        public IReadOnlyList<Student> GetAllStudents() =>
+        // Lista (Index/Search): samo Teacher — kartica ne prikazuje ostale relacije
+        public IReadOnlyList<Student> GetStudentsForList(int? teacherId = null) =>
             _context.Students
+                .Where(s => teacherId == null || s.TeacherId == teacherId)
                 .Include(s => s.Teacher)
-                .Include(s => s.Lessons)
-                .Include(s => s.PracticeSessions)
-                .Include(s => s.StudentPieces).ThenInclude(sp => sp.Piece)
                 .ToList();
 
-        public IReadOnlyList<Student> GetStudentsByTeacherId(int teacherId) =>
+        // Dashboard: StudentPieces(.Piece) + PracticeSessions za statistike i achievemente
+        public IReadOnlyList<Student> GetStudentsWithProgress(int? teacherId = null) =>
             _context.Students
-                .Where(s => s.TeacherId == teacherId)
-                .Include(s => s.Teacher)
-                .Include(s => s.Lessons)
+                .Where(s => teacherId == null || s.TeacherId == teacherId)
                 .Include(s => s.PracticeSessions)
                 .Include(s => s.StudentPieces).ThenInclude(sp => sp.Piece)
                 .ToList();
@@ -51,6 +49,12 @@ namespace PianoLearningTracker.Repositories
                 .Include(t => t.Lessons).ThenInclude(l => l.Student)
                 .Include(t => t.Students)
                 .FirstOrDefault(t => t.Id == id);
+
+        public Teacher? GetStudentTeacher(int studentId) =>
+            _context.Students
+                .Where(s => s.Id == studentId)
+                .Select(s => s.Teacher)
+                .FirstOrDefault();
 
         public IReadOnlyList<Piece> GetAllPieces() =>
             _context.Pieces.ToList();
@@ -115,14 +119,18 @@ namespace PianoLearningTracker.Repositories
                 .Include(ps => ps.Piece)
                 .FirstOrDefault(ps => ps.Id == id);
 
+        // ===================== Count =====================
+
+        public int CountStudents() => _context.Students.Count();
+        public int CountTeachers() => _context.Teachers.Count();
+        public int CountPieces() => _context.Pieces.Count();
+        public int CountLessons() => _context.Lessons.Count();
+
         // ===================== Search =====================
 
         public IReadOnlyList<Student> SearchStudents(string query, int? teacherId = null) =>
             _context.Students
                 .Include(s => s.Teacher)
-                .Include(s => s.Lessons)
-                .Include(s => s.PracticeSessions)
-                .Include(s => s.StudentPieces).ThenInclude(sp => sp.Piece)
                 .Where(s => (teacherId == null || s.TeacherId == teacherId) &&
                             (string.IsNullOrEmpty(query) ||
                              (s.FirstName + " " + s.LastName).Contains(query) ||
@@ -209,6 +217,7 @@ namespace PianoLearningTracker.Repositories
 
         public void UpdateStudent(Student student)
         {
+            _context.Students.Update(student);
             _context.SaveChanges();
         }
 
@@ -232,6 +241,7 @@ namespace PianoLearningTracker.Repositories
 
         public void UpdateTeacher(Teacher teacher)
         {
+            _context.Teachers.Update(teacher);
             _context.SaveChanges();
         }
 
@@ -255,6 +265,7 @@ namespace PianoLearningTracker.Repositories
 
         public void UpdatePiece(Piece piece)
         {
+            _context.Pieces.Update(piece);
             _context.SaveChanges();
         }
 
@@ -278,6 +289,7 @@ namespace PianoLearningTracker.Repositories
 
         public void UpdateLesson(Lesson lesson)
         {
+            _context.Lessons.Update(lesson);
             _context.SaveChanges();
         }
 
@@ -301,6 +313,7 @@ namespace PianoLearningTracker.Repositories
 
         public void UpdatePracticeSession(PracticeSession session)
         {
+            _context.PracticeSessions.Update(session);
             _context.SaveChanges();
         }
 

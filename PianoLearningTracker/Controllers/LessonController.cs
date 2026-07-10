@@ -10,10 +10,10 @@ namespace PianoLearningTracker.Controllers
     [Route("satovi")]
     public class LessonController : Controller
     {
-        private readonly IMockRepository _repository;
+        private readonly IRepository _repository;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public LessonController(IMockRepository repository, UserManager<ApplicationUser> userManager)
+        public LessonController(IRepository repository, UserManager<ApplicationUser> userManager)
         {
             _repository = repository;
             _userManager = userManager;

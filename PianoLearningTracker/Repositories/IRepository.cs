@@ -2,15 +2,19 @@ using PianoLearningTracker.Models;
 
 namespace PianoLearningTracker.Repositories
 {
-    public interface IMockRepository
+    public interface IRepository
     {
         // --- Read ---
-        IReadOnlyList<Student> GetAllStudents();
-        IReadOnlyList<Student> GetStudentsByTeacherId(int teacherId);
+        // Lagana lista za Index/Search — učitava samo Teacher (jedina relacija koju kartica prikazuje)
+        IReadOnlyList<Student> GetStudentsForList(int? teacherId = null);
+        // Dashboard — učitava StudentPieces(.Piece) i PracticeSessions za statistike i achievemente
+        IReadOnlyList<Student> GetStudentsWithProgress(int? teacherId = null);
         Student? GetStudentById(int id);
 
         IReadOnlyList<Teacher> GetAllTeachers();
         Teacher? GetTeacherById(int id);
+        // Profesor dodijeljen učeniku — samo entitet profesora (bez teškog grafa)
+        Teacher? GetStudentTeacher(int studentId);
 
         IReadOnlyList<Piece> GetAllPieces();
         Piece? GetPieceById(int id);
@@ -24,6 +28,12 @@ namespace PianoLearningTracker.Repositories
         IReadOnlyList<PracticeSession> GetPracticeSessionsByStudentId(int studentId);
         IReadOnlyList<PracticeSession> GetPracticeSessionsByTeacherId(int teacherId);
         PracticeSession? GetPracticeSessionById(int id);
+
+        // --- Count (dashboard/landing — SELECT COUNT bez materijalizacije) ---
+        int CountStudents();
+        int CountTeachers();
+        int CountPieces();
+        int CountLessons();
 
         // --- Search (AJAX) ---
         IReadOnlyList<Student> SearchStudents(string query, int? teacherId = null);

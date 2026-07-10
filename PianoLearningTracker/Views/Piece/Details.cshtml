@@ -108,5 +108,90 @@
             </section>
         }
 
+        <section class="detail-card" id="attachments-card">
+            <h2>📎 Datoteke</h2>
+
+            @if (User.IsInRole("Administrator"))
+            {
+                <div id="piece-dropzone" class="dropzone-area"
+                     data-upload-url="/skladbe/upload/@Model.Id">
+                    <div class="dropzone-message">
+                        <span style="font-size:2rem;">📂</span>
+                        <p style="margin:0.4rem 0 0;">Povuci datoteku ovdje ili <strong>klikni za odabir</strong></p>
+                    </div>
+                </div>
+            }
+
+            <div id="attachment-list-container" style="margin-top:1rem;">
+                <p class="text-muted" style="font-size:0.875rem;">Učitavanje...</p>
+            </div>
+        </section>
+
     </div>
 </div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dropzone@5.9.3/dist/min/dropzone.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/dropzone@5.9.3/dist/min/dropzone.min.js"></script>
+    <style>
+        .dropzone-area {
+            border: 2px dashed var(--border, #d1d5db);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            background: var(--surface-alt, #f9fafb);
+        }
+        .dropzone-area.dz-drag-hover, .dropzone-area:hover {
+            border-color: var(--accent, #6366f1);
+            background: var(--accent-soft, #eef2ff);
+        }
+        .dropzone-area .dz-message { display: none; }
+        .dropzone-area .dz-preview { display: none; }
+        #attachment-list-container table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+        #attachment-list-container th { text-align: left; padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--border, #e5e7eb); color: var(--text-soft, #6b7280); font-weight: 600; }
+        #attachment-list-container td { padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border, #f3f4f6); vertical-align: middle; }
+        #attachment-list-container a { color: var(--accent, #6366f1); text-decoration: none; }
+        #attachment-list-container a:hover { text-decoration: underline; }
+    </style>
+    <script>
+        var pieceId = @Model.Id;
+        var antiForgeryToken = document.querySelector('input[name="__RequestVerificationToken"]')?.value ?? '';
+
+        function loadAttachments() {
+            fetch('/skladbe/datoteke/' + pieceId)
+                .then(function (r) { return r.text(); })
+                .then(function (html) {
+                    document.getElementById('attachment-list-container').innerHTML = html;
+                });
+        }
+
+        function deleteAttachment(id) {
+            if (!confirm('Obrisati datoteku?')) return;
+            fetch('/skladbe/obrisi-datoteku/' + id, {
+                method: 'POST',
+                headers: { 'RequestVerificationToken': antiForgeryToken }
+            }).then(function (r) {
+                if (r.ok) loadAttachments();
+            });
+        }
+
+        var dzEl = document.getElementById('piece-dropzone');
+        if (dzEl) {
+            Dropzone.autoDiscover = false;
+            var dz = new Dropzone('#piece-dropzone', {
+                url: dzEl.dataset.uploadUrl,
+                paramName: 'file',
+                maxFilesize: 20,
+                headers: { 'RequestVerificationToken': antiForgeryToken },
+                dictDefaultMessage: '',
+                success: function () { loadAttachments(); this.removeAllFiles(); },
+                error: function (file, msg) { alert('Greška pri uploadu: ' + (msg.error || msg)); this.removeFile(file); }
+            });
+        }
+
+        loadAttachments();
+    </script>
+}
+

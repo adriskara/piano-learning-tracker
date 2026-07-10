@@ -10,10 +10,10 @@ namespace PianoLearningTracker.Controllers
     [Route("vjezbe")]
     public class PracticeSessionController : Controller
     {
-        private readonly IMockRepository _repository;
+        private readonly IRepository _repository;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public PracticeSessionController(IMockRepository repository, UserManager<ApplicationUser> userManager)
+        public PracticeSessionController(IRepository repository, UserManager<ApplicationUser> userManager)
         {
             _repository = repository;
             _userManager = userManager;

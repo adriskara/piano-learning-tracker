@@ -12,10 +12,10 @@ namespace PianoLearningTracker.Controllers
     [Route("repertoar")]
     public class PieceController : Controller
     {
-        private readonly IMockRepository _repository;
+        private readonly IRepository _repository;
         private readonly PianoLearningTrackerDbContext _dbContext;
 
-        public PieceController(IMockRepository repository, PianoLearningTrackerDbContext dbContext)
+        public PieceController(IRepository repository, PianoLearningTrackerDbContext dbContext)
         {
             _repository = repository;
             _dbContext = dbContext;
@@ -210,7 +210,6 @@ namespace PianoLearningTracker.Controllers
         // AJAX dohvat popisa datoteka — vraća partial view
         // URL: /skladbe/datoteke/1
         [Route("datoteke/{pieceId:int}")]
-        [AllowAnonymous]
         public IActionResult GetAttachments(int pieceId)
         {
             var attachments = _dbContext.PieceAttachments
